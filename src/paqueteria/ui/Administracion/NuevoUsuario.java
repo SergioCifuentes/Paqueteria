@@ -5,6 +5,7 @@
  */
 package paqueteria.ui.Administracion;
 
+import javax.swing.JOptionPane;
 import paqueteria.DB.ControladorDB;
 import paqueteria.Usuario.Usuario;
 
@@ -165,6 +166,8 @@ public class NuevoUsuario extends javax.swing.JInternalFrame {
                         lblErrorUser.setText(ERROR_USER_YA_EXISTENTE);
                     } else {
                         ControladorDB.guardarUsuario(new Usuario(txtUserName.getText(),password.getText(),comBoxJerarquias.getSelectedIndex()+1));
+                        JOptionPane.showMessageDialog(this, "UserName: "+txtUserName.getText()+" Guardado Exitosamente", "Nuevo Usuario", JOptionPane.INFORMATION_MESSAGE);
+                        this.setVisible(false);
                     }
                 }
             }

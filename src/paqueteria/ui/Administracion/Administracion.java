@@ -61,6 +61,7 @@ public class Administracion extends javax.swing.JFrame {
         jMenuItem9.setText("jMenuItem9");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Administracion");
         setResizable(false);
 
         dskpanel.setBackground(new java.awt.Color(140, 130, 238));
@@ -74,6 +75,7 @@ public class Administracion extends javax.swing.JFrame {
         menuUsuarios.setBorderPainted(true);
         menuUsuarios.setOpaque(true);
 
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem1.setBackground(new java.awt.Color(254, 254, 254));
         jMenuItem1.setForeground(new java.awt.Color(1, 1, 1));
         jMenuItem1.setText("Nuevo");
@@ -85,6 +87,7 @@ public class Administracion extends javax.swing.JFrame {
         });
         menuUsuarios.add(jMenuItem1);
 
+        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem2.setBackground(new java.awt.Color(254, 254, 254));
         jMenuItem2.setForeground(new java.awt.Color(1, 1, 1));
         jMenuItem2.setText("Eliminar");
@@ -98,10 +101,16 @@ public class Administracion extends javax.swing.JFrame {
         menuRutas.setText("Rutas");
         menuRutas.setOpaque(true);
 
+        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem3.setBackground(new java.awt.Color(254, 254, 254));
         jMenuItem3.setForeground(new java.awt.Color(1, 1, 1));
         jMenuItem3.setText("Nuevo");
         jMenuItem3.setOpaque(true);
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
         menuRutas.add(jMenuItem3);
 
         jMenuItem6.setBackground(new java.awt.Color(254, 254, 254));
@@ -199,6 +208,12 @@ public class Administracion extends javax.swing.JFrame {
        logOut.setVisible(true);
        this.setVisible(false);
     }//GEN-LAST:event_mItemLogOutActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        NuevaRuta ruta = new NuevaRuta(dskpanel);
+        dskpanel.add(ruta);
+        ruta.setVisible(true);
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     /**
      * @param args the command line arguments
