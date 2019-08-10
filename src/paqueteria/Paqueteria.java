@@ -5,6 +5,7 @@
  */
 package paqueteria;
 
+import paqueteria.DB.ControladorDB;
 import paqueteria.ui.IngresoDeUsuario;
 
 /**
@@ -17,6 +18,7 @@ public class Paqueteria {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        ControladorDB controladorDB = new ControladorDB();
         IngresoDeUsuario nuevoUsuario = new IngresoDeUsuario();
         nuevoUsuario.setVisible(true);
     }

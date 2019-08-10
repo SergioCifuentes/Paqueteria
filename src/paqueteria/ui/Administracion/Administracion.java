@@ -5,17 +5,23 @@
  */
 package paqueteria.ui.Administracion;
 
+import paqueteria.Usuario.Administrador;
+import paqueteria.ui.IngresoDeUsuario;
+
 /**
  *
  * @author sergio
  */
 public class Administracion extends javax.swing.JFrame {
-
+    private Administrador user=null;
     /**
      * Creates new form Administracion
+     * @param user
      */
-    public Administracion() {
+    public Administracion(Administrador user) {
+        this.user=user;
         initComponents();
+        
     }
 
     /**
@@ -28,6 +34,8 @@ public class Administracion extends javax.swing.JFrame {
     private void initComponents() {
 
         jMenu1 = new javax.swing.JMenu();
+        jMenu3 = new javax.swing.JMenu();
+        jMenuItem9 = new javax.swing.JMenuItem();
         dskpanel = new javax.swing.JDesktopPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuUsuarios = new javax.swing.JMenu();
@@ -42,14 +50,34 @@ public class Administracion extends javax.swing.JFrame {
         jMenuItem8 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        jMenu4 = new javax.swing.JMenu();
+        menuUsuario = new javax.swing.JMenu();
+        mItemLogOut = new javax.swing.JMenuItem();
 
         jMenu1.setText("jMenu1");
 
+        jMenu3.setText("jMenu3");
+
+        jMenuItem9.setText("jMenuItem9");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
+        dskpanel.setBackground(new java.awt.Color(140, 130, 238));
+
+        jMenuBar1.setBackground(new java.awt.Color(254, 254, 254));
+        jMenuBar1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(2, 5, 142)));
+
+        menuUsuarios.setBackground(new java.awt.Color(254, 254, 254));
+        menuUsuarios.setForeground(new java.awt.Color(1, 1, 1));
         menuUsuarios.setText("Usuarios");
+        menuUsuarios.setBorderPainted(true);
+        menuUsuarios.setOpaque(true);
 
+        jMenuItem1.setBackground(new java.awt.Color(254, 254, 254));
+        jMenuItem1.setForeground(new java.awt.Color(1, 1, 1));
         jMenuItem1.setText("Nuevo");
+        jMenuItem1.setOpaque(true);
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
@@ -57,39 +85,89 @@ public class Administracion extends javax.swing.JFrame {
         });
         menuUsuarios.add(jMenuItem1);
 
+        jMenuItem2.setBackground(new java.awt.Color(254, 254, 254));
+        jMenuItem2.setForeground(new java.awt.Color(1, 1, 1));
         jMenuItem2.setText("Eliminar");
+        jMenuItem2.setOpaque(true);
         menuUsuarios.add(jMenuItem2);
 
         jMenuBar1.add(menuUsuarios);
 
+        menuRutas.setBackground(new java.awt.Color(254, 254, 254));
+        menuRutas.setForeground(new java.awt.Color(1, 1, 1));
         menuRutas.setText("Rutas");
+        menuRutas.setOpaque(true);
 
+        jMenuItem3.setBackground(new java.awt.Color(254, 254, 254));
+        jMenuItem3.setForeground(new java.awt.Color(1, 1, 1));
         jMenuItem3.setText("Nuevo");
+        jMenuItem3.setOpaque(true);
         menuRutas.add(jMenuItem3);
 
+        jMenuItem6.setBackground(new java.awt.Color(254, 254, 254));
+        jMenuItem6.setForeground(new java.awt.Color(1, 1, 1));
         jMenuItem6.setText("Editar");
+        jMenuItem6.setOpaque(true);
         menuRutas.add(jMenuItem6);
 
+        jMenuItem5.setBackground(new java.awt.Color(254, 254, 254));
+        jMenuItem5.setForeground(new java.awt.Color(1, 1, 1));
         jMenuItem5.setText("Desactivar");
+        jMenuItem5.setOpaque(true);
         menuRutas.add(jMenuItem5);
 
         jMenuBar1.add(menuRutas);
 
+        menuPuntos.setBackground(new java.awt.Color(254, 254, 254));
+        menuPuntos.setForeground(new java.awt.Color(1, 1, 1));
         menuPuntos.setText("Puntos De Control");
+        menuPuntos.setOpaque(true);
 
+        jMenuItem7.setBackground(new java.awt.Color(254, 254, 254));
+        jMenuItem7.setForeground(new java.awt.Color(1, 1, 1));
         jMenuItem7.setText("Nuevo");
+        jMenuItem7.setOpaque(true);
         menuPuntos.add(jMenuItem7);
 
+        jMenuItem8.setBackground(new java.awt.Color(254, 254, 254));
+        jMenuItem8.setForeground(new java.awt.Color(1, 1, 1));
         jMenuItem8.setText("Editar");
+        jMenuItem8.setOpaque(true);
         menuPuntos.add(jMenuItem8);
 
+        jMenuItem4.setBackground(new java.awt.Color(254, 254, 254));
+        jMenuItem4.setForeground(new java.awt.Color(1, 1, 1));
         jMenuItem4.setText("Tarifa De Operacion");
+        jMenuItem4.setOpaque(true);
         menuPuntos.add(jMenuItem4);
 
         jMenuBar1.add(menuPuntos);
 
+        jMenu2.setBackground(new java.awt.Color(254, 254, 254));
+        jMenu2.setForeground(new java.awt.Color(1, 1, 1));
         jMenu2.setText("Ayuda");
+        jMenu2.setOpaque(true);
         jMenuBar1.add(jMenu2);
+
+        jMenu4.setText("                                                                                                                        ");
+        jMenu4.setEnabled(false);
+        jMenuBar1.add(jMenu4);
+
+        menuUsuario.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        menuUsuario.setForeground(new java.awt.Color(1, 1, 1));
+        menuUsuario.setText("user");
+
+        mItemLogOut.setText("Log Out");
+        mItemLogOut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mItemLogOutActionPerformed(evt);
+            }
+        });
+        menuUsuario.add(mItemLogOut);
+
+        menuUsuario.setText(user.getUserName());
+
+        jMenuBar1.add(menuUsuario);
 
         setJMenuBar(jMenuBar1);
 
@@ -97,15 +175,13 @@ public class Administracion extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(dskpanel, javax.swing.GroupLayout.DEFAULT_SIZE, 607, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(dskpanel, javax.swing.GroupLayout.DEFAULT_SIZE, 736, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(dskpanel, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(dskpanel, javax.swing.GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -118,6 +194,12 @@ public class Administracion extends javax.swing.JFrame {
         nuevo.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+    private void mItemLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mItemLogOutActionPerformed
+       IngresoDeUsuario logOut = new IngresoDeUsuario();
+       logOut.setVisible(true);
+       this.setVisible(false);
+    }//GEN-LAST:event_mItemLogOutActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -127,6 +209,8 @@ public class Administracion extends javax.swing.JFrame {
     private javax.swing.JDesktopPane dskpanel;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
@@ -136,8 +220,11 @@ public class Administracion extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JMenuItem jMenuItem9;
+    private javax.swing.JMenuItem mItemLogOut;
     private javax.swing.JMenu menuPuntos;
     private javax.swing.JMenu menuRutas;
+    private javax.swing.JMenu menuUsuario;
     private javax.swing.JMenu menuUsuarios;
     // End of variables declaration//GEN-END:variables
 }

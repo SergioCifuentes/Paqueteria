@@ -7,6 +7,13 @@ package paqueteria.ui;
 
 import paqueteria.ui.Administracion.Administracion;
 import java.awt.Color;
+import paqueteria.DB.ControladorDB;
+import paqueteria.Usuario.Administrador;
+import paqueteria.Usuario.Operador;
+import paqueteria.Usuario.Recepcionista;
+import paqueteria.Usuario.Usuario;
+import paqueteria.ui.Operador.AreaOperador;
+import paqueteria.ui.Recepcion.Recepcion;
 
 /**
  *
@@ -17,6 +24,11 @@ public class IngresoDeUsuario extends javax.swing.JFrame {
     /**
      * Creates new form IngresoDeUsuario
      */
+    private static String ERROR_USUARIO_NO_EXISTENTE = "*Usuario No Existe ";
+    private static String ERROR_CAMPO_NO_LLENADO = "*Campo No Llenado";
+    private static String ERROR_PASSWORD_NO_CORRECTO = "*Password Incorrecto ";
+    private Usuario usuarioAIngresar = null;
+
     public IngresoDeUsuario() {
         initComponents();
     }
@@ -30,10 +42,10 @@ public class IngresoDeUsuario extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPasswordField1 = new javax.swing.JPasswordField();
+        jPassword = new javax.swing.JPasswordField();
         jButton1 = new javax.swing.JButton();
         lblPasswordOlvidado = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtUserName = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -42,6 +54,12 @@ public class IngresoDeUsuario extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
+
+        jPassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jPasswordActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("LogIn");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -64,7 +82,7 @@ public class IngresoDeUsuario extends javax.swing.JFrame {
 
         jLabel2.setText("Password:");
 
-        jLabel3.setText("Usuario:");
+        jLabel3.setText("User Name:");
 
         jLabel4.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
         jLabel4.setText("LOGIN");
@@ -95,11 +113,11 @@ public class IngresoDeUsuario extends javax.swing.JFrame {
                         .addComponent(jLabel3))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(layout.createSequentialGroup()
                                     .addGap(88, 88, 88)
-                                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(layout.createSequentialGroup()
                                     .addGap(159, 159, 159)
                                     .addComponent(jLabel4))
@@ -121,13 +139,13 @@ public class IngresoDeUsuario extends javax.swing.JFrame {
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblErrorUsuario))
                 .addGap(28, 28, 28)
                 .addComponent(jLabel2)
                 .addGap(8, 8, 8)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblErrorPassword))
                 .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -140,7 +158,7 @@ public class IngresoDeUsuario extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void lblPasswordOlvidadoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblPasswordOlvidadoMouseEntered
-        lblPasswordOlvidado.setForeground(new Color(97,139,218));
+        lblPasswordOlvidado.setForeground(new Color(97, 139, 218));
     }//GEN-LAST:event_lblPasswordOlvidadoMouseEntered
 
     private void lblPasswordOlvidadoMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblPasswordOlvidadoMouseExited
@@ -148,11 +166,76 @@ public class IngresoDeUsuario extends javax.swing.JFrame {
     }//GEN-LAST:event_lblPasswordOlvidadoMouseExited
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Administracion nuevo = new Administracion();
-        nuevo.setVisible(true);
-        this.setVisible(false);
+        esconderMensajesError();
+        if (verificarCamposLlenados()) {
+            if (verificarUsuario()) {
+            abrirVentaSegunJerarquia(usuarioAIngresar.getJerarquia());
+        }
+        }
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordActionPerformed
+        esconderMensajesError();
+        if (verificarCamposLlenados()) {
+            if (verificarUsuario()) {
+            abrirVentaSegunJerarquia(usuarioAIngresar.getJerarquia());
+        }
+        }
+    }//GEN-LAST:event_jPasswordActionPerformed
+    private boolean verificarUsuario() {
+        boolean usuarioValido;        
+        usuarioAIngresar = ControladorDB.verificarUserName(txtUserName.getText());
+        if (usuarioAIngresar != null) {
+            if (usuarioAIngresar.getPassword().equals(jPassword.getText())) {
+                usuarioValido = true;
+            } else {
+                usuarioValido = false;
+                lblErrorPassword.setText(ERROR_PASSWORD_NO_CORRECTO);
+                lblErrorPassword.setVisible(true);
+            }
+        } else {
+            usuarioValido = false;
+            lblErrorUsuario.setText(ERROR_USUARIO_NO_EXISTENTE);
+            lblErrorUsuario.setVisible(true);
+        }
+        return usuarioValido;
+    }
+
+    private void esconderMensajesError() {
+        lblErrorPassword.setVisible(false);
+        lblErrorUsuario.setVisible(false);
+    }
+
+    private void abrirVentaSegunJerarquia(int jerarquia) {
+        switch (jerarquia) {
+            case 1:
+                Administracion ventanaAdministracion = new Administracion((Administrador) usuarioAIngresar);
+                ventanaAdministracion.setVisible(true);
+                
+                break;
+            case 2:
+                AreaOperador ventanaOperador = new AreaOperador((Operador) usuarioAIngresar);
+                ventanaOperador.setVisible(true);
+                break;
+            case 3:
+                Recepcion ventanaRecepcion = new Recepcion((Recepcionista) usuarioAIngresar);
+                ventanaRecepcion.setVisible(true);
+                break;
+            default:
+                throw new AssertionError();
+        }
+        this.setVisible(false);
+    }
+    private boolean verificarCamposLlenados(){
+        if (jPassword.getText().equals("")||txtUserName.getText().equals("")) {
+            lblErrorUsuario.setText(ERROR_CAMPO_NO_LLENADO);
+            lblErrorUsuario.setVisible(true);
+            return false;
+        }else{
+            return true;
+        }
+    }
     /**
      * @param args the command line arguments
      */
@@ -163,10 +246,10 @@ public class IngresoDeUsuario extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JPasswordField jPassword;
     private javax.swing.JLabel lblErrorPassword;
     private javax.swing.JLabel lblErrorUsuario;
     private javax.swing.JLabel lblPasswordOlvidado;
+    private javax.swing.JTextField txtUserName;
     // End of variables declaration//GEN-END:variables
 }
