@@ -5,6 +5,8 @@
  */
 package paqueteria.Ruta;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author sergio
@@ -12,12 +14,12 @@ package paqueteria.Ruta;
 public class Destino {
     private int codigo;
     private String nombre;
-    private int couta;
+    private ArrayList<Tarifa> precio;
 
-    public Destino(int codigo, String nombre, int couta) {
+    public Destino(int codigo, String nombre,ArrayList<Tarifa> precio) {
         this.codigo = codigo;
         this.nombre = nombre;
-        this.couta = couta;
+        this.precio=precio;
     }
 
     public int getCodigo() {
@@ -28,8 +30,9 @@ public class Destino {
         return nombre;
     }
 
-    public int getCouta() {
-        return couta;
+    public ArrayList<Tarifa> getPrecio() {
+        return precio;
     }
+
     
 }

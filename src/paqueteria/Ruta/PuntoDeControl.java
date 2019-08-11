@@ -5,6 +5,7 @@
  */
 package paqueteria.Ruta;
 
+import java.util.ArrayList;
 import paqueteria.Usuario.Usuario;
 
 /**
@@ -17,6 +18,7 @@ public class PuntoDeControl {
     private int codigoRuta;
     private int capacidad;
     private Usuario user;
+    private ArrayList<Tarifa> precio;
 
     public void setCodigoRuta(int codigoRuta) {
         this.codigoRuta = codigoRuta;
@@ -42,10 +44,11 @@ public class PuntoDeControl {
         return user;
     }
 
-    public PuntoDeControl(int codigo, int numero, int capacidad, Usuario user) {
+    public PuntoDeControl(int codigo, int numero, int capacidad, Usuario user,ArrayList<Tarifa> precio) {
         this.codigo = codigo;
         this.numero = numero;
         this.capacidad = capacidad;
         this.user = user;
+        this.precio = precio;
     }
 }

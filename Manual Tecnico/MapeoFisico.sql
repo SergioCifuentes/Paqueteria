@@ -38,8 +38,8 @@ CREATE TABLE PuntoDeControl (
 );
 
 CREATE TABLE PrecioPunto (
-    fecha DATE NOT NULL,
-    tarifa INT NOT NULL,
+    fecha DATETIME NOT NULL,
+    tarifa FLOAT NOT NULL,
     codigoPuntoDeControl INT,
     CONSTRAINT PK_FECHA PRIMARY KEY(fecha),
     CONSTRAINT FK_PUNTODECONTROL_CODIGO FOREIGN KEY(codigoPuntoDeControl)
@@ -47,8 +47,8 @@ CREATE TABLE PrecioPunto (
 	ON DELETE CASCADE
 );
 CREATE TABLE PrecioDestino (
-    fecha DATE NOT NULL,
-    tarifa INT NOT NULL,
+    fecha DATETIME NOT NULL,
+    tarifa FLOAT NOT NULL,
     codigoDestino INT,
     CONSTRAINT PK_FECHA PRIMARY KEY(fecha),
     CONSTRAINT FK_DESTINO_CODIGO_P FOREIGN KEY(codigoDestino)
@@ -56,10 +56,10 @@ CREATE TABLE PrecioDestino (
 	ON DELETE CASCADE
 );
 CREATE TABLE PreciosAdmin (
-    fecha DATE NOT NULL,
-    porLibra INT NOT NULL,
-    porPriorizacion INT NOT NULL,
-    porOperacion INT NOT NULL,
+    fecha DATETIME NOT NULL,
+    porLibra FLOAT NOT NULL,
+    porPriorizacion FLOAT NOT NULL,
+    porOperacion FLOAT NOT NULL,
     CONSTRAINT PK_FECHA PRIMARY KEY(fecha)
 );
 CREATE TABLE Cliente (
@@ -81,8 +81,8 @@ CREATE TABLE Paquete (
     numeroENCola INT,
     codigoPunto INT,
     estado INT NOT NULL,
-    precioPerdido INT NOT NULL,
-    precioPagado INT NOT NULL,
+    precioPerdido FLOAT NOT NULL,
+    precioPagado FLOAT NOT NULL,
     CONSTRAINT PK_CODIGO PRIMARY KEY(codigo),
     CONSTRAINT FK_RUTA_CODIGO_PACK FOREIGN KEY(codigoRuta)
 	REFERENCES Ruta(codigo),
