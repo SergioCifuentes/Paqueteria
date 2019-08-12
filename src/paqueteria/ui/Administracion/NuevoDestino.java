@@ -5,27 +5,37 @@
  */
 package paqueteria.ui.Administracion;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import paqueteria.DB.ControladorDB;
+import paqueteria.Ruta.Destino;
 import paqueteria.Ruta.GeneradorDeCodigos;
+import paqueteria.Ruta.Tarifa;
 
 /**
  *
  * @author sergio
  */
 public class NuevoDestino extends javax.swing.JInternalFrame {
-private NuevaRuta ruta=null;
-private int codigo;
+
+    private NuevaRuta ruta = null;
+    private int codigo;
+
     /**
      * Creates new form NuevoDestino
      */
     public NuevoDestino() {
         initComponents();
-        codigo= GeneradorDeCodigos.generarCodigoDestino();
+        codigo = GeneradorDeCodigos.generarCodigoDestino();
         lblCodigoDestino.setText(String.valueOf(codigo));
+        
     }
+
     public NuevoDestino(NuevaRuta ruta) {
         initComponents();
-        this.ruta=ruta;
-        codigo= GeneradorDeCodigos.generarCodigoDestino();
+        this.ruta = ruta;
+        codigo = GeneradorDeCodigos.generarCodigoDestino();
         lblCodigoDestino.setText(String.valueOf(codigo));
     }
 
@@ -42,9 +52,11 @@ private int codigo;
         txtNombre = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         lblCodigoDestino = new javax.swing.JLabel();
-        jSpinner1 = new javax.swing.JSpinner();
+        spinnerCuota = new javax.swing.JSpinner();
         jLabel3 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        lblErrorNombre = new javax.swing.JLabel();
+        lblErrorCouta = new javax.swing.JLabel();
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
@@ -57,7 +69,7 @@ private int codigo;
 
         lblCodigoDestino.setText("jLabel3");
 
-        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(0.0f, 0.0f, null, 0.01f));
+        spinnerCuota.setModel(new javax.swing.SpinnerNumberModel(0.0f, 0.0f, null, 0.01f));
 
         jLabel3.setText("Cuota De Destino:");
 
@@ -68,6 +80,17 @@ private int codigo;
             }
         });
 
+        lblErrorNombre.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
+        lblErrorNombre.setForeground(new java.awt.Color(208, 2, 2));
+        lblErrorNombre.setText("Ingrese un Nombre");
+        lblErrorNombre.setVisible(false);
+
+        lblErrorCouta.setBackground(java.awt.Color.red);
+        lblErrorCouta.setFont(new java.awt.Font("Ubuntu", 0, 10)); // NOI18N
+        lblErrorCouta.setForeground(java.awt.Color.red);
+        lblErrorCouta.setText("Cuota Invalida");
+        lblErrorCouta.setVisible(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -76,25 +99,29 @@ private int codigo;
                 .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
-                        .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblErrorNombre)
+                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblErrorCouta)
+                            .addComponent(spinnerCuota, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(105, 105, 105))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(37, 37, 37))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(lblCodigoDestino)
-                        .addGap(26, 26, 26))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(37, 37, 37))))
+                        .addGap(26, 26, 26))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -107,11 +134,15 @@ private int codigo;
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
-                .addGap(58, 58, 58)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblErrorNombre)
+                .addGap(35, 35, 35)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(spinnerCuota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblErrorCouta)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addGap(21, 21, 21))
         );
@@ -120,21 +151,52 @@ private int codigo;
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if (ruta==null) {
-            
-        }else{
-            
+        lblErrorNombre.setVisible(false);
+        lblErrorCouta.setVisible(false);
+        if (verificarCamposLlenos()) {
+            if (verificaCoutaValida()) {
+                ArrayList<Tarifa> precios = new ArrayList<>();
+                precios.add(new Tarifa((float) spinnerCuota.getValue(), LocalDateTime.now()));
+                Destino destinoNuevo = new Destino(codigo, txtNombre.getText(), precios);
+                JOptionPane.showMessageDialog(this, destinoNuevo.getCodigo() + " - " + destinoNuevo.getNombre() + "   $" + destinoNuevo.getPrecio().get(destinoNuevo.getPrecio().size() - 1).getPrecio(), "Destino Creado", JOptionPane.INFORMATION_MESSAGE);
+                if (ruta != null) {
+                    ruta.agregarDestino(destinoNuevo);
+                }
+                ControladorDB.guardarDestino(destinoNuevo);
+                this.setVisible(false);
+            }
+
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+    private boolean verificarCamposLlenos() {
 
+        if ("".equals(txtNombre.getText())) {
+            lblErrorNombre.setVisible(true);
+            return false;
+        } else {
+            return true;
+        }
+    }
 
+    private boolean verificaCoutaValida() {
+        try {
+            System.out.println(spinnerCuota.getValue());
+            float precio = (float) spinnerCuota.getValue();
+            return true;
+        } catch (Exception e) {
+            lblErrorCouta.setVisible(true);
+            return false;
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JSpinner jSpinner1;
     private javax.swing.JLabel lblCodigoDestino;
+    private javax.swing.JLabel lblErrorCouta;
+    private javax.swing.JLabel lblErrorNombre;
+    private javax.swing.JSpinner spinnerCuota;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }

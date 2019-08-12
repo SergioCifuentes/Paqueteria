@@ -77,6 +77,11 @@ public class NuevaRuta extends javax.swing.JInternalFrame {
         });
 
         jButton1.setText("Nuevo Destino");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Puntos De Control:");
 
@@ -187,10 +192,11 @@ public class NuevaRuta extends javax.swing.JInternalFrame {
                     .addComponent(jLabel5)
                     .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cBoxDestinos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1)
-                    .addComponent(lblCoutaDestino, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(cBoxDestinos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblCoutaDestino, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2)
                 .addGap(27, 27, 27)
@@ -225,10 +231,17 @@ public class NuevaRuta extends javax.swing.JInternalFrame {
     private void cBoxDestinosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cBoxDestinosActionPerformed
         if (destinosPosibles!=null) {
             Destino destinoAux=destinosPosibles.get(cBoxDestinos.getSelectedIndex());
+            destino=destinoAux;
             lblCoutaDestino.setText(String.valueOf(destinoAux.getPrecio().get(destinoAux.getPrecio().size()-1).getPrecio()));
         }
 
     }//GEN-LAST:event_cBoxDestinosActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        NuevoDestino nuevoDestino = new NuevoDestino(this);
+        panel.add(nuevoDestino);
+        nuevoDestino.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 private void desabilitarOpciones(boolean b){
     lblCodigo.setVisible(b);
@@ -247,11 +260,14 @@ private void mostrarDestinos(){
         cBoxDestinos.setEnabled(false);
     }
 }
-private void agregarPunto(PuntoDeControl puntoNuevo){
+protected  void agregarPunto(PuntoDeControl puntoNuevo){
     puntos.add(puntoNuevo);
 }
-private void agregarDestino(Destino destino){
+protected  void agregarDestino(Destino destino){
     this.destino=destino;
+    destinosPosibles.add(destino);
+    cBoxDestinos.addItem(destino.getCodigo()+" - "+destino.getNombre());
+    cBoxDestinos.setSelectedIndex(destinosPosibles.size()-1);
 }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarPunto;
