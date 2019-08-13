@@ -36,7 +36,7 @@ public class Administracion extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem9 = new javax.swing.JMenuItem();
-        dskpanel = new javax.swing.JDesktopPane();
+        dskVentana = new javax.swing.JDesktopPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuUsuarios = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -46,11 +46,11 @@ public class Administracion extends javax.swing.JFrame {
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
         menuPuntos = new javax.swing.JMenu();
-        jMenuItem7 = new javax.swing.JMenuItem();
         jMenuItem8 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
+        menuItemTarifa = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
         jMenuItem10 = new javax.swing.JMenuItem();
+        menuTarifas = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
         menuUsuario = new javax.swing.JMenu();
@@ -66,7 +66,7 @@ public class Administracion extends javax.swing.JFrame {
         setTitle("Administracion");
         setResizable(false);
 
-        dskpanel.setBackground(new java.awt.Color(140, 130, 238));
+        dskVentana.setBackground(new java.awt.Color(140, 130, 238));
 
         jMenuBar1.setBackground(new java.awt.Color(254, 254, 254));
         jMenuBar1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(2, 5, 142)));
@@ -134,23 +134,22 @@ public class Administracion extends javax.swing.JFrame {
         menuPuntos.setText("Puntos De Control");
         menuPuntos.setOpaque(true);
 
-        jMenuItem7.setBackground(new java.awt.Color(254, 254, 254));
-        jMenuItem7.setForeground(new java.awt.Color(1, 1, 1));
-        jMenuItem7.setText("Nuevo");
-        jMenuItem7.setOpaque(true);
-        menuPuntos.add(jMenuItem7);
-
         jMenuItem8.setBackground(new java.awt.Color(254, 254, 254));
         jMenuItem8.setForeground(new java.awt.Color(1, 1, 1));
         jMenuItem8.setText("Editar");
         jMenuItem8.setOpaque(true);
         menuPuntos.add(jMenuItem8);
 
-        jMenuItem4.setBackground(new java.awt.Color(254, 254, 254));
-        jMenuItem4.setForeground(new java.awt.Color(1, 1, 1));
-        jMenuItem4.setText("Tarifa De Operacion");
-        jMenuItem4.setOpaque(true);
-        menuPuntos.add(jMenuItem4);
+        menuItemTarifa.setBackground(new java.awt.Color(254, 254, 254));
+        menuItemTarifa.setForeground(new java.awt.Color(1, 1, 1));
+        menuItemTarifa.setText("Tarifa De Operacion");
+        menuItemTarifa.setOpaque(true);
+        menuItemTarifa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemTarifaActionPerformed(evt);
+            }
+        });
+        menuPuntos.add(menuItemTarifa);
 
         jMenuBar1.add(menuPuntos);
 
@@ -169,13 +168,29 @@ public class Administracion extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu5);
 
+        menuTarifas.setBackground(new java.awt.Color(254, 254, 254));
+        menuTarifas.setForeground(new java.awt.Color(1, 1, 1));
+        menuTarifas.setText("Tarifas");
+        menuTarifas.setOpaque(true);
+        menuTarifas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menuTarifasMouseClicked(evt);
+            }
+        });
+        menuTarifas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuTarifasActionPerformed(evt);
+            }
+        });
+        jMenuBar1.add(menuTarifas);
+
         jMenu2.setBackground(new java.awt.Color(254, 254, 254));
         jMenu2.setForeground(new java.awt.Color(1, 1, 1));
         jMenu2.setText("Ayuda");
         jMenu2.setOpaque(true);
         jMenuBar1.add(jMenu2);
 
-        jMenu4.setText("                                                                                                       ");
+        jMenu4.setText("                                                                              ");
         jMenu4.setEnabled(false);
         jMenuBar1.add(jMenu4);
 
@@ -201,13 +216,13 @@ public class Administracion extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(dskpanel, javax.swing.GroupLayout.DEFAULT_SIZE, 736, Short.MAX_VALUE)
+            .addComponent(dskVentana, javax.swing.GroupLayout.DEFAULT_SIZE, 736, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(dskpanel, javax.swing.GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE)
+                .addComponent(dskVentana, javax.swing.GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -216,7 +231,7 @@ public class Administracion extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         NuevoUsuario nuevo = new NuevoUsuario();
-        dskpanel.add(nuevo);
+        dskVentana.add(nuevo);
         nuevo.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
@@ -227,16 +242,35 @@ public class Administracion extends javax.swing.JFrame {
     }//GEN-LAST:event_mItemLogOutActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        NuevaRuta ruta = new NuevaRuta(dskpanel);
-        dskpanel.add(ruta);
+        NuevaRuta ruta = new NuevaRuta(dskVentana);
+        dskVentana.add(ruta);
         ruta.setVisible(true);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
         NuevoDestino nuevoDestino = new NuevoDestino();
-        dskpanel.add(nuevoDestino);
+        dskVentana.add(nuevoDestino);
         nuevoDestino.setVisible(true);
     }//GEN-LAST:event_jMenuItem10ActionPerformed
+
+    private void menuTarifasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuTarifasActionPerformed
+        CambioTarifas cambioTarifas = new CambioTarifas();
+        dskVentana.add(cambioTarifas);
+        cambioTarifas.setVisible(true);
+    }//GEN-LAST:event_menuTarifasActionPerformed
+
+    private void menuItemTarifaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemTarifaActionPerformed
+        CambioTarifas cambioTarifas = new CambioTarifas();
+        dskVentana.add(cambioTarifas);
+        cambioTarifas.setVisible(true);
+    }//GEN-LAST:event_menuItemTarifaActionPerformed
+
+    private void menuTarifasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuTarifasMouseClicked
+        CambioTarifas cambioTarifas = new CambioTarifas();
+        dskVentana.add(cambioTarifas);
+        cambioTarifas.setVisible(true);
+        
+    }//GEN-LAST:event_menuTarifasMouseClicked
 
     /**
      * @param args the command line arguments
@@ -244,7 +278,7 @@ public class Administracion extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JDesktopPane dskpanel;
+    private javax.swing.JDesktopPane dskVentana;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
@@ -255,15 +289,15 @@ public class Administracion extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
-    private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JMenuItem mItemLogOut;
+    private javax.swing.JMenuItem menuItemTarifa;
     private javax.swing.JMenu menuPuntos;
     private javax.swing.JMenu menuRutas;
+    private javax.swing.JMenu menuTarifas;
     private javax.swing.JMenu menuUsuario;
     private javax.swing.JMenu menuUsuarios;
     // End of variables declaration//GEN-END:variables

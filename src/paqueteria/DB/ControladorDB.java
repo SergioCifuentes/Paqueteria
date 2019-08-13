@@ -31,12 +31,15 @@ import paqueteria.Usuario.Usuario;
 public class ControladorDB {
 
     private final static String STATEMENT_USUARIO_POR_NOMBRE = "SELECT * FROM Usuario WHERE userName = ?";
+    private final static String STATEMENT_USUARIO_POR_JERARQUIA = "SELECT * FROM Usuario WHERE jerarquia = ?";
+    private final static String STATEMENT_PRECIO_ADMIN_ACTUALES = "SELECT * FROM PreciosAdmin ORDER BY FECHA DESC";
     private final static String STATEMENT_PRECIO_PUNTO_POR_CODIGO = "SELECT * FROM PrecioPunto WHERE codigoPuntoControl = ? ORDER BY FECHA";
     private final static String STATEMENT_PRECIO_DESTINO_POR_CODIGO = "SELECT * FROM PrecioDestino WHERE codigoDestino = ? ORDER BY FECHA";
     private final static String STATEMENT_PUNTOS_DE_CONTROL_POR_RUTA = "SELECT * FROM PuntosDeControl WHERE codigoRuta = ?";
     private final static String STATEMENT_DESTINO_POR_CODIGO = "SELECT * FROM Destino WHERE codigo = ?";
     private final static String STATEMENT_GUARDAR_USUARIO = "INSERT INTO Usuario VALUES (?,?,?)";
     private final static String STATEMENT_GUARDAR_DESTINO = "INSERT INTO Destino VALUES (?,?)";
+    private final static String STATEMENT_GUARDAR_PRECIO_ADMIN = "INSERT INTO PreciosAdmin VALUES (?,?,?,?)";
     private final static String STATEMENT_GUARDAR_PRECIO_DESTINO = "INSERT INTO PrecioDestino VALUES (?,?,?)";
     private final static String STATEMENT_OBTENER_RUTAS = "SELECT * FROM Ruta";
     private final static String STATEMENT_OBTENER_PUNTOS = "SELECT * FROM PuntoDeControl";
@@ -71,6 +74,20 @@ public class ControladorDB {
             Logger.getLogger(ControladorDB.class.getName()).log(Level.SEVERE, null, ex);
         }
         return userNameValido;
+    }
+        public static ArrayList<Usuario> obteenerUsuarioPorJerarquia(int jerarquia) {
+        ArrayList<Usuario> usuario = new ArrayList<>();
+        try {
+            PreparedStatement declaracionPreparada = coneccion.prepareStatement(STATEMENT_USUARIO_POR_JERARQUIA);
+            declaracionPreparada.setString(1,String.valueOf( jerarquia));
+            ResultSet resultado2 = declaracionPreparada.executeQuery();
+            if (resultado2.next()) {
+                usuario.add(new Usuario(resultado2.getString("userName"), resultado2.getString("contrasena"),jerarquia));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ControladorDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return usuario;
     }
 
     public static ArrayList obtenerCodigoDeRutas() {
@@ -144,6 +161,18 @@ public class ControladorDB {
             System.out.println("Error Al Guardar");
         }
     }
+    public static void guardarPreciosAdmin(LocalDateTime fecha,float precioLibra,float precioPriorizacion,float precioOperacion) {
+        try {
+            PreparedStatement declaracionPreparada = coneccion.prepareStatement(STATEMENT_GUARDAR_PRECIO_ADMIN);
+            declaracionPreparada.setString(1, String.valueOf(fecha));
+            declaracionPreparada.setString(2, String.valueOf(precioLibra));
+            declaracionPreparada.setString(3, String.valueOf(precioPriorizacion));
+            declaracionPreparada.setString(4, String.valueOf(precioOperacion));
+            declaracionPreparada.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error Al Guardar");
+        }
+    }    
 
     public static ArrayList<Ruta> obtenerRutas() {
         ArrayList<Ruta> rutas = null;
@@ -231,10 +260,40 @@ public class ControladorDB {
                 int codigo = resultado.getInt("codigo");
                 destino.add(new Destino(codigo, resultado.getString("nombre"), obtenerPreciosPorCodigo(codigo, TIPO_PRECIO_DESTINO)));
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
         }
         return destino;
     }
+    //1.Por Libra 2.Por priorizacion 3.OperacionGlobal
+    public static float[] obtenerPrecioActuales() {
+        final int NUMERO_PRECIOS=3;
+        float[] precios = new float[NUMERO_PRECIOS];
+        try {
+            PreparedStatement declaracionPreparada = coneccion.prepareStatement(STATEMENT_PRECIO_ADMIN_ACTUALES);
+            ResultSet resultado = declaracionPreparada.executeQuery();
+            if (resultado.next()) {
+                precios[0]=resultado.getFloat(2);
+                precios[1]=resultado.getFloat(3);
+                precios[2]=resultado.getFloat(4);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error ");
+        }
+        return precios;
+    }
+    public static LocalDateTime obtenerFechaDePrecioActuales() {
+        LocalDateTime fecha = null;
+        try {
+            PreparedStatement declaracionPreparada = coneccion.prepareStatement(STATEMENT_PRECIO_ADMIN_ACTUALES);
+            ResultSet resultado = declaracionPreparada.executeQuery();
+            if (resultado.next()) {
+                fecha= resultado.getObject("fecha",LocalDateTime.class);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error ");
+        }
+        return fecha;
+    }  
 
     public static ArrayList<Tarifa> obtenerPreciosPorCodigo(int codigo, int tipo) {
         ArrayList<Tarifa> precios = new ArrayList();

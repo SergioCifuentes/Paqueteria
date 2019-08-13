@@ -5,7 +5,10 @@
  */
 package paqueteria.ui.Administracion;
 
+import java.util.ArrayList;
+import paqueteria.DB.ControladorDB;
 import paqueteria.Ruta.GeneradorDeCodigos;
+import paqueteria.Usuario.Usuario;
 
 /**
  *
@@ -13,14 +16,19 @@ import paqueteria.Ruta.GeneradorDeCodigos;
  */
 public class NuevoPunto extends javax.swing.JInternalFrame {
 private int codigo;
+private ArrayList<Usuario> operadores= new ArrayList<>();
+private float tarifaGlobal;
     /**
      * Creates new form NuevoPunto
      */
     public NuevoPunto(NuevaRuta ruta) {
+        tarifaGlobal=ControladorDB.obtenerPrecioActuales()[2];
         initComponents();
         esconderErrores();
         codigo=GeneradorDeCodigos.generarCodigoPuntoDeControl();
         lblCodigoPunto.setText(String.valueOf(codigo));
+        mostrarOperadores();
+        spinnerTarifa.setValue(tarifaGlobal);
     }
 
     /**
@@ -39,11 +47,12 @@ private int codigo;
         jLabel3 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
-        jSpinner2 = new javax.swing.JSpinner();
+        spinnerTarifa = new javax.swing.JSpinner();
         jButton1 = new javax.swing.JButton();
         lblErrorTarifa = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtErrorOperador = new javax.swing.JTextArea();
+        lblGlobal = new javax.swing.JLabel();
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
@@ -62,7 +71,17 @@ private int codigo;
 
         jLabel4.setText("Tarifa De Operacion:");
 
-        jSpinner2.setModel(new javax.swing.SpinnerNumberModel(0.0f, 0.0f, null, 0.01f));
+        spinnerTarifa.setModel(new javax.swing.SpinnerNumberModel(0.0f, 0.0f, null, 0.01f));
+        spinnerTarifa.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                spinnerTarifaStateChanged(evt);
+            }
+        });
+        spinnerTarifa.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                spinnerTarifaKeyPressed(evt);
+            }
+        });
 
         jButton1.setText("Agregar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -86,6 +105,11 @@ private int codigo;
         txtErrorOperador.setMinimumSize(new java.awt.Dimension(141, 41));
         jScrollPane1.setViewportView(txtErrorOperador);
 
+        lblGlobal.setBackground(java.awt.Color.green);
+        lblGlobal.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        lblGlobal.setForeground(java.awt.Color.green);
+        lblGlobal.setText("Tarifa Global");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -94,26 +118,18 @@ private int codigo;
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addGap(36, 36, 36)
-                                .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblErrorTarifa))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                        .addComponent(jLabel2)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jSpinner1))
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addGap(68, 68, 68)
-                                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addComponent(jLabel3)))
+                                .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jSpinner1))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(68, 68, 68)
+                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jLabel3)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(52, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -125,7 +141,20 @@ private int codigo;
                                 .addGap(21, 21, 21))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jButton1)
-                                .addGap(29, 29, 29))))))
+                                .addGap(29, 29, 29))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addGap(36, 36, 36)
+                                .addComponent(spinnerTarifa, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(lblErrorTarifa))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(165, 165, 165)
+                                .addComponent(lblGlobal)
+                                .addGap(103, 103, 103)))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -145,12 +174,14 @@ private int codigo;
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(spinnerTarifa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblErrorTarifa)
                     .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblGlobal)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addContainerGap())
         );
@@ -161,11 +192,33 @@ private int codigo;
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void spinnerTarifaStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinnerTarifaStateChanged
+        if ((float)spinnerTarifa.getValue()==tarifaGlobal) {
+            lblGlobal.setVisible(true);
+        }else{
+            lblGlobal.setVisible(false);
+        }
+    }//GEN-LAST:event_spinnerTarifaStateChanged
+
+    private void spinnerTarifaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_spinnerTarifaKeyPressed
+        if ((float)spinnerTarifa.getValue()==tarifaGlobal) {
+            lblGlobal.setVisible(true);
+        }else{
+            lblGlobal.setVisible(false);
+        }
+    }//GEN-LAST:event_spinnerTarifaKeyPressed
 private void esconderErrores(){
     lblErrorTarifa.setVisible(false);
     txtErrorOperador.setVisible(false);
 }
-
+private void mostrarOperadores(){
+    operadores=ControladorDB.obteenerUsuarioPorJerarquia(2);
+    for (int i = 0; i < operadores.size(); i++) {
+        jComboBox1.addItem(operadores.get(i).getUserName());
+        
+    }
+}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
@@ -175,9 +228,10 @@ private void esconderErrores(){
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JSpinner jSpinner2;
     private javax.swing.JLabel lblCodigoPunto;
     private javax.swing.JLabel lblErrorTarifa;
+    private javax.swing.JLabel lblGlobal;
+    private javax.swing.JSpinner spinnerTarifa;
     private javax.swing.JTextArea txtErrorOperador;
     // End of variables declaration//GEN-END:variables
 }

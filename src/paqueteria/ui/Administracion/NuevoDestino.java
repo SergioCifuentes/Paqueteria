@@ -180,7 +180,6 @@ public class NuevoDestino extends javax.swing.JInternalFrame {
 
     private boolean verificaCoutaValida() {
         try {
-            System.out.println(spinnerCuota.getValue());
             float precio = (float) spinnerCuota.getValue();
             return true;
         } catch (Exception e) {
