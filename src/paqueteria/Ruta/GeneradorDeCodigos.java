@@ -5,6 +5,7 @@
  */
 package paqueteria.Ruta;
 
+import java.util.ArrayList;
 import paqueteria.DB.ControladorDB;
 
 /**
@@ -15,11 +16,11 @@ public class GeneradorDeCodigos {
 
     public static int generarCodigoRuta() {
         int codigo = 110000;
-        if (ControladorDB.obtenerCodigoDeRutas()!=null) {
-            codigo=codigo+ControladorDB.obtenerCodigoDeRutas().size();
+        if (ControladorDB.obtenerCodigoDeRutas() != null) {
+            codigo = codigo + ControladorDB.obtenerCodigoDeRutas().size();
         }
-        
-        while(ControladorDB.obtenerRutas(codigo)!=null){
+
+        while (ControladorDB.obtenerRutas(codigo) != null) {
             codigo++;
         }
         return codigo;
@@ -27,23 +28,49 @@ public class GeneradorDeCodigos {
 
     public static int generarCodigoPuntoDeControl() {
         int codigo = 220000;
-        if (ControladorDB.obtenerCodigoDePuntosDeControl()!=null) {
-            codigo=codigo+ControladorDB.obtenerCodigoDePuntosDeControl().size();
+        if (ControladorDB.obtenerCodigoDePuntosDeControl() != null) {
+            codigo = codigo + ControladorDB.obtenerCodigoDePuntosDeControl().size();
         }
-        
-        while(ControladorDB.obtenerRutas(codigo)!=null){
+
+        while (ControladorDB.obtenerRutas(codigo) != null) {
             codigo++;
         }
         return codigo;
     }
 
+    public static int generarCodigoPuntoDeControl(ArrayList<PuntoDeControl> puntos) {
+        int codigo = 220000;
+        if (ControladorDB.obtenerCodigoDePuntosDeControl() != null) {
+            codigo = codigo + ControladorDB.obtenerCodigoDePuntosDeControl().size();
+        }
+
+        while (ControladorDB.obtenerRutas(codigo) != null) {
+            codigo++;
+        }
+        if (puntos != null) {
+            boolean auxiliar;
+            do {
+                auxiliar=false;
+                for (int i = 0; i < puntos.size(); i++) {
+                    if (codigo==puntos.get(i).getCodigo()) {
+                        auxiliar=true;
+                        codigo++;
+                    }
+
+                }
+            } while (auxiliar);
+        }
+
+        return codigo;
+    }
+
     public static int generarCodigoDestino() {
         int codigo = 330000;
-        if (ControladorDB.obtenerCodigoDeDestinos()!=null) {
-            codigo=codigo+ControladorDB.obtenerCodigoDeDestinos().size();
+        if (ControladorDB.obtenerCodigoDeDestinos() != null) {
+            codigo = codigo + ControladorDB.obtenerCodigoDeDestinos().size();
         }
-        
-        while(ControladorDB.obtenerPuntoDeControl(codigo)!=null){
+
+        while (ControladorDB.obtenerPuntoDeControl(codigo) != null) {
             codigo++;
         }
         return codigo;

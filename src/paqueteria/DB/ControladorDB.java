@@ -172,7 +172,19 @@ public class ControladorDB {
         } catch (SQLException e) {
             System.out.println("Error Al Guardar");
         }
-    }    
+    }
+    public static void guardarPuntoDeControl(PuntoDeControl punto) {
+        try {
+            PreparedStatement declaracionPreparada = coneccion.prepareStatement(STATEMENT_GUARDAR_PRECIO_ADMIN);
+            declaracionPreparada.setString(1, String.valueOf(fecha));
+            declaracionPreparada.setString(2, String.valueOf(precioLibra));
+            declaracionPreparada.setString(3, String.valueOf(precioPriorizacion));
+            declaracionPreparada.setString(4, String.valueOf(precioOperacion));
+            declaracionPreparada.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error Al Guardar");
+        }
+    }      
 
     public static ArrayList<Ruta> obtenerRutas() {
         ArrayList<Ruta> rutas = null;

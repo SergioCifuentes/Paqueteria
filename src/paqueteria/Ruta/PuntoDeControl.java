@@ -44,11 +44,22 @@ public class PuntoDeControl {
         return user;
     }
 
-    public PuntoDeControl(int codigo, int numero, int capacidad, Usuario user,ArrayList<Tarifa> precio) {
+    public PuntoDeControl(int codigo, int capacidad, Usuario user,ArrayList<Tarifa> precio) {
         this.codigo = codigo;
-        this.numero = numero;
         this.capacidad = capacidad;
         this.user = user;
         this.precio = precio;
+    }
+
+    public ArrayList<Tarifa> getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(ArrayList<Tarifa> precio) {
+        this.precio = precio;
+    }
+
+    public void setNumero(int numero) {
+        this.numero = numero;
     }
 }
