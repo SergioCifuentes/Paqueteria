@@ -7,11 +7,13 @@ package paqueteria.ui.Administracion;
 
 import java.util.ArrayList;
 import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import paqueteria.DB.ControladorDB;
 import paqueteria.Ruta.Destino;
 import paqueteria.Ruta.GeneradorDeCodigos;
 import paqueteria.Ruta.PuntoDeControl;
+import paqueteria.Ruta.Ruta;
 
 /**
  *
@@ -67,6 +69,7 @@ public class NuevaRuta extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblPuntos = new javax.swing.JTable();
+        lblErrorDestino = new javax.swing.JLabel();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -142,6 +145,11 @@ public class NuevaRuta extends javax.swing.JInternalFrame {
         });
 
         jButton5.setText("Crear Ruta");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Codigo Ruta:");
 
@@ -175,6 +183,9 @@ public class NuevaRuta extends javax.swing.JInternalFrame {
 
         jScrollPane1.setViewportView(jScrollPane3);
 
+        lblErrorDestino.setText("Debes Elejir Un Destino");
+        lblErrorDestino.setVisible(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -202,7 +213,9 @@ public class NuevaRuta extends javax.swing.JInternalFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(lblCoutaDestino, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
-                                        .addComponent(jButton1))))
+                                        .addComponent(jButton1)
+                                        .addGap(36, 36, 36)
+                                        .addComponent(lblErrorDestino))))
                             .addComponent(btnAgregarPunto, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 614, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -242,7 +255,9 @@ public class NuevaRuta extends javax.swing.JInternalFrame {
                                     .addComponent(jLabel4))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton1)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jButton1)
+                                        .addComponent(lblErrorDestino))
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(cBoxDestinos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(lblCoutaDestino, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -252,8 +267,8 @@ public class NuevaRuta extends javax.swing.JInternalFrame {
                                 .addComponent(btnAgregarPunto))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(171, 171, 171)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(labelCodigo)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(labelCodigo, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(lblCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -329,6 +344,23 @@ public class NuevaRuta extends javax.swing.JInternalFrame {
         
     }//GEN-LAST:event_spinnerPosicionStateChanged
 
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        lblErrorDestino.setVisible(false);
+        if (destino!= null) {
+            for (int i = 0; i < puntos.size(); i++) {
+                puntos.get(i).setNumero(1+i);
+                puntos.get(i).setCodigoRuta(codigoRuta);
+            }
+            Ruta nuevaRuta = new Ruta(codigoRuta,true, destino, puntos);
+            ControladorDB.guardarRuta(nuevaRuta);
+             JOptionPane.showMessageDialog(this, "Codigo: "+nuevaRuta.getCodigo()+"   Destino: "+nuevaRuta.getDestino().getNombre() , "Ruta Creada", JOptionPane.INFORMATION_MESSAGE);
+             this.setVisible(false);
+        }else{
+            lblErrorDestino.setVisible(true);
+            
+        }
+    }//GEN-LAST:event_jButton5ActionPerformed
+
 private void desabilitarOpciones(boolean b){
     lblCodigo.setVisible(b);
     lblPosicion.setVisible(b);
@@ -394,6 +426,7 @@ private void agregarPuntosATabla(){
     private javax.swing.JLabel lblCodigo;
     private javax.swing.JLabel lblCodigoRuta;
     private javax.swing.JLabel lblCoutaDestino;
+    private javax.swing.JLabel lblErrorDestino;
     private javax.swing.JLabel lblPosicion;
     private javax.swing.JSpinner spinnerPosicion;
     private javax.swing.JTable tblPuntos;

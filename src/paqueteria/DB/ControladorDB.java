@@ -40,7 +40,10 @@ public class ControladorDB {
     private final static String STATEMENT_GUARDAR_USUARIO = "INSERT INTO Usuario VALUES (?,?,?)";
     private final static String STATEMENT_GUARDAR_DESTINO = "INSERT INTO Destino VALUES (?,?)";
     private final static String STATEMENT_GUARDAR_PRECIO_ADMIN = "INSERT INTO PreciosAdmin VALUES (?,?,?,?)";
+    private final static String STATEMENT_GUARDAR_RUTA = "INSERT INTO Ruta VALUES (?,?,?)";
+    private final static String STATEMENT_GUARDAR_PUNTOS_DE_CONTROL = "INSERT INTO PuntoDeControl VALUES (?,?,?,?,?)";
     private final static String STATEMENT_GUARDAR_PRECIO_DESTINO = "INSERT INTO PrecioDestino VALUES (?,?,?)";
+    private final static String STATEMENT_GUARDAR_PRECIO_PUNTO = "INSERT INTO PrecioPunto VALUES (?,?,?)";
     private final static String STATEMENT_OBTENER_RUTAS = "SELECT * FROM Ruta";
     private final static String STATEMENT_OBTENER_PUNTOS = "SELECT * FROM PuntoDeControl";
     private final static String STATEMENT_OBTENER_DESTINOS = "SELECT * FROM Destino";
@@ -147,6 +150,7 @@ public class ControladorDB {
 
     public static void guardarDestino(Destino destino) {
         try {
+            coneccion.setAutoCommit(false);
             PreparedStatement declaracionPreparada = coneccion.prepareStatement(STATEMENT_GUARDAR_DESTINO);
             declaracionPreparada.setString(1, destino.getNombre());
             declaracionPreparada.setString(2, String.valueOf(destino.getCodigo()));
@@ -157,8 +161,16 @@ public class ControladorDB {
             declaracionPreparada.setString(2, String.valueOf(tarifa.getPrecio()));
             declaracionPreparada.setString(3,String.valueOf(destino.getCodigo()));
             declaracionPreparada.executeUpdate();
+            coneccion.commit();
+            coneccion.setAutoCommit(true);
         } catch (SQLException e) {
             System.out.println("Error Al Guardar");
+            try {
+                coneccion.rollback();
+            } catch (SQLException ex) {
+                System.out.println("Error Rollback");
+            }
+            
         }
     }
     public static void guardarPreciosAdmin(LocalDateTime fecha,float precioLibra,float precioPriorizacion,float precioOperacion) {
@@ -173,14 +185,50 @@ public class ControladorDB {
             System.out.println("Error Al Guardar");
         }
     }
+    public static void guardarRuta(Ruta ruta) {
+        try {
+            coneccion.setAutoCommit(false);
+            PreparedStatement declaracionPreparadaRuta = coneccion.prepareStatement(STATEMENT_GUARDAR_RUTA);
+            declaracionPreparadaRuta.setString(1, String.valueOf(ruta.getCodigo()));
+            if (ruta.isEstado()) {
+                declaracionPreparadaRuta.setString(2,"1");
+            }else{
+                declaracionPreparadaRuta.setString(2,"2");
+            }
+            
+            declaracionPreparadaRuta.setString(3, String.valueOf(ruta.getDestino().getCodigo()));
+            declaracionPreparadaRuta.executeUpdate();
+            for (int i = 0; i < ruta.getPuntos().size(); i++) {
+                guardarPuntoDeControl(ruta.getPuntos().get(i));
+                
+            }
+            coneccion.commit();
+            coneccion.setAutoCommit(true);
+        } catch (SQLException e) {
+            
+            System.out.println("Error Al Guardar");
+            try {
+                coneccion.rollback();
+            } catch (SQLException ex) {
+                Logger.getLogger(ControladorDB.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }    
     public static void guardarPuntoDeControl(PuntoDeControl punto) {
         try {
-            PreparedStatement declaracionPreparada = coneccion.prepareStatement(STATEMENT_GUARDAR_PRECIO_ADMIN);
-            declaracionPreparada.setString(1, String.valueOf(fecha));
-            declaracionPreparada.setString(2, String.valueOf(precioLibra));
-            declaracionPreparada.setString(3, String.valueOf(precioPriorizacion));
-            declaracionPreparada.setString(4, String.valueOf(precioOperacion));
-            declaracionPreparada.executeUpdate();
+            PreparedStatement declaracionPunto = coneccion.prepareStatement(STATEMENT_GUARDAR_PUNTOS_DE_CONTROL);
+            declaracionPunto.setString(1, String.valueOf(punto.getCodigo()));
+            declaracionPunto.setString(2, String.valueOf(punto.getNumero()));
+            declaracionPunto.setString(3, String.valueOf(punto.getCodigoRuta()));
+            declaracionPunto.setString(4, String.valueOf(punto.getCapacidad()));
+            declaracionPunto.setString(5, punto.getUser().getUserName());
+            declaracionPunto.executeUpdate();
+            declaracionPunto = coneccion.prepareStatement(STATEMENT_GUARDAR_PRECIO_PUNTO);
+            Tarifa tarifa = punto.getPrecio().get(punto.getPrecio().size()-1);
+            declaracionPunto.setString(1,String.valueOf(tarifa.getFecha()));
+            declaracionPunto.setString(2, String.valueOf(tarifa.getPrecio()));
+            declaracionPunto.setString(3,String.valueOf(punto.getCodigo()));
+            declaracionPunto.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error Al Guardar");
         }
@@ -222,8 +270,10 @@ public class ControladorDB {
             declaracionPreparada.setString(1, String.valueOf(codigo));
             ResultSet resultado2 = declaracionPreparada.executeQuery();
             while (resultado2.next()) {
-                puntoDeControl = new PuntoDeControl(codigo, resultado2.getInt("numeroEnRuta"), resultado2.getInt("cantidadDePaquetes"),
+                puntoDeControl = new PuntoDeControl(codigo, resultado2.getInt("cantidadDePaquetes"),
                         verificarUserName(resultado2.getString("userNameUsuario")), obtenerPreciosPorCodigo(codigo, TIPO_PRECIO_PUNTO));
+            
+                puntoDeControl.setCodigoRuta( resultado2.getInt("numeroEnRuta"));
             }
         } catch (Exception e) {
         }
@@ -238,8 +288,11 @@ public class ControladorDB {
             ResultSet resultado = declaracionPreparada.executeQuery();
             while (resultado.next()) {
                 int codigo = resultado.getInt("codigo");
-                puntosDeControl.add(new PuntoDeControl(codigo, resultado.getInt("numeroEnRuta"), resultado.getInt("cantidadDePaquetes"),
-                        verificarUserName(resultado.getString("userNameUsuario")), obtenerPreciosPorCodigo(codigo, TIPO_PRECIO_PUNTO)));
+                PuntoDeControl punto =new PuntoDeControl(codigo, resultado.getInt("cantidadDePaquetes"),
+                        verificarUserName(resultado.getString("userNameUsuario")), obtenerPreciosPorCodigo(codigo, TIPO_PRECIO_PUNTO));
+                
+                puntosDeControl.add(punto);
+                punto.setCodigoRuta(resultado.getInt("numeroEnRuta"));
             }
 
         } catch (SQLException ex) {
