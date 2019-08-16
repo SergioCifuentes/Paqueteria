@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import paqueteria.DB.ControladorDB;
-import paqueteria.Ruta.GeneradorDeCodigos;
+import paqueteria.DB.GeneradorDeCodigos;
 import paqueteria.Ruta.PuntoDeControl;
 import paqueteria.Ruta.Tarifa;
 import paqueteria.Usuario.Usuario;
@@ -229,7 +229,7 @@ private void esconderErrores(){
     txtErrorOperador.setVisible(false);
 }
 private void mostrarOperadores(){
-    operadores=ControladorDB.obteenerUsuarioPorJerarquia(2);
+    operadores=ControladorDB.obtenerUsuarioPorJerarquia(2);
     if (operadores.isEmpty()) {
         btnAgregar.setEnabled(false);
         txtErrorOperador.setVisible(true);

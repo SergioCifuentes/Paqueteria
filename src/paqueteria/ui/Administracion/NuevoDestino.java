@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import paqueteria.DB.ControladorDB;
 import paqueteria.Ruta.Destino;
-import paqueteria.Ruta.GeneradorDeCodigos;
+import paqueteria.DB.GeneradorDeCodigos;
 import paqueteria.Ruta.Tarifa;
 
 /**

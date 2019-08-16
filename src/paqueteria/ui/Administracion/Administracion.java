@@ -43,8 +43,8 @@ public class Administracion extends javax.swing.JFrame {
         jMenuItem2 = new javax.swing.JMenuItem();
         menuRutas = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem6 = new javax.swing.JMenuItem();
-        jMenuItem5 = new javax.swing.JMenuItem();
+        menuEditarRuta = new javax.swing.JMenuItem();
+        menuDesactivar = new javax.swing.JMenuItem();
         menuPuntos = new javax.swing.JMenu();
         jMenuItem8 = new javax.swing.JMenuItem();
         menuItemTarifa = new javax.swing.JMenuItem();
@@ -92,8 +92,13 @@ public class Administracion extends javax.swing.JFrame {
         jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem2.setBackground(new java.awt.Color(254, 254, 254));
         jMenuItem2.setForeground(new java.awt.Color(1, 1, 1));
-        jMenuItem2.setText("Eliminar");
+        jMenuItem2.setText("Existentes");
         jMenuItem2.setOpaque(true);
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         menuUsuarios.add(jMenuItem2);
 
         jMenuBar1.add(menuUsuarios);
@@ -115,17 +120,27 @@ public class Administracion extends javax.swing.JFrame {
         });
         menuRutas.add(jMenuItem3);
 
-        jMenuItem6.setBackground(new java.awt.Color(254, 254, 254));
-        jMenuItem6.setForeground(new java.awt.Color(1, 1, 1));
-        jMenuItem6.setText("Editar");
-        jMenuItem6.setOpaque(true);
-        menuRutas.add(jMenuItem6);
+        menuEditarRuta.setBackground(new java.awt.Color(254, 254, 254));
+        menuEditarRuta.setForeground(new java.awt.Color(1, 1, 1));
+        menuEditarRuta.setText("Editar");
+        menuEditarRuta.setOpaque(true);
+        menuEditarRuta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuEditarRutaActionPerformed(evt);
+            }
+        });
+        menuRutas.add(menuEditarRuta);
 
-        jMenuItem5.setBackground(new java.awt.Color(254, 254, 254));
-        jMenuItem5.setForeground(new java.awt.Color(1, 1, 1));
-        jMenuItem5.setText("Desactivar");
-        jMenuItem5.setOpaque(true);
-        menuRutas.add(jMenuItem5);
+        menuDesactivar.setBackground(new java.awt.Color(254, 254, 254));
+        menuDesactivar.setForeground(new java.awt.Color(1, 1, 1));
+        menuDesactivar.setText("Desactivar");
+        menuDesactivar.setOpaque(true);
+        menuDesactivar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuDesactivarActionPerformed(evt);
+            }
+        });
+        menuRutas.add(menuDesactivar);
 
         jMenuBar1.add(menuRutas);
 
@@ -272,6 +287,24 @@ public class Administracion extends javax.swing.JFrame {
         
     }//GEN-LAST:event_menuTarifasMouseClicked
 
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        UsuariosExistentes usuariosExistentes = new UsuariosExistentes(user,this);
+        dskVentana.add(usuariosExistentes);
+        usuariosExistentes.setVisible(true);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void menuEditarRutaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEditarRutaActionPerformed
+       MostradorDeRutas nuevaMostador= new MostradorDeRutas(MostradorDeRutas.IDENTIFICADO_EDITADOR);
+       dskVentana.add(nuevaMostador);
+       nuevaMostador.setVisible(true);
+    }//GEN-LAST:event_menuEditarRutaActionPerformed
+
+    private void menuDesactivarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuDesactivarActionPerformed
+      MostradorDeRutas nuevaMostador= new MostradorDeRutas(MostradorDeRutas.IDENTIFICADO_DESACTIVADOR);
+       dskVentana.add(nuevaMostador);
+       nuevaMostador.setVisible(true);  
+    }//GEN-LAST:event_menuDesactivarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -289,11 +322,11 @@ public class Administracion extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JMenuItem mItemLogOut;
+    private javax.swing.JMenuItem menuDesactivar;
+    private javax.swing.JMenuItem menuEditarRuta;
     private javax.swing.JMenuItem menuItemTarifa;
     private javax.swing.JMenu menuPuntos;
     private javax.swing.JMenu menuRutas;
