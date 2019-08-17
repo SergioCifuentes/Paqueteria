@@ -7,6 +7,7 @@ package paqueteria.ui.Recepcion;
 
 import java.util.ArrayList;
 import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
 import paqueteria.DB.ControladorDB;
 import paqueteria.paquetes.Cliente;
 import paqueteria.paquetes.Paquete;
@@ -16,16 +17,19 @@ import paqueteria.paquetes.Paquete;
  * @author sergio
  */
 public class IngresoPaquete extends javax.swing.JInternalFrame {
-private ArrayList<Paquete> paquetes = new ArrayList<>();
-private Cliente cliente;
-private JDesktopPane recepcion;
-protected static final String IDENTIFICADOR_CONSUMIDOR_FINAL="C/F";    
-/**
+
+    private ArrayList<Paquete> paquetes = new ArrayList<>();
+    private Cliente cliente;
+    private JDesktopPane recepcion;
+    protected static final String IDENTIFICADOR_CONSUMIDOR_FINAL = "C/F";
+
+    /**
      * Creates new form IngresoPaquete
+     *
      * @param recepcion
      */
     public IngresoPaquete(JDesktopPane recepcion) {
-        this.recepcion=recepcion;
+        this.recepcion = recepcion;
         initComponents();
     }
 
@@ -92,6 +96,11 @@ protected static final String IDENTIFICADOR_CONSUMIDOR_FINAL="C/F";
         jLabel3.setOpaque(true);
 
         btnEnviar.setText("Enviar");
+        btnEnviar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEnviarActionPerformed(evt);
+            }
+        });
 
         tblPaquetes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -234,7 +243,7 @@ protected static final String IDENTIFICADOR_CONSUMIDOR_FINAL="C/F";
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        this.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void tblPaquetesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPaquetesMouseClicked
@@ -247,18 +256,16 @@ protected static final String IDENTIFICADOR_CONSUMIDOR_FINAL="C/F";
         lblNombre.setText("");
         if ("".equals(txtNit.getText())) {
             txtNit.setText(IDENTIFICADOR_CONSUMIDOR_FINAL);
-        }else if(!txtNit.getText().equals(IDENTIFICADOR_CONSUMIDOR_FINAL)){
+        } else if (!txtNit.getText().equals(IDENTIFICADOR_CONSUMIDOR_FINAL)) {
             if (verficarNit()) {
-                if (ControladorDB.verificarCliente(Integer.parseInt(txtNit.getText()))==null) {
-                
-            }else{
-                cliente=ControladorDB.verificarCliente(Integer.parseInt(txtNit.getText()));
-                lblNombre.setText(cliente.getNombre());
-                lblDireccion.setText(cliente.getDireccion());
-                btnAgregarCliente.setEnabled(false);
+                if (ControladorDB.verificarCliente(Integer.parseInt(txtNit.getText())) == null) {
+                    cliente=null;
+                } else {
+                    cliente = ControladorDB.verificarCliente(Integer.parseInt(txtNit.getText()));
+                    mostrarDatosCliente();
+                }
             }
-            }
-            
+
         }
     }//GEN-LAST:event_txtNitActionPerformed
 
@@ -269,23 +276,51 @@ protected static final String IDENTIFICADOR_CONSUMIDOR_FINAL="C/F";
     private void btnAgregarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarClienteActionPerformed
         NuevoCliente nuevoCliente;
         if (txtNit.getText().equals(IDENTIFICADOR_CONSUMIDOR_FINAL)) {
-             nuevoCliente= new NuevoCliente(this);
-        }else{
-             nuevoCliente= new NuevoCliente(this,Integer.parseInt(txtNit.getText()));
+            nuevoCliente = new NuevoCliente(this);
+        } else {
+            nuevoCliente = new NuevoCliente(this, Integer.parseInt(txtNit.getText()));
         }
         recepcion.add(nuevoCliente);
         nuevoCliente.setVisible(true);
     }//GEN-LAST:event_btnAgregarClienteActionPerformed
-private boolean  verficarNit(){
-    try {
-        int aux = Integer.parseInt(txtNit.getText());
-        return true;
-    } catch (NumberFormatException e) {
-        txtNit.setText("NIT INVALIDO");
-        btnAgregarCliente.setEnabled(false);
-        return false;
+
+    private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
+        if (verificarEnvio()) {
+            
+        }
+    }//GEN-LAST:event_btnEnviarActionPerformed
+    private boolean verficarNit() {
+        try {
+            int aux = Integer.parseInt(txtNit.getText());
+            return true;
+        } catch (NumberFormatException e) {
+            txtNit.setText("NIT INVALIDO");
+            btnAgregarCliente.setEnabled(false);
+            return false;
+        }
     }
-}
+
+    private void mostrarDatosCliente() {
+        lblNombre.setText(cliente.getNombre());
+        lblDireccion.setText(cliente.getDireccion());
+        btnAgregarCliente.setEnabled(false);
+    }
+
+    protected void recibirCliente(Cliente cliente) {
+        this.cliente = cliente;
+        mostrarDatosCliente();
+    }
+    private boolean  verificarEnvio(){
+        if (cliente==null) {
+            JOptionPane.showMessageDialog(this,"Cliente No Registrado", "Error Al Enviar", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }else if (paquetes.isEmpty()) {
+            JOptionPane.showMessageDialog(this,"Faltan Los Paquetes", "Error Al Enviar", JOptionPane.ERROR_MESSAGE);
+           return false; 
+        }else{
+            return true;
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarCliente;

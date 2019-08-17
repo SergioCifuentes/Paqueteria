@@ -51,10 +51,10 @@ public class GeneradorDeCodigos {
         if (puntos != null) {
             boolean auxiliar;
             do {
-                auxiliar=false;
+                auxiliar = false;
                 for (int i = 0; i < puntos.size(); i++) {
-                    if (codigo==puntos.get(i).getCodigo()) {
-                        auxiliar=true;
+                    if (codigo == puntos.get(i).getCodigo()) {
+                        auxiliar = true;
                         codigo++;
                     }
 
@@ -76,4 +76,25 @@ public class GeneradorDeCodigos {
         }
         return codigo;
     }
+
+    public static int generarCodigoCliente() {
+        int codigo = 440000;
+        if (ControladorDB.obtenerCodigoDeClientes() != null) {
+            codigo = codigo + ControladorDB.obtenerCodigoDeClientes().size();
+        }
+        while (ControladorDB.verificarCliente(codigo) != null) {
+            codigo++;
+        }
+        return codigo;
+    }
+    public static int generarCodigoPaquete() {
+        int codigo = 550000;
+        if (ControladorDB.obtenerCodigoDePaquetes() != null) {
+            codigo = codigo + ControladorDB.obtenerCodigoDePaquetes().size();
+        }
+        while (ControladorDB.verificarPaquete(codigo) != null) {
+            codigo++;
+        }
+        return codigo;
+    }    
 }

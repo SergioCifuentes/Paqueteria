@@ -24,6 +24,7 @@ import paqueteria.Usuario.Operador;
 import paqueteria.Usuario.Recepcionista;
 import paqueteria.Usuario.Usuario;
 import paqueteria.paquetes.Cliente;
+import paqueteria.paquetes.Paquete;
 
 /**
  *
@@ -42,6 +43,7 @@ public class ControladorDB {
     private final static String STATEMENT_GUARDAR_USUARIO = "INSERT INTO Usuario VALUES (?,?,?)";
     private final static String STATEMENT_GUARDAR_DESTINO = "INSERT INTO Destino VALUES (?,?)";
     private final static String STATEMENT_GUARDAR_PRECIO_ADMIN = "INSERT INTO PreciosAdmin VALUES (?,?,?,?)";
+    private final static String STATEMENT_GUARDAR_CLIENTE = "INSERT INTO Cliente VALUES (?,?,?,?)";
     private final static String STATEMENT_GUARDAR_RUTA = "INSERT INTO Ruta VALUES (?,?,?)";
     private final static String STATEMENT_GUARDAR_PUNTOS_DE_CONTROL = "INSERT INTO PuntoDeControl VALUES (?,?,?,?,?)";
     private final static String STATEMENT_GUARDAR_PRECIO_DESTINO = "INSERT INTO PrecioDestino VALUES (?,?,?)";
@@ -53,6 +55,9 @@ public class ControladorDB {
     private final static String STATEMENT_OBTENER_RUTAS_POR_CODIGO = "SELECT * FROM Ruta WHERE codigo = ?";
     private final static String STATEMENT_DELETE_USUARIO = "DELETE FROM Usuario WHERE userName = ?";
     private final static String STATEMENT_CLIENTE_POR_NIT = "SELECT * FROM Cliente WHERE nit = ?";
+    private final static String STATEMENT_OBTENER_CLIENTES = "SELECT * FROM Cliente";
+    private final static String STATEMENT_OBTENER_PAQUETES = "SELECT * FROM Paquete";
+    private final static String STATEMENT_PAQUETE_POR_CODIGO = "SELECT * FROM Paquete WHERE codigo = ?";
     private final static String USER = "root";
     private final static String PASSWORD = "danielito";
     private final static String STRING_CONNECTION = "jdbc:mysql://localhost:3306/paquetes";
@@ -453,5 +458,66 @@ public class ControladorDB {
             Logger.getLogger(ControladorDB.class.getName()).log(Level.SEVERE, null, ex);
         }
         return userNameValido;
+    }  
+    public static ArrayList obtenerCodigoDeClientes() {
+        ArrayList codigos = new ArrayList();
+        try {
+            PreparedStatement declaracionPreparada = coneccion.prepareStatement(STATEMENT_OBTENER_CLIENTES);
+            ResultSet resultado2 = declaracionPreparada.executeQuery();
+            while (resultado2.next()) {
+                codigos.add(resultado2.getInt("codigo"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error SQL");
+        }
+        return codigos;
+    } 
+    public static void guardarCliente(Cliente cliente) {
+        try {
+            PreparedStatement declaracionPreparada = coneccion.prepareStatement(STATEMENT_GUARDAR_CLIENTE);
+            declaracionPreparada.setString(1, String.valueOf(cliente.getCodigo()));
+            if (cliente.getNit()==0) {
+               declaracionPreparada.setString(3, null); 
+            }else{
+                declaracionPreparada.setString(3,String.valueOf(cliente.getNit())); 
+            }            
+            declaracionPreparada.setString(4, cliente.getNombre());
+            declaracionPreparada.setString(2, cliente.getDireccion());
+            declaracionPreparada.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error Al Guardar");
+        }
+    }
+    public static Paquete verificarPaquete(int nit) {
+        Paquete userNameValido = null;
+        try {
+            PreparedStatement declaracionPreparada = coneccion.prepareStatement(STATEMENT_PAQUETE_POR_CODIGO);
+            declaracionPreparada.setString(1,String.valueOf( nit));
+            ResultSet resultado = declaracionPreparada.executeQuery();
+            if (resultado.next()) { 
+                         userNameValido = new Paquete(resultado.getInt("codigo"),resultado.getInt("peso"),
+                                 obtenerRutas(resultado.getInt("codigoRuta")),verificarCliente(resultado.getInt("codigoCliente")),
+                                 resultado.getBoolean("priorizado"), resultado.getObject("fechaIngreso", LocalDateTime.class),
+                                 resultado.getInt("numeroENCola"),resultado.getInt("estado"),resultado.getFloat("precioPerdido"),
+                                 resultado.getFloat("precioPagado"));
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ControladorDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return userNameValido;
+    }  
+    public static ArrayList obtenerCodigoDePaquetes() {
+        ArrayList codigos = new ArrayList();
+        try {
+            PreparedStatement declaracionPreparada = coneccion.prepareStatement(STATEMENT_OBTENER_PAQUETES);
+            ResultSet resultado2 = declaracionPreparada.executeQuery();
+            while (resultado2.next()) {
+                codigos.add(resultado2.getInt("codigo"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error SQL");
+        }
+        return codigos;
     }    
 }

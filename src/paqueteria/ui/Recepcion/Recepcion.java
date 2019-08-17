@@ -41,6 +41,8 @@ private Recepcionista user=null;
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         menuPreciosDestino = new javax.swing.JMenuItem();
+        jMenu4 = new javax.swing.JMenu();
+        jMenuItem2 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         menuPrecios = new javax.swing.JMenuItem();
 
@@ -72,7 +74,7 @@ private Recepcionista user=null;
 
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Destino");
+        jMenu2.setText("Destinos");
 
         jMenuItem1.setText("Paquete Listo");
         jMenu2.add(jMenuItem1);
@@ -86,6 +88,13 @@ private Recepcionista user=null;
         jMenu2.add(menuPreciosDestino);
 
         jMenuBar1.add(jMenu2);
+
+        jMenu4.setText("Clientes");
+
+        jMenuItem2.setText("Editar");
+        jMenu4.add(jMenuItem2);
+
+        jMenuBar1.add(jMenu4);
 
         jMenu3.setText("Tarifas");
 
@@ -147,9 +156,11 @@ private Recepcionista user=null;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem menuNuevo;
