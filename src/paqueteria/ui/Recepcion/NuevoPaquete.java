@@ -32,9 +32,10 @@ public class NuevoPaquete extends javax.swing.JInternalFrame {
      * Creates new form NuevoPaquete
      *
      * @param ingresoPaquete
+     * @param paquetesYaRegistrados
      */
-    public NuevoPaquete(IngresoPaquete ingresoPaquete) {
-        codigo = GeneradorDeCodigos.generarCodigoPaquete();
+    public NuevoPaquete(IngresoPaquete ingresoPaquete,ArrayList<Paquete> paquetesYaRegistrados) {
+        codigo = GeneradorDeCodigos.generarCodigoPaquete(paquetesYaRegistrados);
         initComponents();
         lblCodigo.setText(String.valueOf(codigo));
         this.ingresoPaquete = ingresoPaquete;

@@ -316,12 +316,17 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
                 paquetes.get(i).setCliente(cliente);
                 paquetes.get(i).setNumeroEnCola(numeroEnBodega+i);
                 ControladorDB.guardarPaquete(paquetes.get(i));
+                
             }
+            this.setVisible(false);
+                Factura factura = new Factura(cliente, paquetes);
+                recepcion.add(factura);
+                factura.setVisible(true);
         }
     }//GEN-LAST:event_btnEnviarActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        NuevoPaquete nuevoPaquete = new NuevoPaquete(this);
+        NuevoPaquete nuevoPaquete = new NuevoPaquete(this,paquetes);
         recepcion.add(nuevoPaquete);
         nuevoPaquete.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed

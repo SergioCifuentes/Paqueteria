@@ -8,6 +8,7 @@ package paqueteria.DB;
 import java.util.ArrayList;
 import paqueteria.DB.ControladorDB;
 import paqueteria.Ruta.PuntoDeControl;
+import paqueteria.paquetes.Paquete;
 
 /**
  *
@@ -87,7 +88,7 @@ public class GeneradorDeCodigos {
         }
         return codigo;
     }
-    public static int generarCodigoPaquete() {
+    public static int generarCodigoPaquete(ArrayList<Paquete> paquetes) {
         int codigo = 550000;
         if (ControladorDB.obtenerCodigoDePaquetes() != null) {
             codigo = codigo + ControladorDB.obtenerCodigoDePaquetes().size();
@@ -95,6 +96,29 @@ public class GeneradorDeCodigos {
         while (ControladorDB.verificarPaquete(codigo) != null) {
             codigo++;
         }
+        if (paquetes != null) {
+            boolean auxiliar;
+            do {
+                auxiliar = false;
+                for (int i = 0; i < paquetes.size(); i++) {
+                    if (codigo == paquetes.get(i).getCodigo()) {
+                        auxiliar = true;
+                        codigo++;
+                    }
+
+                }
+            } while (auxiliar);
+        }        
         return codigo;
-    }    
+    }
+    public static int generarCodigoPaquete() {
+        int codigo = 550000;
+        if (ControladorDB.obtenerCodigoDePaquetes() != null) {
+            codigo = codigo + ControladorDB.obtenerCodigoDePaquetes().size();
+        }
+        while (ControladorDB.verificarPaquete(codigo) != null) {
+            codigo++;
+        }        
+        return codigo;
+    }      
 }
