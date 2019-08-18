@@ -8,6 +8,7 @@ package paqueteria.ui.Recepcion;
 import java.util.ArrayList;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import paqueteria.DB.ControladorDB;
 import paqueteria.paquetes.Cliente;
 import paqueteria.paquetes.Paquete;
@@ -22,6 +23,7 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
     private Cliente cliente;
     private JDesktopPane recepcion;
     protected static final String IDENTIFICADOR_CONSUMIDOR_FINAL = "C/F";
+    private float total;
 
     /**
      * Creates new form IngresoPaquete
@@ -31,6 +33,7 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
     public IngresoPaquete(JDesktopPane recepcion) {
         this.recepcion = recepcion;
         initComponents();
+        total=0;
     }
 
     /**
@@ -46,7 +49,7 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        lblTotal = new javax.swing.JLabel();
         btnEnviar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -85,15 +88,24 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
         jLabel1.setOpaque(true);
 
         jButton1.setText("+ Paquete");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel2.setBackground(new java.awt.Color(254, 254, 254));
+        jLabel2.setFont(new java.awt.Font("Ubuntu", 0, 16)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(1, 1, 1));
         jLabel2.setText("Total:");
         jLabel2.setOpaque(true);
 
-        jLabel3.setBackground(new java.awt.Color(254, 254, 254));
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel3.setText("$0");
-        jLabel3.setOpaque(true);
+        lblTotal.setBackground(new java.awt.Color(254, 254, 254));
+        lblTotal.setFont(new java.awt.Font("Ubuntu", 0, 16)); // NOI18N
+        lblTotal.setForeground(new java.awt.Color(1, 1, 1));
+        lblTotal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblTotal.setText("$0");
+        lblTotal.setOpaque(true);
 
         btnEnviar.setText("Enviar");
         btnEnviar.addActionListener(new java.awt.event.ActionListener() {
@@ -101,6 +113,9 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
                 btnEnviarActionPerformed(evt);
             }
         });
+
+        jScrollPane2.setBackground(new java.awt.Color(255, 128, 0));
+        jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         tblPaquetes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -121,6 +136,11 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
 
         btnCancelarPaquete.setText("Cancelar Paquete");
         btnCancelarPaquete.setEnabled(false);
+        btnCancelarPaquete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarPaqueteActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -177,9 +197,9 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(btnCancelar)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(btnEnviar))
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(btnEnviar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -227,7 +247,7 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
+                            .addComponent(lblTotal)
                             .addComponent(jLabel2))
                         .addGap(28, 28, 28)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -247,7 +267,12 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void tblPaquetesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPaquetesMouseClicked
-        btnCancelarPaquete.setEnabled(true);
+        if (tblPaquetes.getSelectedRow()>=0) {
+            btnCancelarPaquete.setEnabled(true);
+        }else{
+            btnCancelarPaquete.setEnabled(false);
+        }
+
     }//GEN-LAST:event_tblPaquetesMouseClicked
 
     private void txtNitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNitActionPerformed
@@ -286,9 +311,27 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
 
     private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
         if (verificarEnvio()) {
-            
+            int numeroEnBodega= ControladorDB.obtenerPaquetesPorEstado(1).size()+1;
+            for (int i = 0; i < paquetes.size(); i++) {
+                paquetes.get(i).setCliente(cliente);
+                paquetes.get(i).setNumeroEnCola(numeroEnBodega+i);
+                ControladorDB.guardarPaquete(paquetes.get(i));
+            }
         }
     }//GEN-LAST:event_btnEnviarActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        NuevoPaquete nuevoPaquete = new NuevoPaquete(this);
+        recepcion.add(nuevoPaquete);
+        nuevoPaquete.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnCancelarPaqueteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarPaqueteActionPerformed
+        paquetes.remove(tblPaquetes.getSelectedRow());
+        agregarPaquetesATabla();
+        sumarTotal();
+         btnCancelarPaquete.setEnabled(false);
+    }//GEN-LAST:event_btnCancelarPaqueteActionPerformed
     private boolean verficarNit() {
         try {
             int aux = Integer.parseInt(txtNit.getText());
@@ -310,6 +353,11 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
         this.cliente = cliente;
         mostrarDatosCliente();
     }
+    protected void recibirPaquete(Paquete paquete) {
+        paquetes.add(paquete);
+        agregarPaquetesATabla();
+        sumarTotal();
+    }
     private boolean  verificarEnvio(){
         if (cliente==null) {
             JOptionPane.showMessageDialog(this,"Cliente No Registrado", "Error Al Enviar", JOptionPane.ERROR_MESSAGE);
@@ -321,7 +369,35 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
             return true;
         }
     }
+private void agregarPaquetesATabla(){
+    DefaultTableModel model = (DefaultTableModel) tblPaquetes.getModel();
+    int aux=model.getRowCount();
+    for (int i = aux; i > 0; i--) {
+        model.removeRow(i-1);
+        
+    }
+            for (int i = 0; i < paquetes.size(); i++) {//Creacion de Celdas
+                 model.addRow(new Object[] {"","","","",""});
+                 tblPaquetes.setValueAt(paquetes.get(i).getCodigo(), i, 0);
+                 tblPaquetes.setValueAt(paquetes.get(i).getRuta().getDestino().getNombre(), i, 1);
+                 tblPaquetes.setValueAt(paquetes.get(i).getPeso(), i, 2);
+                 tblPaquetes.setValueAt(String.format("%6.2f",paquetes.get(i).getPrecioPagado()), i, 3);
+                 if (paquetes.get(i).isPriorizado()) {
+                    tblPaquetes.setValueAt("Si", i, 4);
+                }else{
+                     tblPaquetes.setValueAt("No", i, 4);
+                 }
+                 
+            }
 
+           
+}
+private void sumarTotal(){
+    for (int i = 0; i < paquetes.size(); i++) {
+        total=total+paquetes.get(i).getPrecioPagado();        
+    }
+    lblTotal.setText("$"+String.format("%6.2f",total));
+}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarCliente;
     private javax.swing.JButton btnCancelar;
@@ -330,13 +406,13 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblDireccion;
     private javax.swing.JLabel lblNombre;
+    private javax.swing.JLabel lblTotal;
     private javax.swing.JTable tblPaquetes;
     private javax.swing.JTextField txtNit;
     // End of variables declaration//GEN-END:variables

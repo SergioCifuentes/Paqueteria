@@ -270,17 +270,19 @@ public class UsuariosExistentes extends javax.swing.JInternalFrame {
         agregarUsuariosATabla();
     }//GEN-LAST:event_txtBuscadorKeyReleased
     private void buscar(String palabra){
-        System.out.println(palabra);
-        ArrayList<Usuario> aux = new ArrayList<>();
+        if (!"".equals(palabra)) {
+            System.out.println(palabra);
+            ArrayList<Usuario> aux = new ArrayList<>();
         for (int i = 0; i < usuarios.size(); i++) {
             if (usuarios.get(i).getUserName().startsWith(palabra)) {
                 aux.add(usuarios.get(i));
             }            
         }
-        boolean auxiliar=true;
+        boolean auxiliar;
         for (int i = 0; i < usuarios.size(); i++) {
+            auxiliar=true;
             for (int j = 0; j < aux.size(); j++) {
-                 if (usuarios.get(i)==aux.get(j)) {
+                 if (usuarios.get(i).getUserName().equals(aux.get(j).getUserName())) {
                     auxiliar=false;
                 }
                 
@@ -290,6 +292,8 @@ public class UsuariosExistentes extends javax.swing.JInternalFrame {
                 }
         }
         usuarios= aux;
+        }
+
     }
     private void logOut() {
         this.setVisible(false);

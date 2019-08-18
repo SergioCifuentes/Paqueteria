@@ -137,7 +137,6 @@ private void agregarRutas() {
         for (int i = aux; i > 0; i--) {
             model.removeRow(i - 1);
         }
-        System.out.println(rutas);
         for (int i = 0; i < rutas.size(); i++) {//Creacion de Celdas
             model.addRow(new Object[]{"", "", "", ""});
             tblRuta.setValueAt(rutas.get(i).getCodigo(), i, 0);

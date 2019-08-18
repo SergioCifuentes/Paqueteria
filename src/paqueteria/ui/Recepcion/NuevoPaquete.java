@@ -5,25 +5,90 @@
  */
 package paqueteria.ui.Recepcion;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import paqueteria.DB.ControladorDB;
 import paqueteria.DB.GeneradorDeCodigos;
-
+import paqueteria.Ruta.Ruta;
+import paqueteria.paquetes.Paquete;
 /**
  *
  * @author sergio
  */
 public class NuevoPaquete extends javax.swing.JInternalFrame {
-private int codigo;
-private IngresoPaquete ingresoPaquete;
+
+    private int codigo;
+    private IngresoPaquete ingresoPaquete;
+    private float porLibra;
+    private float totalPorLibra;
+    private float porPriorizacion;
+    private ArrayList<Ruta> rutasDisponibles;
+    private Ruta rutaAEnviar;
+    private float total;
+
     /**
      * Creates new form NuevoPaquete
+     *
      * @param ingresoPaquete
      */
     public NuevoPaquete(IngresoPaquete ingresoPaquete) {
-        codigo= GeneradorDeCodigos.generarCodigoPaquete();
-        lblCodigo.setText(String.valueOf(codigo));
-        this.ingresoPaquete= ingresoPaquete;
+        codigo = GeneradorDeCodigos.generarCodigoPaquete();
         initComponents();
+        lblCodigo.setText(String.valueOf(codigo));
+        this.ingresoPaquete = ingresoPaquete;
+        mostrarPreciosInicio();
+
+    }
+    private void mostrarPreciosInicio(){
+                obtenerPreciosYFecha();
+        lblPesoLibra.setText("Peso($" + String.format("%6.2f", porLibra) + "/Libra):");
+        radiobtnPriorizado.setText("Priorizado($" + String.format("%6.2f", porPriorizacion) + ")");
+        totalPorLibra = porLibra * (Integer) spinnerPeso.getValue();
+        lblCostoPeso.setText("$" + String.format("%6.2f", totalPorLibra));
+        rutasDisponibles = ControladorDB.obtenerRutas();
+        mostrarRutas();
+        sumarTotal();
+    }
+    private void obtenerPreciosYFecha() {
+        float[] precios = ControladorDB.obtenerPrecioActuales();
+        porLibra = precios[0];
+        porPriorizacion = precios[1];
+    }
+
+    private void mostrarRutas() {
+        DefaultTableModel model = (DefaultTableModel) tblRuta.getModel();
+        int aux = model.getRowCount();
+        for (int i = aux; i > 0; i--) {
+            model.removeRow(i - 1);
+        }
+        eliminarRutasDesactivadas();
+        for (int i = 0; i < rutasDisponibles.size(); i++) {//Creacion de Celdas
+            model.addRow(new Object[]{"", "", "", ""});
+            tblRuta.setValueAt(rutasDisponibles.get(i).getCodigo(), i, 0);
+            tblRuta.setValueAt(rutasDisponibles.get(i).getDestino().getNombre(), i, 1);
+            tblRuta.setValueAt(rutasDisponibles.get(i).getDestino().getPrecio().get(rutasDisponibles.get(i).getDestino().getPrecio().size() - 1).getPrecio(), i, 2);
+            tblRuta.setValueAt(rutasDisponibles.get(i).getPuntos().size(), i, 3);
+        }
+
+    }
+
+    private void eliminarRutasDesactivadas() {
+        ArrayList<Ruta> aux = new ArrayList<>();
+        for (int i = 0; i < rutasDisponibles.size(); i++) {
+            if (rutasDisponibles.get(i).isEstado()) {
+                aux.add(rutasDisponibles.get(i));
+            }
+        }
+        rutasDisponibles = aux;
+    }
+    private void mostrarPrecioDestino(){
+        if (rutaAEnviar!=null) {
+         lblPrecioDestino.setText("$"+String.format("%6.2f",rutaAEnviar.getDestino().getPrecio().get(rutaAEnviar.getDestino().getPrecio().size()-1).getPrecio()));
+        }else{
+            lblPrecioDestino.setText("$0");
+        }
     }
 
     /**
@@ -35,10 +100,54 @@ private IngresoPaquete ingresoPaquete;
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         lblCodigo = new javax.swing.JLabel();
-        jRadioButton1 = new javax.swing.JRadioButton();
+        radiobtnPriorizado = new javax.swing.JRadioButton();
+        lblPesoLibra = new javax.swing.JLabel();
+        spinnerPeso = new javax.swing.JSpinner();
+        lblCostoPeso = new javax.swing.JLabel();
+        lblCostoPriorizado = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        btnRegistrar = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        lblTotal = new javax.swing.JLabel();
+        lblPrecioDestino = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tblRuta = new javax.swing.JTable();
+        txtDestino = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        btnCancelar = new javax.swing.JButton();
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
+
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(jTable2);
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
@@ -47,49 +156,293 @@ private IngresoPaquete ingresoPaquete;
 
         jLabel1.setText("Codigo :");
 
-        jRadioButton1.setText("Priorizado");
+        radiobtnPriorizado.setText("Priorizado");
+        radiobtnPriorizado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radiobtnPriorizadoActionPerformed(evt);
+            }
+        });
 
-        jLabel2.setText("Peso:");
+        lblPesoLibra.setText("Peso(Libra):");
+
+        spinnerPeso.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
+        spinnerPeso.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                spinnerPesoStateChanged(evt);
+            }
+        });
+
+        lblCostoPeso.setBackground(new java.awt.Color(254, 254, 254));
+        lblCostoPeso.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblCostoPeso.setText("$0");
+        lblCostoPeso.setOpaque(true);
+
+        lblCostoPriorizado.setBackground(new java.awt.Color(254, 254, 254));
+        lblCostoPriorizado.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblCostoPriorizado.setText("$0");
+        lblCostoPriorizado.setOpaque(true);
+
+        jLabel2.setFont(new java.awt.Font("Ubuntu", 0, 17)); // NOI18N
+        jLabel2.setText("Ruta:");
+
+        btnRegistrar.setText("Registrar");
+        btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistrarActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setBackground(new java.awt.Color(254, 254, 254));
+        jLabel3.setFont(new java.awt.Font("Ubuntu", 1, 16)); // NOI18N
+        jLabel3.setForeground(java.awt.Color.green);
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel3.setText("Total:");
+        jLabel3.setOpaque(true);
+
+        lblTotal.setBackground(new java.awt.Color(254, 254, 254));
+        lblTotal.setFont(new java.awt.Font("Ubuntu", 1, 16)); // NOI18N
+        lblTotal.setForeground(java.awt.Color.green);
+        lblTotal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblTotal.setText("$0");
+        lblTotal.setOpaque(true);
+
+        lblPrecioDestino.setBackground(java.awt.Color.white);
+        lblPrecioDestino.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblPrecioDestino.setText("$0");
+        lblPrecioDestino.setOpaque(true);
+
+        jScrollPane4.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        tblRuta.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Codigo", "Destino", "Couta", "Puntos/C"
+            }
+        ));
+        tblRuta.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblRutaMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(tblRuta);
+
+        jScrollPane4.setViewportView(jScrollPane3);
+
+        txtDestino.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtDestinoKeyReleased(evt);
+            }
+        });
+
+        jLabel6.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
+        jLabel6.setText("Buscar Destino :");
+
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(231, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(jRadioButton1))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblPesoLibra)
+                                .addGap(18, 18, 18)
+                                .addComponent(spinnerPeso, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(radiobtnPriorizado))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblCostoPriorizado, javax.swing.GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE)
+                            .addComponent(lblCostoPeso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 136, Short.MAX_VALUE)
+                                .addComponent(jLabel6)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtDestino, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(113, 113, 113))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(jLabel1)
+                                        .addGap(9, 9, 9))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(btnCancelar)
+                                        .addGap(18, 18, 18)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnRegistrar)
+                                    .addComponent(lblCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblPrecioDestino, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel3)
+                        .addGap(7, 7, 7)
+                        .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(46, 46, 46)
-                .addComponent(jLabel2)
-                .addGap(45, 45, 45)
-                .addComponent(jRadioButton1)
-                .addContainerGap(183, Short.MAX_VALUE))
+                .addGap(41, 41, 41)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPesoLibra)
+                    .addComponent(spinnerPeso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCostoPeso))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(radiobtnPriorizado)
+                    .addComponent(lblCostoPriorizado))
+                .addGap(37, 37, 37)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtDestino, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel6)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                        .addComponent(lblPrecioDestino)
+                        .addGap(70, 70, 70))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(lblTotal))
+                .addGap(17, 17, 17)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnRegistrar)
+                    .addComponent(btnCancelar))
+                .addGap(6, 6, 6))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void spinnerPesoStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinnerPesoStateChanged
+        totalPorLibra = porLibra * (Integer) spinnerPeso.getValue();
+        lblCostoPeso.setText("$" + String.format("%6.2f", totalPorLibra));
+        sumarTotal();
+    }//GEN-LAST:event_spinnerPesoStateChanged
 
+    private void radiobtnPriorizadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radiobtnPriorizadoActionPerformed
+        if (radiobtnPriorizado.isSelected()) {
+            lblCostoPriorizado.setText("$" + String.format("%6.2f", porPriorizacion));
+        } else {
+            lblCostoPriorizado.setText("$0");
+        }
+        sumarTotal();
+    }//GEN-LAST:event_radiobtnPriorizadoActionPerformed
+
+    private void tblRutaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblRutaMouseClicked
+        if (tblRuta.getSelectedRow()>=0) {
+            rutaAEnviar= rutasDisponibles.get(tblRuta.getSelectedRow());
+        }else{
+            rutaAEnviar=null;
+        }
+        mostrarPrecioDestino();
+        sumarTotal();
+    }//GEN-LAST:event_tblRutaMouseClicked
+
+    private void txtDestinoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDestinoKeyReleased
+        buscar(txtDestino.getText());
+        mostrarRutas();
+    }//GEN-LAST:event_txtDestinoKeyReleased
+
+    private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
+        if (rutaAEnviar!=null) {
+             ingresoPaquete.recibirPaquete(new Paquete(codigo,(Integer)spinnerPeso.getValue(),rutaAEnviar,radiobtnPriorizado.isSelected(),LocalDateTime.now(),0, 1,0,total));
+             JOptionPane.showMessageDialog(this,"Codigo: "+codigo+"   Destino: "+rutaAEnviar.getDestino().getNombre(),"Paquete Registrado", JOptionPane.INFORMATION_MESSAGE);
+             this.setVisible(false);
+        }else{
+            JOptionPane.showMessageDialog(this,"Debes ELejir una Ruta Para el Paquete" ,"Error!", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnRegistrarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.setVisible(false);
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void buscar(String palabra){
+        if (!"".equals(palabra)) {
+            ArrayList<Ruta> aux = new ArrayList<>();
+        for (int i = 0; i < rutasDisponibles.size(); i++) {
+            if (rutasDisponibles.get(i).getDestino().getNombre().startsWith(palabra)||
+                    rutasDisponibles.get(i).getDestino().getNombre().startsWith(palabra.toLowerCase())||
+                    rutasDisponibles.get(i).getDestino().getNombre().startsWith(palabra.toUpperCase())) {
+                aux.add(rutasDisponibles.get(i));
+            }            
+        }
+        boolean auxiliar;
+        for (int i = 0; i < rutasDisponibles.size(); i++) {
+            auxiliar=true;
+            for (int j = 0; j < aux.size(); j++) {
+                 if (rutasDisponibles.get(i)==aux.get(j)) {
+                    auxiliar=false;
+                }
+                
+            }   
+            if (auxiliar) {
+                    aux.add(rutasDisponibles.get(i));
+                }
+        }
+        rutasDisponibles= aux;
+        }
+        
+    }
+    private void sumarTotal(){
+        total = totalPorLibra;
+        if (rutaAEnviar!=null) {
+            total=rutaAEnviar.getDestino().getPrecio().get(rutaAEnviar.getDestino().getPrecio().size()-1).getPrecio()+total;
+        }
+        if (radiobtnPriorizado.isSelected()) {
+            total=total+porPriorizacion;
+        }
+        lblTotal.setText("$"+String.format("%6.2f",total));
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnRegistrar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTable2;
     private javax.swing.JLabel lblCodigo;
+    private javax.swing.JLabel lblCostoPeso;
+    private javax.swing.JLabel lblCostoPriorizado;
+    private javax.swing.JLabel lblPesoLibra;
+    private javax.swing.JLabel lblPrecioDestino;
+    private javax.swing.JLabel lblTotal;
+    private javax.swing.JRadioButton radiobtnPriorizado;
+    private javax.swing.JSpinner spinnerPeso;
+    private javax.swing.JTable tblRuta;
+    private javax.swing.JTextField txtDestino;
     // End of variables declaration//GEN-END:variables
 }

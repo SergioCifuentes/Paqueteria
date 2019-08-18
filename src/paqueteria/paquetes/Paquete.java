@@ -27,17 +27,21 @@ public class Paquete {
     private float precioPerdido;
     private float precioPagado;
 
-    public Paquete(int codigo, int peso, Ruta ruta, Cliente cliente, boolean priorizado, LocalDateTime fechaIngresado, int numeroEnCola, int estado, float precioPerdido, float precioPagado) {
+    public Paquete(int codigo, int peso, Ruta ruta, boolean priorizado, LocalDateTime fechaIngresado,
+            int numeroEnCola, int estado, float precioPerdido, float precioPagado) {
         this.codigo = codigo;
         this.peso = peso;
         this.ruta = ruta;
-        this.cliente = cliente;
         this.priorizado = priorizado;
         this.fechaIngresado = fechaIngresado;
         this.numeroEnCola = numeroEnCola;
         this.estado = estado;
         this.precioPerdido = precioPerdido;
         this.precioPagado = precioPagado;
+    }
+
+    public void setNumeroEnCola(int numeroEnCola) {
+        this.numeroEnCola = numeroEnCola;
     }
 
     public int getCodigo() {
@@ -50,6 +54,10 @@ public class Paquete {
 
     public Ruta getRuta() {
         return ruta;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
     public Cliente getCliente() {

@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,6 +45,7 @@ public class ControladorDB {
     private final static String STATEMENT_GUARDAR_DESTINO = "INSERT INTO Destino VALUES (?,?)";
     private final static String STATEMENT_GUARDAR_PRECIO_ADMIN = "INSERT INTO PreciosAdmin VALUES (?,?,?,?)";
     private final static String STATEMENT_GUARDAR_CLIENTE = "INSERT INTO Cliente VALUES (?,?,?,?)";
+    private final static String STATEMENT_GUARDAR_PAQUETE = "INSERT INTO Paquete VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
     private final static String STATEMENT_GUARDAR_RUTA = "INSERT INTO Ruta VALUES (?,?,?)";
     private final static String STATEMENT_GUARDAR_PUNTOS_DE_CONTROL = "INSERT INTO PuntoDeControl VALUES (?,?,?,?,?)";
     private final static String STATEMENT_GUARDAR_PRECIO_DESTINO = "INSERT INTO PrecioDestino VALUES (?,?,?)";
@@ -58,6 +60,7 @@ public class ControladorDB {
     private final static String STATEMENT_OBTENER_CLIENTES = "SELECT * FROM Cliente";
     private final static String STATEMENT_OBTENER_PAQUETES = "SELECT * FROM Paquete";
     private final static String STATEMENT_PAQUETE_POR_CODIGO = "SELECT * FROM Paquete WHERE codigo = ?";
+    private final static String STATEMENT_PAQUETE_POR_ESTADO = "SELECT * FROM Paquete WHERE estado = ?";
     private final static String USER = "root";
     private final static String PASSWORD = "danielito";
     private final static String STRING_CONNECTION = "jdbc:mysql://localhost:3306/paquetes";
@@ -488,25 +491,50 @@ public class ControladorDB {
             System.out.println("Error Al Guardar");
         }
     }
-    public static Paquete verificarPaquete(int nit) {
+    public static Paquete verificarPaquete(int codigo) {
         Paquete userNameValido = null;
         try {
             PreparedStatement declaracionPreparada = coneccion.prepareStatement(STATEMENT_PAQUETE_POR_CODIGO);
-            declaracionPreparada.setString(1,String.valueOf( nit));
+            declaracionPreparada.setString(1,String.valueOf( codigo));
             ResultSet resultado = declaracionPreparada.executeQuery();
             if (resultado.next()) { 
                          userNameValido = new Paquete(resultado.getInt("codigo"),resultado.getInt("peso"),
-                                 obtenerRutas(resultado.getInt("codigoRuta")),verificarCliente(resultado.getInt("codigoCliente")),
+                                 obtenerRutas(resultado.getInt("codigoRuta")),
                                  resultado.getBoolean("priorizado"), resultado.getObject("fechaIngreso", LocalDateTime.class),
                                  resultado.getInt("numeroENCola"),resultado.getInt("estado"),resultado.getFloat("precioPerdido"),
                                  resultado.getFloat("precioPagado"));
+                         userNameValido.setCliente(verificarCliente(resultado.getInt("codigoCliente")));
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(ControladorDB.class.getName()).log(Level.SEVERE, null, ex);
         }
         return userNameValido;
-    }  
+    }
+    public static void guardarPaquete(Paquete paquete) {
+        try {
+            PreparedStatement declaracionPreparada = coneccion.prepareStatement(STATEMENT_GUARDAR_PAQUETE);
+            declaracionPreparada.setString(1, String.valueOf(paquete.getCodigo()));
+            declaracionPreparada.setString(2, String.valueOf(paquete.getPeso()));
+            declaracionPreparada.setString(3, String.valueOf(paquete.getRuta().getCodigo()));
+            declaracionPreparada.setString(4, String.valueOf(paquete.getCliente().getCodigo()));
+            if (paquete.isPriorizado()) {
+                declaracionPreparada.setString(5, "1");
+            }else{
+                declaracionPreparada.setString(5, "0");
+            }            
+            declaracionPreparada.setString(6, String.valueOf(paquete.getFechaIngresado()));
+            declaracionPreparada.setString(7, null);
+            declaracionPreparada.setString(8, String.valueOf(paquete.getNumeroEnCola()));
+            declaracionPreparada.setString(9, null);
+            declaracionPreparada.setString(10, String.valueOf(paquete.getEstado()));
+            declaracionPreparada.setString(11, String.valueOf(paquete.getPrecioPerdido()));
+            declaracionPreparada.setString(12, String.valueOf(paquete.getPrecioPagado()));
+            declaracionPreparada.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error Al Guardar");
+        }
+    }    
     public static ArrayList obtenerCodigoDePaquetes() {
         ArrayList codigos = new ArrayList();
         try {
@@ -519,5 +547,19 @@ public class ControladorDB {
             System.out.println("Error SQL");
         }
         return codigos;
-    }    
+    }
+    public static ArrayList<Paquete> obtenerPaquetesPorEstado(int estado) {
+        ArrayList<Paquete> codigos = new ArrayList();
+        try {
+            PreparedStatement declaracionPreparada = coneccion.prepareStatement(STATEMENT_PAQUETE_POR_ESTADO);
+            declaracionPreparada.setString(1, String.valueOf(estado));
+            ResultSet resultado2 = declaracionPreparada.executeQuery();
+            while (resultado2.next()) {
+                codigos.add(verificarPaquete(resultado2.getInt("codigo")));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error SQL");
+        }
+        return codigos;
+    }     
 }
