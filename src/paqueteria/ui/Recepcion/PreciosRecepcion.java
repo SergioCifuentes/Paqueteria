@@ -43,7 +43,6 @@ public class PreciosRecepcion extends javax.swing.JInternalFrame {
         lblPrecioLibra = new javax.swing.JLabel();
         lblPriorizacion = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(186, 186, 186));
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         setIconifiable(true);
@@ -56,31 +55,25 @@ public class PreciosRecepcion extends javax.swing.JInternalFrame {
             }
         });
 
-        jLabel1.setBackground(new java.awt.Color(254, 254, 254));
         jLabel1.setForeground(new java.awt.Color(1, 1, 1));
         jLabel1.setText("Precio Por Libra:");
         jLabel1.setOpaque(true);
 
-        jLabel2.setBackground(new java.awt.Color(254, 254, 254));
         jLabel2.setForeground(new java.awt.Color(1, 1, 1));
         jLabel2.setText("Precio Por Priorizacion:");
         jLabel2.setOpaque(true);
 
-        jLabel3.setBackground(new java.awt.Color(254, 254, 254));
         jLabel3.setForeground(new java.awt.Color(1, 1, 1));
         jLabel3.setText("Fecha:");
         jLabel3.setOpaque(true);
 
-        lblFecha.setBackground(new java.awt.Color(254, 254, 254));
         lblFecha.setForeground(new java.awt.Color(1, 1, 1));
         lblFecha.setOpaque(true);
 
-        lblPrecioLibra.setBackground(new java.awt.Color(254, 254, 254));
         lblPrecioLibra.setForeground(new java.awt.Color(1, 1, 1));
         lblPrecioLibra.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblPrecioLibra.setOpaque(true);
 
-        lblPriorizacion.setBackground(new java.awt.Color(254, 254, 254));
         lblPriorizacion.setForeground(new java.awt.Color(1, 1, 1));
         lblPriorizacion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblPriorizacion.setOpaque(true);

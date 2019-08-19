@@ -10,9 +10,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,11 +50,13 @@ public class ControladorDB {
     private final static String STATEMENT_GUARDAR_PRECIO_PUNTO = "INSERT INTO PrecioPunto VALUES (?,?,?)";
     private final static String STATEMENT_OBTENER_RUTAS = "SELECT * FROM Ruta";
     private final static String STATEMENT_OBTENER_PUNTOS = "SELECT * FROM PuntoDeControl";
+    private final static String STATEMENT_OBTENER_PUNTOS_POR_CODIGO = "SELECT * FROM PuntoDeControl WHERE codigo = ?";
     private final static String STATEMENT_OBTENER_PUNTOS_POR_USUARIO = "SELECT * FROM PuntoDeControl WHERE userNameUsuario = ?";
     private final static String STATEMENT_OBTENER_DESTINOS = "SELECT * FROM Destino";
     private final static String STATEMENT_OBTENER_RUTAS_POR_CODIGO = "SELECT * FROM Ruta WHERE codigo = ?";
     private final static String STATEMENT_DELETE_USUARIO = "DELETE FROM Usuario WHERE userName = ?";
     private final static String STATEMENT_CLIENTE_POR_NIT = "SELECT * FROM Cliente WHERE nit = ?";
+    private final static String STATEMENT_CLIENTE_POR_CODIGO = "SELECT * FROM Cliente WHERE codigo = ?";
     private final static String STATEMENT_OBTENER_CLIENTES = "SELECT * FROM Cliente";
     private final static String STATEMENT_OBTENER_PAQUETES = "SELECT * FROM Paquete";
     private final static String STATEMENT_PAQUETE_POR_CODIGO = "SELECT * FROM Paquete WHERE codigo = ?";
@@ -313,7 +313,7 @@ public class ControladorDB {
             ResultSet resultado2 = declaracionPreparada.executeQuery();
             while (resultado2.next()) {
                 int codigoRuta = resultado2.getInt("codigo");
-                ruta = new Ruta(codigoRuta, resultado2.getBoolean("estado"), null, obtenerPuntosPorRuta(codigoRuta));
+                ruta = new Ruta(codigoRuta, resultado2.getBoolean("estado"),obtenerDestinoPorCodigo(resultado2.getInt("codigoDestino")), obtenerPuntosPorRuta(codigoRuta));
             }
         } catch (Exception e) {
         }
@@ -323,13 +323,13 @@ public class ControladorDB {
     public static PuntoDeControl obtenerPuntoDeControl(int codigo) {
         PuntoDeControl puntoDeControl = null;
         try {
-            PreparedStatement declaracionPreparada = coneccion.prepareStatement(STATEMENT_OBTENER_RUTAS_POR_CODIGO);
+            PreparedStatement declaracionPreparada = coneccion.prepareStatement(STATEMENT_OBTENER_PUNTOS_POR_CODIGO);
             declaracionPreparada.setString(1, String.valueOf(codigo));
             ResultSet resultado2 = declaracionPreparada.executeQuery();
             while (resultado2.next()) {
                 puntoDeControl = new PuntoDeControl(codigo, resultado2.getInt("cantidadDePaquetes"),
                         verificarUserName(resultado2.getString("userNameUsuario")), obtenerPreciosPorCodigo(codigo, TIPO_PRECIO_PUNTO));
-
+                puntoDeControl.setNumero(resultado2.getInt("numeroEnRuta"));
                 puntoDeControl.setCodigoRuta(resultado2.getInt("numeroEnRuta"));
             }
         } catch (Exception e) {
@@ -447,11 +447,26 @@ public class ControladorDB {
             System.out.println("Error Al Eliminar");
         }
     }
-    public static Cliente verificarCliente(int nit) {
+    public static Cliente verificarClientePorNit(int nit) {
         Cliente userNameValido = null;
         try {
             PreparedStatement declaracionPreparada = coneccion.prepareStatement(STATEMENT_CLIENTE_POR_NIT);
             declaracionPreparada.setString(1,String.valueOf( nit));
+            ResultSet resultado2 = declaracionPreparada.executeQuery();
+            if (resultado2.next()) { 
+                         userNameValido = new Cliente(nit,resultado2.getInt("codigo"),resultado2.getString("nombre"),resultado2.getString("direccion"));
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ControladorDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return userNameValido;
+    }
+    public static Cliente verificarClientePorCodigo(int codigo) {
+        Cliente userNameValido = null;
+        try {
+            PreparedStatement declaracionPreparada = coneccion.prepareStatement(STATEMENT_CLIENTE_POR_CODIGO);
+            declaracionPreparada.setString(1,String.valueOf( codigo));
             ResultSet resultado2 = declaracionPreparada.executeQuery();
             if (resultado2.next()) { 
                          userNameValido = new Cliente(resultado2.getInt("nit"),resultado2.getInt("codigo"),resultado2.getString("nombre"),resultado2.getString("direccion"));
@@ -461,7 +476,8 @@ public class ControladorDB {
             Logger.getLogger(ControladorDB.class.getName()).log(Level.SEVERE, null, ex);
         }
         return userNameValido;
-    }  
+    }     
+    
     public static ArrayList obtenerCodigoDeClientes() {
         ArrayList codigos = new ArrayList();
         try {
@@ -503,7 +519,8 @@ public class ControladorDB {
                                  resultado.getBoolean("priorizado"), resultado.getObject("fechaIngreso", LocalDateTime.class),
                                  resultado.getInt("numeroENCola"),resultado.getInt("estado"),resultado.getFloat("precioPerdido"),
                                  resultado.getFloat("precioPagado"));
-                         userNameValido.setCliente(verificarCliente(resultado.getInt("codigoCliente")));
+                         userNameValido.setCliente(verificarClientePorCodigo(resultado.getInt("codigoCliente")));
+                         userNameValido.setPunto(obtenerPuntoDeControl(resultado.getInt("codigoPunto")));
             }
 
         } catch (SQLException ex) {

@@ -283,10 +283,10 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
             txtNit.setText(IDENTIFICADOR_CONSUMIDOR_FINAL);
         } else if (!txtNit.getText().equals(IDENTIFICADOR_CONSUMIDOR_FINAL)) {
             if (verficarNit()) {
-                if (ControladorDB.verificarCliente(Integer.parseInt(txtNit.getText())) == null) {
+                if (ControladorDB.verificarClientePorNit(Integer.parseInt(txtNit.getText())) == null) {
                     cliente=null;
                 } else {
-                    cliente = ControladorDB.verificarCliente(Integer.parseInt(txtNit.getText()));
+                    cliente = ControladorDB.verificarClientePorNit(Integer.parseInt(txtNit.getText()));
                     mostrarDatosCliente();
                 }
             }

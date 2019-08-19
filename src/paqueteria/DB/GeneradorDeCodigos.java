@@ -83,7 +83,7 @@ public class GeneradorDeCodigos {
         if (ControladorDB.obtenerCodigoDeClientes() != null) {
             codigo = codigo + ControladorDB.obtenerCodigoDeClientes().size();
         }
-        while (ControladorDB.verificarCliente(codigo) != null) {
+        while (ControladorDB.verificarClientePorNit(codigo) != null) {
             codigo++;
         }
         return codigo;

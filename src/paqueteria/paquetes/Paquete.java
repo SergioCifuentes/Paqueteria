@@ -44,6 +44,10 @@ public class Paquete {
         this.numeroEnCola = numeroEnCola;
     }
 
+    public void setPunto(PuntoDeControl punto) {
+        this.punto = punto;
+    }
+
     public int getCodigo() {
         return codigo;
     }
