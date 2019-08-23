@@ -35,7 +35,7 @@ public class ControladorDB {
     private final static String STATEMENT_USUARIO_POR_JERARQUIA = "SELECT * FROM Usuario WHERE jerarquia = ?";
     private final static String STATEMENT_USUARIO = "SELECT * FROM Usuario";
     private final static String STATEMENT_PRECIO_ADMIN_ACTUALES = "SELECT * FROM PreciosAdmin ORDER BY FECHA DESC";
-    private final static String STATEMENT_PRECIO_PUNTO_POR_CODIGO = "SELECT * FROM PrecioPunto WHERE codigoPuntoControl = ? ORDER BY FECHA";
+    private final static String STATEMENT_PRECIO_PUNTO_POR_CODIGO = "SELECT * FROM PrecioPunto WHERE codigoPuntoDeControl = ? ORDER BY FECHA";
     private final static String STATEMENT_PRECIO_DESTINO_POR_CODIGO = "SELECT * FROM PrecioDestino WHERE codigoDestino = ? ORDER BY FECHA";
     private final static String STATEMENT_PUNTOS_DE_CONTROL_POR_RUTA = "SELECT * FROM PuntoDeControl WHERE codigoRuta = ?";
     private final static String STATEMENT_DESTINO_POR_CODIGO = "SELECT * FROM Destino WHERE codigo = ?";
@@ -330,7 +330,7 @@ public class ControladorDB {
                 puntoDeControl = new PuntoDeControl(codigo, resultado2.getInt("cantidadDePaquetes"),
                         verificarUserName(resultado2.getString("userNameUsuario")), obtenerPreciosPorCodigo(codigo, TIPO_PRECIO_PUNTO));
                 puntoDeControl.setNumero(resultado2.getInt("numeroEnRuta"));
-                puntoDeControl.setCodigoRuta(resultado2.getInt("numeroEnRuta"));
+                puntoDeControl.setCodigoRuta(resultado2.getInt("codigoRuta"));
             }
         } catch (Exception e) {
         }
@@ -349,11 +349,11 @@ public class ControladorDB {
                         verificarUserName(resultado.getString("userNameUsuario")), obtenerPreciosPorCodigo(codigo, TIPO_PRECIO_PUNTO));
 
                 puntosDeControl.add(punto);
-                punto.setCodigoRuta(resultado.getInt("numeroEnRuta"));
+                punto.setCodigoRuta(resultado.getInt("codigoRuta"));
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(ControladorDB.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error AL Cargar");
         }
         return puntosDeControl;
 
@@ -434,6 +434,7 @@ public class ControladorDB {
                 precios.add(new Tarifa(resultado.getFloat("tarifa"), resultado.getObject("fecha", LocalDateTime.class)));
             }
         } catch (SQLException e) {
+            
         }
         return precios;
     }

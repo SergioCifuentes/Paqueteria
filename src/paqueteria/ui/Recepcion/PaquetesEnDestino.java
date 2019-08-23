@@ -166,6 +166,7 @@ public class PaquetesEnDestino extends javax.swing.JInternalFrame {
     private void btnRetirarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRetirarActionPerformed
         if (tblPaquetes.getSelectedRow()>=0) {
             TransferenciasDB.moverEstadoDePaquete(paquetes.get(tblPaquetes.getSelectedRow()).getCodigo());
+            TransferenciasDB.registrarRetiroDePaquete(paquetes.get(tblPaquetes.getSelectedRow()).getCodigo());
             paquetes.remove(tblPaquetes.getSelectedRow());
             agregarPaquetesATablas();
         }

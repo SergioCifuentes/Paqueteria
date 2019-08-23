@@ -5,22 +5,44 @@
  */
 package paqueteria.ui.Operador;
 
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import paqueteria.DB.ControladorDB;
+import paqueteria.DB.TransferenciasDB;
+import paqueteria.Ruta.PuntoDeControl;
 import paqueteria.Usuario.Operador;
+import paqueteria.paquetes.Paquete;
 
 /**
  *
  * @author sergio
  */
 public class AreaOperador extends javax.swing.JFrame {
-private Operador user=null;
+
+    private Operador user = null;
+    private ArrayList<PuntoDeControl> puntosDeControl;
+    private float tarifaDePaquete;
+    private float tarifaActual;
+    ArrayList<Paquete> paquetesDisponibles;
+    private Paquete paqueteAProcesar;
+    private final static String ERROR_PAQUETES = "No se encuentran Paquetes para Este Punto";
+    private final static String ERROR_PUNTOS = "No Cuentas Con Puntos De Contol";
+
     /**
      * Creates new form AreaOperador
+     *
      * @param user
      */
     public AreaOperador(Operador user) {
-        this.user=user;
+        this.user = user;
         initComponents();
-        menuUser.setText(this.user.getUserName());
+        lblErrorPuntos.setVisible(false);
+        menuUser.setText(" " + this.user.getUserName() + " ");
+        puntosDeControl = ControladorDB.obtenerPuntosDeControlPorOperador(this.user);
+        agregarPuntosDeControl();
+        ocultarOpciones(false);
     }
 
     /**
@@ -32,29 +54,112 @@ private Operador user=null;
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jComboBox1 = new javax.swing.JComboBox<>();
+        comBoxPunto = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
+        lblErrorPuntos = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblPaquetes = new javax.swing.JTable();
+        spinnerHora = new javax.swing.JSpinner();
+        jLabel2 = new javax.swing.JLabel();
+        btnProcesar = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        lblTarifa = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        lblTarifaPaquete = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         menuUser = new javax.swing.JMenu();
         menuItemLogOut = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Area De Operacion");
+        setResizable(false);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comBoxPunto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comBoxPuntoActionPerformed(evt);
+            }
+        });
 
-        jLabel1.setText("Puntos De Control");
+        jLabel1.setForeground(java.awt.Color.black);
+        jLabel1.setText("Puntos De Control:");
 
-        jMenuBar1.setBackground(java.awt.Color.white);
+        lblErrorPuntos.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
+        lblErrorPuntos.setForeground(java.awt.Color.red);
+        lblErrorPuntos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblErrorPuntos.setText("No Cuentas Con Puntos De Contol");
 
-        jMenu1.setText("                                                                                                                                                                       ");
+        jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        tblPaquetes.setBackground(java.awt.Color.gray);
+        tblPaquetes.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        tblPaquetes.setForeground(java.awt.Color.white);
+        tblPaquetes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "#", "Codigo", "Peso", "Ingreso"
+            }
+        ));
+        tblPaquetes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblPaquetesMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblPaquetes);
+        if (tblPaquetes.getColumnModel().getColumnCount() > 0) {
+            tblPaquetes.getColumnModel().getColumn(0).setPreferredWidth(35);
+            tblPaquetes.getColumnModel().getColumn(0).setMaxWidth(35);
+            tblPaquetes.getColumnModel().getColumn(1).setPreferredWidth(105);
+            tblPaquetes.getColumnModel().getColumn(1).setMaxWidth(105);
+            tblPaquetes.getColumnModel().getColumn(2).setPreferredWidth(105);
+            tblPaquetes.getColumnModel().getColumn(2).setMaxWidth(105);
+            tblPaquetes.getColumnModel().getColumn(3).setPreferredWidth(145);
+            tblPaquetes.getColumnModel().getColumn(3).setMaxWidth(145);
+        }
+
+        jScrollPane2.setViewportView(jScrollPane1);
+
+        spinnerHora.setFont(new java.awt.Font("URW Gothic L", 0, 15)); // NOI18N
+        spinnerHora.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
+
+        jLabel2.setFont(new java.awt.Font("URW Gothic L", 0, 15)); // NOI18N
+        jLabel2.setText("Horas Para Procesar:");
+
+        btnProcesar.setFont(new java.awt.Font("URW Gothic L", 0, 15)); // NOI18N
+        btnProcesar.setText("Procesar");
+        btnProcesar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProcesarActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("Tarifa/Hora(Actual):");
+
+        lblTarifa.setText("---");
+
+        jLabel4.setText("Tarifa/Hora(Paquete): ");
+
+        lblTarifaPaquete.setText("---");
+
+        jMenuBar1.setBackground(java.awt.Color.black);
+
+        jMenu1.setText("                                                                                             ");
         jMenu1.setEnabled(false);
         jMenuBar1.add(jMenu1);
 
-        menuUser.setText("User");
+        menuUser.setBorder(new javax.swing.border.LineBorder(java.awt.Color.white, 3, true));
+        menuUser.setForeground(java.awt.Color.white);
+        menuUser.setText(" User ");
+        menuUser.setFont(new java.awt.Font("Ubuntu", 1, 13)); // NOI18N
 
         menuItemLogOut.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.CTRL_MASK));
+        menuItemLogOut.setBackground(java.awt.Color.gray);
+        menuItemLogOut.setForeground(java.awt.Color.white);
         menuItemLogOut.setText("Log Out");
+        menuItemLogOut.setOpaque(true);
         menuUser.add(menuItemLogOut);
 
         jMenuBar1.add(menuUser);
@@ -66,36 +171,181 @@ private Operador user=null;
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(48, 48, 48)
-                .addComponent(jLabel1)
-                .addGap(42, 42, 42)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(187, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblErrorPuntos, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(42, 42, 42)
+                                .addComponent(comBoxPunto, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblTarifa, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(194, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(spinnerHora, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
+                    .addComponent(lblTarifaPaquete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(26, 26, 26)
+                .addComponent(btnProcesar)
+                .addGap(22, 22, 22))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(41, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(259, 259, 259))
+                    .addComponent(comBoxPunto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblErrorPuntos)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(lblTarifa))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(lblTarifaPaquete))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(spinnerHora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(btnProcesar))
+                .addGap(25, 25, 25))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void comBoxPuntoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comBoxPuntoActionPerformed
+        lblErrorPuntos.setVisible(false);
+        ocultarOpciones(false);
+        tarifaActual = ControladorDB.obtenerPreciosPorCodigo(puntosDeControl.get(comBoxPunto.getSelectedIndex()).getCodigo(),
+                ControladorDB.TIPO_PRECIO_PUNTO).get(ControladorDB.obtenerPreciosPorCodigo(puntosDeControl.get(comBoxPunto.getSelectedIndex()).getCodigo(),
+                        ControladorDB.TIPO_PRECIO_PUNTO).size() - 1).getPrecio();
+        lblTarifa.setText(String.format("%6.2f", tarifaActual));
+        agregarPaquetes();
+    }//GEN-LAST:event_comBoxPuntoActionPerformed
+
+    private void tblPaquetesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPaquetesMouseClicked
+        ocultarOpciones(false);
+        lblTarifaPaquete.setText("---");
+        if (tblPaquetes.getSelectedRow() >= 0) {
+            ocultarOpciones(true);
+            paqueteAProcesar = paquetesDisponibles.get(tblPaquetes.getSelectedRow());
+            tarifaDePaquete = TransferenciasDB.obtenerTarifaDePaquete(paqueteAProcesar);
+            if (tarifaDePaquete == tarifaActual) {
+                lblTarifaPaquete.setText("Actual");
+            } else {
+                lblTarifaPaquete.setText(String.format("%6.2f", tarifaDePaquete));
+            }
+
+        }
+    }//GEN-LAST:event_tblPaquetesMouseClicked
+
+    private void btnProcesarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcesarActionPerformed
+        if (paqueteAProcesar.getPunto().getNumero() < ControladorDB.obtenerPuntosPorRuta(paqueteAProcesar.getRuta().getCodigo()).size()) {
+            PuntoDeControl puntoSiguiente = TransferenciasDB.obtenerSiguientePunto(paqueteAProcesar.getPunto());
+            if (TransferenciasDB.obtenerPaquetesPorPunto(puntoSiguiente.getCodigo()).size() == puntoSiguiente.getCapacidad()) {
+                JOptionPane.showMessageDialog(this, "El siguiente punto de control (codigo: " + puntoSiguiente.getCodigo() + ") se encuentra lleno", "Error Al Procesar", JOptionPane.ERROR_MESSAGE);
+            } else {
+                procesarPaquete();
+                JOptionPane.showMessageDialog(this, "El paquete (codigo: " + paqueteAProcesar.getCodigo() + ") llego al siguente punto", "Paquete Procesado Correctamente", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            procesarPaquete();
+            JOptionPane.showMessageDialog(this, "El paquete (codigo: " + paqueteAProcesar.getCodigo() + ") llego a su destino", "Paquete Procesado Correctamente", JOptionPane.ERROR_MESSAGE);
+        }
+
+
+    }//GEN-LAST:event_btnProcesarActionPerformed
+    private void agregarPuntosDeControl() {
+        if (puntosDeControl.size() > 0) {
+            for (int i = 0; i < puntosDeControl.size(); i++) {
+                comBoxPunto.addItem(String.valueOf(puntosDeControl.get(i).getCodigo()));
+            }
+        } else {
+            lblErrorPuntos.setText(ERROR_PUNTOS);
+            lblErrorPuntos.setVisible(true);
+            comBoxPunto.setEnabled(false);
+        }
+
+    }
+
+    private void ocultarOpciones(boolean b) {
+        spinnerHora.setEnabled(b);
+        btnProcesar.setEnabled(b);
+        lblTarifaPaquete.setText("---");
+    }
+
+    private void procesarPaquete() {
+        System.out.println(tarifaDePaquete * (Integer) spinnerHora.getValue());
+        user.preocesarPaquete(paqueteAProcesar, tarifaDePaquete * (Integer) spinnerHora.getValue());
+        agregarPaquetes();
+
+    }
+
+    private void agregarPaquetes() {
+        DefaultTableModel model = (DefaultTableModel) tblPaquetes.getModel();
+        int aux = model.getRowCount();
+        for (int i = aux; i > 0; i--) {
+            model.removeRow(i - 1);
+        }
+        paquetesDisponibles = TransferenciasDB.obtenerPaquetesPorPunto(puntosDeControl.get(comBoxPunto.getSelectedIndex()).getCodigo());
+        if (paquetesDisponibles.size() > 0) {
+
+            for (int i = 0; i < paquetesDisponibles.size(); i++) {//Creacion de Celdas
+                model.addRow(new Object[]{"", "", "", ""});
+                tblPaquetes.setValueAt(paquetesDisponibles.get(i).getNumeroEnCola(), i, 0);
+                tblPaquetes.setValueAt(paquetesDisponibles.get(i).getCodigo(), i, 1);
+
+                tblPaquetes.setValueAt(paquetesDisponibles.get(i).getPeso(), i, 2);
+                tblPaquetes.setValueAt(paquetesDisponibles.get(i).getFechaIngresado().format(DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm")), i, 3);
+            }
+        } else {
+            lblErrorPuntos.setText(ERROR_PAQUETES);
+            lblErrorPuntos.setVisible(true);
+        }
+    }
     /**
      * @param args the command line arguments
      */
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton btnProcesar;
+    private javax.swing.JComboBox<String> comBoxPunto;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblErrorPuntos;
+    private javax.swing.JLabel lblTarifa;
+    private javax.swing.JLabel lblTarifaPaquete;
     private javax.swing.JMenuItem menuItemLogOut;
     private javax.swing.JMenu menuUser;
+    private javax.swing.JSpinner spinnerHora;
+    private javax.swing.JTable tblPaquetes;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,6 +5,9 @@
  */
 package paqueteria.Usuario;
 
+import paqueteria.DB.TransferenciasDB;
+import paqueteria.paquetes.Paquete;
+
 /**
  *
  * @author sergio
@@ -12,5 +15,8 @@ package paqueteria.Usuario;
 public class Operador extends Usuario{
     public Operador(String userName, String password, int jerarquia) {
         super(userName, password, jerarquia);
+    }
+    public void preocesarPaquete(Paquete paquete,float tarifa){
+        TransferenciasDB.procesarPaquete(paquete, tarifa);
     }
 }
