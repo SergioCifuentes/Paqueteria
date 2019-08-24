@@ -46,12 +46,13 @@ public class Administracion extends javax.swing.JFrame {
         menuEditarRuta = new javax.swing.JMenuItem();
         menuDesactivar = new javax.swing.JMenuItem();
         menuPuntos = new javax.swing.JMenu();
-        jMenuItem8 = new javax.swing.JMenuItem();
+        menuItemEditarPunto = new javax.swing.JMenuItem();
         menuItemTarifa = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
         jMenuItem10 = new javax.swing.JMenuItem();
+        menuItemEditarDestino = new javax.swing.JMenuItem();
         menuTarifas = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
+        menuAyuda = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
         menuUsuario = new javax.swing.JMenu();
         mItemLogOut = new javax.swing.JMenuItem();
@@ -149,11 +150,16 @@ public class Administracion extends javax.swing.JFrame {
         menuPuntos.setText("Puntos De Control");
         menuPuntos.setOpaque(true);
 
-        jMenuItem8.setBackground(new java.awt.Color(254, 254, 254));
-        jMenuItem8.setForeground(new java.awt.Color(1, 1, 1));
-        jMenuItem8.setText("Editar");
-        jMenuItem8.setOpaque(true);
-        menuPuntos.add(jMenuItem8);
+        menuItemEditarPunto.setBackground(new java.awt.Color(254, 254, 254));
+        menuItemEditarPunto.setForeground(new java.awt.Color(1, 1, 1));
+        menuItemEditarPunto.setText("Editar");
+        menuItemEditarPunto.setOpaque(true);
+        menuItemEditarPunto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemEditarPuntoActionPerformed(evt);
+            }
+        });
+        menuPuntos.add(menuItemEditarPunto);
 
         menuItemTarifa.setBackground(new java.awt.Color(254, 254, 254));
         menuItemTarifa.setForeground(new java.awt.Color(1, 1, 1));
@@ -181,6 +187,14 @@ public class Administracion extends javax.swing.JFrame {
         });
         jMenu5.add(jMenuItem10);
 
+        menuItemEditarDestino.setText("Editar");
+        menuItemEditarDestino.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemEditarDestinoActionPerformed(evt);
+            }
+        });
+        jMenu5.add(menuItemEditarDestino);
+
         jMenuBar1.add(jMenu5);
 
         menuTarifas.setBackground(new java.awt.Color(254, 254, 254));
@@ -188,6 +202,9 @@ public class Administracion extends javax.swing.JFrame {
         menuTarifas.setText("Tarifas");
         menuTarifas.setOpaque(true);
         menuTarifas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                menuTarifasMousePressed(evt);
+            }
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 menuTarifasMouseClicked(evt);
             }
@@ -199,11 +216,16 @@ public class Administracion extends javax.swing.JFrame {
         });
         jMenuBar1.add(menuTarifas);
 
-        jMenu2.setBackground(new java.awt.Color(254, 254, 254));
-        jMenu2.setForeground(new java.awt.Color(1, 1, 1));
-        jMenu2.setText("Ayuda");
-        jMenu2.setOpaque(true);
-        jMenuBar1.add(jMenu2);
+        menuAyuda.setBackground(new java.awt.Color(254, 254, 254));
+        menuAyuda.setForeground(new java.awt.Color(1, 1, 1));
+        menuAyuda.setText("Ayuda");
+        menuAyuda.setOpaque(true);
+        menuAyuda.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                menuAyudaMousePressed(evt);
+            }
+        });
+        jMenuBar1.add(menuAyuda);
 
         jMenu4.setText("                                                                              ");
         jMenu4.setEnabled(false);
@@ -282,10 +304,7 @@ public class Administracion extends javax.swing.JFrame {
     }//GEN-LAST:event_menuItemTarifaActionPerformed
 
     private void menuTarifasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuTarifasMouseClicked
-        CambioTarifas cambioTarifas = new CambioTarifas();
-        dskVentana.add(cambioTarifas);
-        cambioTarifas.setVisible(true);
-        
+
     }//GEN-LAST:event_menuTarifasMouseClicked
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
@@ -306,6 +325,31 @@ public class Administracion extends javax.swing.JFrame {
        nuevaMostador.setVisible(true);  
     }//GEN-LAST:event_menuDesactivarActionPerformed
 
+    private void menuItemEditarPuntoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemEditarPuntoActionPerformed
+        EditacionDePuntos editacionDePuntos = new EditacionDePuntos(dskVentana);
+        dskVentana.add(editacionDePuntos);
+        editacionDePuntos.setVisible(true);
+    }//GEN-LAST:event_menuItemEditarPuntoActionPerformed
+
+    private void menuAyudaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuAyudaMousePressed
+        Ayuda nuevaAyuda= new Ayuda();
+        dskVentana.add(nuevaAyuda);
+        nuevaAyuda.setVisible(true);
+    }//GEN-LAST:event_menuAyudaMousePressed
+
+    private void menuTarifasMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuTarifasMousePressed
+        CambioTarifas cambioTarifas = new CambioTarifas();
+        dskVentana.add(cambioTarifas);
+        cambioTarifas.setVisible(true);
+        
+    }//GEN-LAST:event_menuTarifasMousePressed
+
+    private void menuItemEditarDestinoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemEditarDestinoActionPerformed
+        EditarDestino nuevoEditarDestino = new EditarDestino();
+        dskVentana.add(nuevoEditarDestino);
+        nuevoEditarDestino.setVisible(true);
+    }//GEN-LAST:event_menuItemEditarDestinoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -314,7 +358,6 @@ public class Administracion extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane dskVentana;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
@@ -323,11 +366,13 @@ public class Administracion extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JMenuItem mItemLogOut;
+    private javax.swing.JMenu menuAyuda;
     private javax.swing.JMenuItem menuDesactivar;
     private javax.swing.JMenuItem menuEditarRuta;
+    private javax.swing.JMenuItem menuItemEditarDestino;
+    private javax.swing.JMenuItem menuItemEditarPunto;
     private javax.swing.JMenuItem menuItemTarifa;
     private javax.swing.JMenu menuPuntos;
     private javax.swing.JMenu menuRutas;

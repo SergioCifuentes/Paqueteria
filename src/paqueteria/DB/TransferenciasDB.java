@@ -26,12 +26,14 @@ public class TransferenciasDB {
     private final static String STATEMENT_SUBIR_ESTADO_POR_CODIGO = "UPDATE Paquete SET estado =estado+1 WHERE codigo =?";
     private final static String STATEMENT_CAMBIAR_ESTADO_RUTA = "UPDATE Ruta SET estado =? WHERE codigo =?";
     private final static String STATEMENT_ELIMINAR_PUNTOS_POR_RUTA = "DELETE FROM PuntoDeControl WHERE codigoRuta =?";
+    private final static String STATEMENT_ELIMINAR_PUNTOS = "DELETE FROM PuntoDeControl WHERE codigo = ?";
     private final static String STATEMENT_REGISTRAR_RETIRO = "UPDATE Paquete SET fechaRecibido =? WHERE codigo =?";
     private final static String STATEMENT_UPDATE_CODIGO_PUNTO = "UPDATE Paquete SET codigoPunto =?  WHERE codigo =?";
     private final static String STATEMENT_UPDATE_NUMERO_COLA = "UPDATE Paquete SET numeroEnCola =? WHERE codigo =?";
     private final static String STATEMENT_UPDATE_PRECIO_PERDIDO = "UPDATE Paquete SET precioPerdido =precioPerdido+? WHERE codigo =?";
     private final static String STATEMENT_PAQUETE_POR_PUNTO = "SELECT * FROM Paquete WHERE codigoPunto = ?";
     private final static String STATEMENT_PAQUETE_POR_RUTA = "SELECT * FROM Paquete WHERE codigoRuta = ? AND estado<3";
+    private final static String STATEMENT_PUNTOS_DE_CONTROL = "SELECT * FROM PuntoDeControl ORDER BY codigoRuta ";
 
     private static Connection coneccion2 = null;
 
@@ -189,13 +191,14 @@ public class TransferenciasDB {
     public static void actualizarPuntos(int codigoRuta,ArrayList<PuntoDeControl> puntos) {
             eliminarPuntosPorRuta(codigoRuta);
             for (int i = 0; i < puntos.size(); i++) {
-                System.out.println("sawd");
                 ControladorDB.guardarPuntoDeControl(puntos.get(i));                
-            }          
-
-
+            }
     }
-
+    public static void actualizarPunto(PuntoDeControl punto) {
+            eliminarPunto(punto.getCodigo());
+             ControladorDB.guardarPuntoDeControl(punto);                
+    
+    }
     public static void eliminarPuntosPorRuta(int codigoRuta) {
         try {
             PreparedStatement declaracionPreparada = coneccion2.prepareStatement(STATEMENT_ELIMINAR_PUNTOS_POR_RUTA);
@@ -206,7 +209,29 @@ public class TransferenciasDB {
             System.out.println("Error Al Eliminar");
         }
     }
+    public static void eliminarPunto(int codigoPunto) {
+        try {
+            PreparedStatement declaracionPreparada = coneccion2.prepareStatement(STATEMENT_ELIMINAR_PUNTOS);
+            declaracionPreparada.setString(1, String.valueOf(codigoPunto));
 
+            declaracionPreparada.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error Al Eliminar");
+        }
+    }    
+    public static ArrayList<PuntoDeControl> obtenerTodosLosPuntos() {
+        ArrayList<PuntoDeControl> puntos = new ArrayList();
+        try {
+            PreparedStatement declaracionPreparada = coneccion2.prepareStatement(STATEMENT_PUNTOS_DE_CONTROL);
+            ResultSet resultado2 = declaracionPreparada.executeQuery();
+            while (resultado2.next()) {
+                puntos.add(ControladorDB.obtenerPuntoDeControl(resultado2.getInt("codigo")));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error SQL");
+        }
+        return puntos;
+    }
     private final static String USER = "root";
     private final static String PASSWORD = "danielito";
     private final static String STRING_CONNECTION = "jdbc:mysql://localhost:3306/paquetes";

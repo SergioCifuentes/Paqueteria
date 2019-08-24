@@ -83,18 +83,18 @@ public class ControladorDB {
             declaracionPreparada.setString(1, userName);
             ResultSet resultado2 = declaracionPreparada.executeQuery();
             if (resultado2.next()) {
-                switch(resultado2.getInt("jerarquia")){
+                switch (resultado2.getInt("jerarquia")) {
                     case 1:
-                         userNameValido = new Administrador(resultado2.getString("userName"), resultado2.getString("contrasena"), resultado2.getInt("jerarquia"));
+                        userNameValido = new Administrador(resultado2.getString("userName"), resultado2.getString("contrasena"), resultado2.getInt("jerarquia"));
                         break;
                     case 2:
-                         userNameValido = new Operador(resultado2.getString("userName"), resultado2.getString("contrasena"), resultado2.getInt("jerarquia"));
+                        userNameValido = new Operador(resultado2.getString("userName"), resultado2.getString("contrasena"), resultado2.getInt("jerarquia"));
                         break;
                     case 3:
-                         userNameValido = new Recepcionista(resultado2.getString("userName"), resultado2.getString("contrasena"), resultado2.getInt("jerarquia"));
+                        userNameValido = new Recepcionista(resultado2.getString("userName"), resultado2.getString("contrasena"), resultado2.getInt("jerarquia"));
                         break;
                 }
-               
+
             }
 
         } catch (SQLException ex) {
@@ -109,7 +109,7 @@ public class ControladorDB {
             PreparedStatement declaracionPreparada = coneccion.prepareStatement(STATEMENT_USUARIO_POR_JERARQUIA);
             declaracionPreparada.setString(1, String.valueOf(jerarquia));
             ResultSet resultado2 = declaracionPreparada.executeQuery();
-            if (resultado2.next()) {
+            while (resultado2.next()) {                
                 usuario.add(new Usuario(resultado2.getString("userName"), resultado2.getString("contrasena"), jerarquia));
             }
         } catch (SQLException ex) {
@@ -123,7 +123,7 @@ public class ControladorDB {
         try {
             PreparedStatement declaracionPreparada = coneccion.prepareStatement(STATEMENT_USUARIO);
             ResultSet resultado2 = declaracionPreparada.executeQuery();
-            while (resultado2.next()) {                
+            while (resultado2.next()) {
                 usuario.add(new Usuario(resultado2.getString("userName"), resultado2.getString("contrasena"), resultado2.getInt("jerarquia")));
             }
         } catch (SQLException ex) {
@@ -159,6 +159,7 @@ public class ControladorDB {
         }
         return codigos;
     }
+
     public static ArrayList<PuntoDeControl> obtenerPuntosDeControlPorOperador(Usuario operador) {
         ArrayList<PuntoDeControl> codigos = new ArrayList();
         try {
@@ -166,13 +167,13 @@ public class ControladorDB {
             declaracionUsuario.setString(1, operador.getUserName());
             ResultSet resultado2 = declaracionUsuario.executeQuery();
             while (resultado2.next()) {
-                 codigos.add(obtenerPuntoDeControl(resultado2.getInt("codigo")));
+                codigos.add(obtenerPuntoDeControl(resultado2.getInt("codigo")));
             }
         } catch (SQLException e) {
             System.out.println("Error SQL");
         }
         return codigos;
-    }    
+    }
 
     public static ArrayList obtenerCodigoDeDestinos() {
         ArrayList codigos = new ArrayList();
@@ -208,12 +209,8 @@ public class ControladorDB {
             declaracionPreparada.setString(1, destino.getNombre());
             declaracionPreparada.setString(2, String.valueOf(destino.getCodigo()));
             declaracionPreparada.executeUpdate();
-            declaracionPreparada = coneccion.prepareStatement(STATEMENT_GUARDAR_PRECIO_DESTINO);
             Tarifa tarifa = destino.getPrecio().get(destino.getPrecio().size() - 1);
-            declaracionPreparada.setString(1, String.valueOf(tarifa.getFecha()));
-            declaracionPreparada.setString(2, String.valueOf(tarifa.getPrecio()));
-            declaracionPreparada.setString(3, String.valueOf(destino.getCodigo()));
-            declaracionPreparada.executeUpdate();
+            guardarPrecioDestino(destino, tarifa);
             coneccion.commit();
             coneccion.setAutoCommit(true);
         } catch (SQLException e) {
@@ -224,6 +221,18 @@ public class ControladorDB {
                 System.out.println("Error Rollback");
             }
 
+        }
+    }
+
+    public static void guardarPrecioDestino(Destino destino, Tarifa tarifa) {
+        try {
+            PreparedStatement declaracionPreparada = coneccion.prepareStatement(STATEMENT_GUARDAR_PRECIO_DESTINO);            
+            declaracionPreparada.setString(1, String.valueOf(tarifa.getFecha()));
+            declaracionPreparada.setString(2, String.valueOf(tarifa.getPrecio()));
+            declaracionPreparada.setString(3, String.valueOf(destino.getCodigo()));
+            declaracionPreparada.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ControladorDB.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -270,7 +279,7 @@ public class ControladorDB {
         }
     }
 
-        public static void guardarPuntoDeControl(PuntoDeControl punto) {
+    public static void guardarPuntoDeControl(PuntoDeControl punto) {
         try {
             PreparedStatement declaracionPunto = coneccion.prepareStatement(STATEMENT_GUARDAR_PUNTOS_DE_CONTROL);
             declaracionPunto.setString(1, String.valueOf(punto.getCodigo()));
@@ -279,17 +288,24 @@ public class ControladorDB {
             declaracionPunto.setString(4, String.valueOf(punto.getCapacidad()));
             declaracionPunto.setString(5, punto.getUser().getUserName());
             declaracionPunto.executeUpdate();
-            declaracionPunto = coneccion.prepareStatement(STATEMENT_GUARDAR_PRECIO_PUNTO);
             Tarifa tarifa = punto.getPrecio().get(punto.getPrecio().size() - 1);
-            declaracionPunto.setString(1, String.valueOf(tarifa.getFecha()));
-            declaracionPunto.setString(2, String.valueOf(tarifa.getPrecio()));
-            declaracionPunto.setString(3, String.valueOf(punto.getCodigo()));
-            declaracionPunto.executeUpdate();
+            guardarPrecioPunto(punto, tarifa);
+
         } catch (SQLException e) {
             System.out.println("Error Al Guardar");
         }
     }
-
+    public static void guardarPrecioPunto(PuntoDeControl punto, Tarifa tarifa) {
+        try {
+            PreparedStatement declaracionPunto = coneccion.prepareStatement(STATEMENT_GUARDAR_PRECIO_PUNTO);           
+            declaracionPunto.setString(1, String.valueOf(tarifa.getFecha()));
+            declaracionPunto.setString(2, String.valueOf(tarifa.getPrecio()));
+            declaracionPunto.setString(3, String.valueOf(punto.getCodigo()));
+            declaracionPunto.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println("Error Al Guardar Precio");
+        }
+    }
     public static ArrayList<Ruta> obtenerRutas() {
         ArrayList<Ruta> rutas = new ArrayList<>();
         try {
@@ -297,7 +313,7 @@ public class ControladorDB {
             ResultSet resultado2 = declaracionPreparada.executeQuery();
             while (resultado2.next()) {
                 int codigoRuta = resultado2.getInt("codigo");
-                rutas.add(new Ruta(codigoRuta, resultado2.getBoolean("estado"),obtenerDestinoPorCodigo(resultado2.getInt("codigoDestino")), obtenerPuntosPorRuta(codigoRuta)));
+                rutas.add(new Ruta(codigoRuta, resultado2.getBoolean("estado"), obtenerDestinoPorCodigo(resultado2.getInt("codigoDestino")), obtenerPuntosPorRuta(codigoRuta)));
             }
         } catch (SQLException e) {
             System.out.println("Error Al Cargar");
@@ -313,7 +329,7 @@ public class ControladorDB {
             ResultSet resultado2 = declaracionPreparada.executeQuery();
             while (resultado2.next()) {
                 int codigoRuta = resultado2.getInt("codigo");
-                ruta = new Ruta(codigoRuta, resultado2.getBoolean("estado"),obtenerDestinoPorCodigo(resultado2.getInt("codigoDestino")), obtenerPuntosPorRuta(codigoRuta));
+                ruta = new Ruta(codigoRuta, resultado2.getBoolean("estado"), obtenerDestinoPorCodigo(resultado2.getInt("codigoDestino")), obtenerPuntosPorRuta(codigoRuta));
             }
         } catch (Exception e) {
         }
@@ -434,28 +450,30 @@ public class ControladorDB {
                 precios.add(new Tarifa(resultado.getFloat("tarifa"), resultado.getObject("fecha", LocalDateTime.class)));
             }
         } catch (SQLException e) {
-            
+
         }
         return precios;
     }
-    public static void eliminarUsuario(Usuario user){
+
+    public static void eliminarUsuario(Usuario user) {
         try {
-            PreparedStatement declaracionDeleteUser=coneccion.prepareStatement(STATEMENT_DELETE_USUARIO);
-            declaracionDeleteUser.setString(1,user.getUserName());
+            PreparedStatement declaracionDeleteUser = coneccion.prepareStatement(STATEMENT_DELETE_USUARIO);
+            declaracionDeleteUser.setString(1, user.getUserName());
             declaracionDeleteUser.executeUpdate();
-            
+
         } catch (SQLException e) {
             System.out.println("Error Al Eliminar");
         }
     }
+
     public static Cliente verificarClientePorNit(int nit) {
         Cliente userNameValido = null;
         try {
             PreparedStatement declaracionPreparada = coneccion.prepareStatement(STATEMENT_CLIENTE_POR_NIT);
-            declaracionPreparada.setString(1,String.valueOf( nit));
+            declaracionPreparada.setString(1, String.valueOf(nit));
             ResultSet resultado2 = declaracionPreparada.executeQuery();
-            if (resultado2.next()) { 
-                         userNameValido = new Cliente(nit,resultado2.getInt("codigo"),resultado2.getString("nombre"),resultado2.getString("direccion"));
+            if (resultado2.next()) {
+                userNameValido = new Cliente(nit, resultado2.getInt("codigo"), resultado2.getString("nombre"), resultado2.getString("direccion"));
             }
 
         } catch (SQLException ex) {
@@ -463,22 +481,23 @@ public class ControladorDB {
         }
         return userNameValido;
     }
+
     public static Cliente verificarClientePorCodigo(int codigo) {
         Cliente userNameValido = null;
         try {
             PreparedStatement declaracionPreparada = coneccion.prepareStatement(STATEMENT_CLIENTE_POR_CODIGO);
-            declaracionPreparada.setString(1,String.valueOf( codigo));
+            declaracionPreparada.setString(1, String.valueOf(codigo));
             ResultSet resultado2 = declaracionPreparada.executeQuery();
-            if (resultado2.next()) { 
-                         userNameValido = new Cliente(resultado2.getInt("nit"),resultado2.getInt("codigo"),resultado2.getString("nombre"),resultado2.getString("direccion"));
+            if (resultado2.next()) {
+                userNameValido = new Cliente(resultado2.getInt("nit"), resultado2.getInt("codigo"), resultado2.getString("nombre"), resultado2.getString("direccion"));
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(ControladorDB.class.getName()).log(Level.SEVERE, null, ex);
         }
         return userNameValido;
-    }     
-    
+    }
+
     public static ArrayList obtenerCodigoDeClientes() {
         ArrayList codigos = new ArrayList();
         try {
@@ -491,16 +510,17 @@ public class ControladorDB {
             System.out.println("Error SQL");
         }
         return codigos;
-    } 
+    }
+
     public static void guardarCliente(Cliente cliente) {
         try {
             PreparedStatement declaracionPreparada = coneccion.prepareStatement(STATEMENT_GUARDAR_CLIENTE);
             declaracionPreparada.setString(1, String.valueOf(cliente.getCodigo()));
-            if (cliente.getNit()==0) {
-               declaracionPreparada.setString(3, null); 
-            }else{
-                declaracionPreparada.setString(3,String.valueOf(cliente.getNit())); 
-            }            
+            if (cliente.getNit() == 0) {
+                declaracionPreparada.setString(3, null);
+            } else {
+                declaracionPreparada.setString(3, String.valueOf(cliente.getNit()));
+            }
             declaracionPreparada.setString(4, cliente.getNombre());
             declaracionPreparada.setString(2, cliente.getDireccion());
             declaracionPreparada.executeUpdate();
@@ -508,20 +528,21 @@ public class ControladorDB {
             System.out.println("Error Al Guardar");
         }
     }
+
     public static Paquete verificarPaquete(int codigo) {
         Paquete userNameValido = null;
         try {
             PreparedStatement declaracionPreparada = coneccion.prepareStatement(STATEMENT_PAQUETE_POR_CODIGO);
-            declaracionPreparada.setString(1,String.valueOf( codigo));
+            declaracionPreparada.setString(1, String.valueOf(codigo));
             ResultSet resultado = declaracionPreparada.executeQuery();
-            if (resultado.next()) { 
-                         userNameValido = new Paquete(resultado.getInt("codigo"),resultado.getInt("peso"),
-                                 obtenerRutas(resultado.getInt("codigoRuta")),
-                                 resultado.getBoolean("priorizado"), resultado.getObject("fechaIngreso", LocalDateTime.class),
-                                 resultado.getInt("numeroENCola"),resultado.getInt("estado"),resultado.getFloat("precioPerdido"),
-                                 resultado.getFloat("precioPagado"));
-                         userNameValido.setCliente(verificarClientePorCodigo(resultado.getInt("codigoCliente")));
-                         userNameValido.setPunto(obtenerPuntoDeControl(resultado.getInt("codigoPunto")));
+            if (resultado.next()) {
+                userNameValido = new Paquete(resultado.getInt("codigo"), resultado.getInt("peso"),
+                        obtenerRutas(resultado.getInt("codigoRuta")),
+                        resultado.getBoolean("priorizado"), resultado.getObject("fechaIngreso", LocalDateTime.class),
+                        resultado.getInt("numeroENCola"), resultado.getInt("estado"), resultado.getFloat("precioPerdido"),
+                        resultado.getFloat("precioPagado"));
+                userNameValido.setCliente(verificarClientePorCodigo(resultado.getInt("codigoCliente")));
+                userNameValido.setPunto(obtenerPuntoDeControl(resultado.getInt("codigoPunto")));
             }
 
         } catch (SQLException ex) {
@@ -529,6 +550,7 @@ public class ControladorDB {
         }
         return userNameValido;
     }
+
     public static void guardarPaquete(Paquete paquete) {
         try {
             PreparedStatement declaracionPreparada = coneccion.prepareStatement(STATEMENT_GUARDAR_PAQUETE);
@@ -538,9 +560,9 @@ public class ControladorDB {
             declaracionPreparada.setString(4, String.valueOf(paquete.getCliente().getCodigo()));
             if (paquete.isPriorizado()) {
                 declaracionPreparada.setString(5, "1");
-            }else{
+            } else {
                 declaracionPreparada.setString(5, "0");
-            }            
+            }
             declaracionPreparada.setString(6, String.valueOf(paquete.getFechaIngresado()));
             declaracionPreparada.setString(7, null);
             declaracionPreparada.setString(8, String.valueOf(paquete.getNumeroEnCola()));
@@ -552,7 +574,8 @@ public class ControladorDB {
         } catch (SQLException e) {
             System.out.println("Error Al Guardar");
         }
-    }    
+    }
+
     public static ArrayList obtenerCodigoDePaquetes() {
         ArrayList codigos = new ArrayList();
         try {
@@ -566,6 +589,7 @@ public class ControladorDB {
         }
         return codigos;
     }
+
     public static ArrayList<Paquete> obtenerPaquetesPorEstado(int estado) {
         ArrayList<Paquete> codigos = new ArrayList();
         try {
@@ -579,5 +603,5 @@ public class ControladorDB {
             System.out.println("Error SQL");
         }
         return codigos;
-    }     
+    }
 }

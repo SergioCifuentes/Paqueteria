@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import paqueteria.DB.ControladorDB;
 import paqueteria.DB.GeneradorDeCodigos;
+import paqueteria.DB.TransferenciasDB;
 import paqueteria.Ruta.PuntoDeControl;
 import paqueteria.Ruta.Tarifa;
 import paqueteria.Usuario.Usuario;
@@ -22,8 +23,11 @@ public class NuevoPunto extends javax.swing.JInternalFrame {
 private int codigo;
 private ArrayList<Usuario> operadores= new ArrayList<>();
 private float tarifaGlobal;
+private float tarifaAEditar;
 private NuevaRuta ruta;
 private PuntoDeControl puntoDeControl;
+
+private boolean editacion;
     /**
      * Creates new form NuevoPunto
      * @param ruta
@@ -31,6 +35,7 @@ private PuntoDeControl puntoDeControl;
      */
     public NuevoPunto(NuevaRuta ruta,ArrayList<PuntoDeControl> puntosCreados) {
         this.ruta=ruta;
+        editacion=false;
         tarifaGlobal=ControladorDB.obtenerPrecioActuales()[2];
         initComponents();
         esconderErrores();
@@ -38,6 +43,22 @@ private PuntoDeControl puntoDeControl;
         lblCodigoPunto.setText(String.valueOf(codigo));
         mostrarOperadores();
         spinnerTarifa.setValue(tarifaGlobal);
+    }
+        public NuevoPunto(PuntoDeControl puntoAEditar) {
+            this.puntoDeControl=puntoAEditar;
+        tarifaAEditar= puntoAEditar.getPrecio().get(puntoAEditar.getPrecio().size() - 1).getPrecio();
+        initComponents();
+        esconderErrores();
+        editacion=true;
+        codigo=puntoAEditar.getCodigo();
+        lblCodigoPunto.setText(String.valueOf(codigo));
+        spinnerCapacidad.setValue(puntoAEditar.getCapacidad());
+        lblGlobal.setVisible(false);
+        mostrarOperadores();
+        cBoxOperador.setSelectedItem(puntoAEditar.getUser().getUserName());
+        spinnerTarifa.setValue(tarifaAEditar);
+        btnAgregar.setText("Editar");
+        btnAgregar.setEnabled(false);
     }
 
     /**
@@ -76,8 +97,19 @@ private PuntoDeControl puntoDeControl;
         jLabel2.setText("Capacidad De Paquetes :");
 
         spinnerCapacidad.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
+        spinnerCapacidad.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                spinnerCapacidadStateChanged(evt);
+            }
+        });
 
         jLabel3.setText("Operador Encargado:");
+
+        cBoxOperador.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cBoxOperadorActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Tarifa De Operacion:");
 
@@ -150,7 +182,7 @@ private PuntoDeControl puntoDeControl;
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(165, 165, 165)
                                 .addComponent(lblGlobal)))
-                        .addGap(0, 106, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
@@ -200,6 +232,16 @@ private PuntoDeControl puntoDeControl;
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        if (editacion) {
+            puntoDeControl.setCapacidad((Integer)spinnerCapacidad.getValue());
+            puntoDeControl.setUser(ControladorDB.verificarUserName((String)cBoxOperador.getSelectedItem()));
+            TransferenciasDB.actualizarPunto(puntoDeControl);
+            if (puntoDeControl.getPrecio().get(puntoDeControl.getPrecio().size() - 1).getPrecio()!=(float)spinnerTarifa.getValue()) {
+                ControladorDB.guardarPrecioPunto(puntoDeControl,new Tarifa((float)spinnerTarifa.getValue(), LocalDateTime.now()));
+            }       
+            JOptionPane.showMessageDialog(this,"Punto Codigo: "+puntoDeControl.getCodigo()+" Actualizado","Punto Actualizado", JOptionPane.INFORMATION_MESSAGE);   
+            this.setVisible(false);
+        }else{
         if (verificarOperador()) {
             ArrayList<Tarifa> nuevaTarifa= new ArrayList<>();
             nuevaTarifa.add(new Tarifa((float)spinnerTarifa.getValue(), LocalDateTime.now()));
@@ -208,13 +250,18 @@ private PuntoDeControl puntoDeControl;
             JOptionPane.showMessageDialog(this,"codigo: "+ puntoDeControl.getCodigo()  + "   Tarifa : $" + puntoDeControl.getPrecio().get(puntoDeControl.getPrecio().size() - 1).getPrecio(), "Punto De Control Agregado", JOptionPane.INFORMATION_MESSAGE);
             this.setVisible(false);
         }
+        }
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void spinnerTarifaStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinnerTarifaStateChanged
+        if (editacion) {
+            btnAgregar.setEnabled(true);
+        }else{
         if ((float)spinnerTarifa.getValue()==tarifaGlobal) {
             lblGlobal.setVisible(true);
         }else{
             lblGlobal.setVisible(false);
+        }
         }
     }//GEN-LAST:event_spinnerTarifaStateChanged
 
@@ -225,6 +272,24 @@ private PuntoDeControl puntoDeControl;
             lblGlobal.setVisible(false);
         }
     }//GEN-LAST:event_spinnerTarifaKeyPressed
+
+    private void spinnerCapacidadStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinnerCapacidadStateChanged
+        if (editacion) {
+            btnAgregar.setEnabled(true);
+        }
+    }//GEN-LAST:event_spinnerCapacidadStateChanged
+
+    private void cBoxOperadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cBoxOperadorActionPerformed
+        if (editacion) {
+            if (cBoxOperador.getSelectedItem()!=null) {
+                if (cBoxOperador.getSelectedItem()!=puntoDeControl.getUser().getUserName()) {
+                btnAgregar.setEnabled(true);
+            }
+            }
+            
+            
+        }
+    }//GEN-LAST:event_cBoxOperadorActionPerformed
 private void esconderErrores(){
     lblErrorTarifa.setVisible(false);
     txtErrorOperador.setVisible(false);

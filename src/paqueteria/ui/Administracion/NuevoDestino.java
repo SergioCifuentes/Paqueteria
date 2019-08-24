@@ -60,7 +60,7 @@ public class NuevoDestino extends javax.swing.JInternalFrame {
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
-        setMaximizable(true);
+        setIconifiable(true);
         setTitle("Nuevo Destino");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/admi.png"))); // NOI18N
 

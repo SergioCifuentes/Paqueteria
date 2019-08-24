@@ -62,4 +62,13 @@ public class PuntoDeControl {
     public void setNumero(int numero) {
         this.numero = numero;
     }
+
+    public void setCapacidad(int capacidad) {
+        this.capacidad = capacidad;
+    }
+
+    public void setUser(Usuario user) {
+        this.user = user;
+    }
+    
 }
