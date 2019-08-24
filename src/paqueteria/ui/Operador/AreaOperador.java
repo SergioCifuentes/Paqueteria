@@ -5,11 +5,14 @@
  */
 package paqueteria.ui.Operador;
 
+import java.awt.Color;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import paqueteria.DB.ControladorDB;
+import paqueteria.DB.ControladorDeBodega;
 import paqueteria.DB.TransferenciasDB;
 import paqueteria.Ruta.PuntoDeControl;
 import paqueteria.Usuario.Operador;
@@ -38,7 +41,7 @@ public class AreaOperador extends javax.swing.JFrame {
     public AreaOperador(Operador user) {
         this.user = user;
         initComponents();
-        lblErrorPuntos.setVisible(false);
+        lblErrorPuntos.setText("");
         menuUser.setText(" " + this.user.getUserName() + " ");
         puntosDeControl = ControladorDB.obtenerPuntosDeControlPorOperador(this.user);
         agregarPuntosDeControl();
@@ -54,6 +57,7 @@ public class AreaOperador extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jSplitPane1 = new javax.swing.JSplitPane();
         comBoxPunto = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
         lblErrorPuntos = new javax.swing.JLabel();
@@ -67,6 +71,8 @@ public class AreaOperador extends javax.swing.JFrame {
         lblTarifa = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         lblTarifaPaquete = new javax.swing.JLabel();
+        lblPaquetes = new javax.swing.JLabel();
+        lblRefresh = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         menuUser = new javax.swing.JMenu();
@@ -144,14 +150,34 @@ public class AreaOperador extends javax.swing.JFrame {
 
         lblTarifaPaquete.setText("---");
 
-        jMenuBar1.setBackground(java.awt.Color.black);
+        lblPaquetes.setText("Paquetes");
+
+        lblRefresh.setBackground(java.awt.Color.white);
+        lblRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Refresh.png"))); // NOI18N
+        lblRefresh.setText("-");
+        lblRefresh.setOpaque(true);
+        lblRefresh.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblRefreshMouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                lblRefreshMouseExited(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lblRefreshMouseEntered(evt);
+            }
+        });
+
+        jMenuBar1.setBackground(java.awt.Color.white);
+        jMenuBar1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jMenu1.setText("                                                                                             ");
         jMenu1.setEnabled(false);
         jMenuBar1.add(jMenu1);
 
         menuUser.setBorder(new javax.swing.border.LineBorder(java.awt.Color.white, 3, true));
-        menuUser.setForeground(java.awt.Color.white);
+        menuUser.setForeground(new java.awt.Color(77, 77, 236));
+        menuUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/LogOut_1_1.png"))); // NOI18N
         menuUser.setText(" User ");
         menuUser.setFont(new java.awt.Font("Ubuntu", 1, 13)); // NOI18N
 
@@ -177,20 +203,11 @@ public class AreaOperador extends javax.swing.JFrame {
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(31, 31, 31)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblErrorPuntos, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(42, 42, 42)
-                                .addComponent(comBoxPunto, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel1)
+                        .addGap(42, 42, 42)
+                        .addComponent(comBoxPunto, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblTarifa, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(194, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -203,6 +220,21 @@ public class AreaOperador extends javax.swing.JFrame {
                 .addGap(26, 26, 26)
                 .addComponent(btnProcesar)
                 .addGap(22, 22, 22))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblTarifa, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblErrorPuntos, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblPaquetes, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -212,14 +244,17 @@ public class AreaOperador extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(comBoxPunto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblErrorPuntos)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblErrorPuntos)
+                    .addComponent(lblPaquetes))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(lblTarifa))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                    .addComponent(lblTarifa)
+                    .addComponent(lblRefresh))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(lblTarifaPaquete))
@@ -235,13 +270,14 @@ public class AreaOperador extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void comBoxPuntoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comBoxPuntoActionPerformed
-        lblErrorPuntos.setVisible(false);
+        lblErrorPuntos.setText(" ");
         ocultarOpciones(false);
         tarifaActual = ControladorDB.obtenerPreciosPorCodigo(puntosDeControl.get(comBoxPunto.getSelectedIndex()).getCodigo(),
                 ControladorDB.TIPO_PRECIO_PUNTO).get(ControladorDB.obtenerPreciosPorCodigo(puntosDeControl.get(comBoxPunto.getSelectedIndex()).getCodigo(),
                         ControladorDB.TIPO_PRECIO_PUNTO).size() - 1).getPrecio();
         lblTarifa.setText(String.format("%6.2f", tarifaActual));
         agregarPaquetes();
+        lblPaquetes.setText(paquetesDisponibles.size() + "/" + puntosDeControl.get(comBoxPunto.getSelectedIndex()).getCapacidad() + " Paquetes");
     }//GEN-LAST:event_comBoxPuntoActionPerformed
 
     private void tblPaquetesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPaquetesMouseClicked
@@ -276,12 +312,25 @@ public class AreaOperador extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_btnProcesarActionPerformed
+
+    private void lblRefreshMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRefreshMouseClicked
+        agregarPaquetes();
+    }//GEN-LAST:event_lblRefreshMouseClicked
+
+    private void lblRefreshMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRefreshMouseEntered
+        lblRefresh.setBackground(Color.gray);
+    }//GEN-LAST:event_lblRefreshMouseEntered
+
+    private void lblRefreshMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRefreshMouseExited
+        lblRefresh.setBackground(Color.WHITE);
+    }//GEN-LAST:event_lblRefreshMouseExited
     private void agregarPuntosDeControl() {
         if (puntosDeControl.size() > 0) {
             for (int i = 0; i < puntosDeControl.size(); i++) {
                 comBoxPunto.addItem(String.valueOf(puntosDeControl.get(i).getCodigo()));
             }
         } else {
+            lblRefresh.setVisible(false);
             lblErrorPuntos.setText(ERROR_PUNTOS);
             lblErrorPuntos.setVisible(true);
             comBoxPunto.setEnabled(false);
@@ -299,6 +348,8 @@ public class AreaOperador extends javax.swing.JFrame {
         System.out.println(tarifaDePaquete * (Integer) spinnerHora.getValue());
         user.preocesarPaquete(paqueteAProcesar, tarifaDePaquete * (Integer) spinnerHora.getValue());
         agregarPaquetes();
+        ControladorDeBodega nuevo = new ControladorDeBodega();
+        new Thread(nuevo).start();
 
     }
 
@@ -340,7 +391,10 @@ public class AreaOperador extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JLabel lblErrorPuntos;
+    private javax.swing.JLabel lblPaquetes;
+    private javax.swing.JLabel lblRefresh;
     private javax.swing.JLabel lblTarifa;
     private javax.swing.JLabel lblTarifaPaquete;
     private javax.swing.JMenuItem menuItemLogOut;

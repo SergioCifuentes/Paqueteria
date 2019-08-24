@@ -154,6 +154,7 @@ public class NuevoPaquete extends javax.swing.JInternalFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         setIconifiable(true);
         setTitle("NuevoPaquete");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/recepcion2.png"))); // NOI18N
 
         jLabel1.setText("Codigo :");
 

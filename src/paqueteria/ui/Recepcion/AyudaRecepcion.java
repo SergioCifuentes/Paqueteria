@@ -16,6 +16,7 @@ public class AyudaRecepcion extends javax.swing.JInternalFrame {
      */
     public AyudaRecepcion() {
         initComponents();
+        
     }
 
     /**
@@ -33,6 +34,7 @@ public class AyudaRecepcion extends javax.swing.JInternalFrame {
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         setTitle("Ayuda");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/recepcion.jpeg"))); // NOI18N
 
         jTextArea1.setEditable(false);
         jTextArea1.setBackground(new java.awt.Color(252, 208, 51));

@@ -30,6 +30,9 @@
       <Color blue="1" green="1" red="1" type="rgb"/>
     </Property>
     <Property name="title" type="java.lang.String" value="Usuarios Existentes"/>
+    <Property name="frameIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+      <Image iconType="3" name="/imagenes/admi.png"/>
+    </Property>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>

@@ -137,6 +137,7 @@ private Recepcionista user=null;
         jMenuBar1.add(jMenu7);
 
         menuUsuario.setForeground(java.awt.Color.black);
+        menuUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/LogOut_1_1.png"))); // NOI18N
         menuUsuario.setText("Usuario");
         menuUsuario.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
@@ -162,7 +163,7 @@ private Recepcionista user=null;
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(dskVentana, javax.swing.GroupLayout.DEFAULT_SIZE, 435, Short.MAX_VALUE))
+                .addComponent(dskVentana, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE))
         );
 
         pack();

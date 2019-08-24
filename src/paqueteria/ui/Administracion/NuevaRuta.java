@@ -97,6 +97,7 @@ public class NuevaRuta extends javax.swing.JInternalFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         setIconifiable(true);
         setTitle("Creacion De Rutas");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/admi.png"))); // NOI18N
 
         jLabel1.setText("Destino:");
 

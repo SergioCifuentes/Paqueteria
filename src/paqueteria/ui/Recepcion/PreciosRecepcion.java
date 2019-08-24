@@ -47,6 +47,7 @@ public class PreciosRecepcion extends javax.swing.JInternalFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         setIconifiable(true);
         setTitle("Precios De Recepcion");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/recepcion2.png"))); // NOI18N
 
         btnSalir.setText("Salir");
         btnSalir.addActionListener(new java.awt.event.ActionListener() {

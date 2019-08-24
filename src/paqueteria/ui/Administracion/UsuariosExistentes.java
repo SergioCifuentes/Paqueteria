@@ -73,6 +73,7 @@ public class UsuariosExistentes extends javax.swing.JInternalFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         setForeground(new java.awt.Color(1, 1, 1));
         setTitle("Usuarios Existentes");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/admi.png"))); // NOI18N
 
         tblUsuarios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {

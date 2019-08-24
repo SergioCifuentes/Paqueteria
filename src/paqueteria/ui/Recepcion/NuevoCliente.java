@@ -63,6 +63,7 @@ private IngresoPaquete ingresoPaquete;
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         setIconifiable(true);
         setTitle("Nuevo Cliente");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/recepcion2.png"))); // NOI18N
 
         jLabel1.setText("NIT:");
 

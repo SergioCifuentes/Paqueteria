@@ -59,6 +59,7 @@ public class CambioTarifas extends javax.swing.JInternalFrame {
         setIconifiable(true);
         setTitle("Tarifas De Administracion");
         setToolTipText("");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/admi.png"))); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("Ubuntu", 1, 16)); // NOI18N
         jLabel1.setText("Tarifas Actuales:");

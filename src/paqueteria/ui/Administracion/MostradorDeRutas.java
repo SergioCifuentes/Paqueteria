@@ -56,6 +56,7 @@ public class MostradorDeRutas extends javax.swing.JInternalFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         setIconifiable(true);
         setTitle("Rutas Existentes");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/admi.png"))); // NOI18N
 
         btnAccion.setText("Boton");
         btnAccion.setEnabled(false);

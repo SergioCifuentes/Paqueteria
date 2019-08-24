@@ -10,6 +10,7 @@ import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import paqueteria.DB.ControladorDB;
+import paqueteria.DB.ControladorDeBodega;
 import paqueteria.paquetes.Cliente;
 import paqueteria.paquetes.Paquete;
 
@@ -33,7 +34,7 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
     public IngresoPaquete(JDesktopPane recepcion) {
         this.recepcion = recepcion;
         initComponents();
-        total=0;
+        total = 0;
     }
 
     /**
@@ -66,6 +67,7 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         setIconifiable(true);
         setTitle("Ingreso De Paquete");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/recepcion2.png"))); // NOI18N
 
         txtNit.setBackground(new java.awt.Color(254, 254, 254));
         txtNit.setForeground(new java.awt.Color(3, 2, 155));
@@ -267,9 +269,9 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void tblPaquetesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPaquetesMouseClicked
-        if (tblPaquetes.getSelectedRow()>=0) {
+        if (tblPaquetes.getSelectedRow() >= 0) {
             btnCancelarPaquete.setEnabled(true);
-        }else{
+        } else {
             btnCancelarPaquete.setEnabled(false);
         }
 
@@ -284,7 +286,7 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
         } else if (!txtNit.getText().equals(IDENTIFICADOR_CONSUMIDOR_FINAL)) {
             if (verficarNit()) {
                 if (ControladorDB.verificarClientePorNit(Integer.parseInt(txtNit.getText())) == null) {
-                    cliente=null;
+                    cliente = null;
                 } else {
                     cliente = ControladorDB.verificarClientePorNit(Integer.parseInt(txtNit.getText()));
                     mostrarDatosCliente();
@@ -311,22 +313,24 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
 
     private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
         if (verificarEnvio()) {
-            int numeroEnBodega= ControladorDB.obtenerPaquetesPorEstado(1).size()+1;
+            int numeroEnBodega = ControladorDB.obtenerPaquetesPorEstado(1).size() + 1;
             for (int i = 0; i < paquetes.size(); i++) {
                 paquetes.get(i).setCliente(cliente);
-                paquetes.get(i).setNumeroEnCola(numeroEnBodega+i);
+                paquetes.get(i).setNumeroEnCola(numeroEnBodega + i);
                 ControladorDB.guardarPaquete(paquetes.get(i));
-                
+
             }
             this.setVisible(false);
-                Factura factura = new Factura(cliente, paquetes);
-                recepcion.add(factura);
-                factura.setVisible(true);
+            Factura factura = new Factura(cliente, paquetes);
+            recepcion.add(factura);
+            factura.setVisible(true);
+            ControladorDeBodega nuevo = new ControladorDeBodega();
+            new Thread(nuevo).start();
         }
     }//GEN-LAST:event_btnEnviarActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        NuevoPaquete nuevoPaquete = new NuevoPaquete(this,paquetes);
+        NuevoPaquete nuevoPaquete = new NuevoPaquete(this, paquetes);
         recepcion.add(nuevoPaquete);
         nuevoPaquete.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -335,7 +339,7 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
         paquetes.remove(tblPaquetes.getSelectedRow());
         agregarPaquetesATabla();
         sumarTotal();
-         btnCancelarPaquete.setEnabled(false);
+        btnCancelarPaquete.setEnabled(false);
     }//GEN-LAST:event_btnCancelarPaqueteActionPerformed
     private boolean verficarNit() {
         try {
@@ -358,51 +362,54 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
         this.cliente = cliente;
         mostrarDatosCliente();
     }
+
     protected void recibirPaquete(Paquete paquete) {
         paquetes.add(paquete);
         agregarPaquetesATabla();
         sumarTotal();
     }
-    private boolean  verificarEnvio(){
-        if (cliente==null) {
-            JOptionPane.showMessageDialog(this,"Cliente No Registrado", "Error Al Enviar", JOptionPane.ERROR_MESSAGE);
+
+    private boolean verificarEnvio() {
+        if (cliente == null) {
+            JOptionPane.showMessageDialog(this, "Cliente No Registrado", "Error Al Enviar", JOptionPane.ERROR_MESSAGE);
             return false;
-        }else if (paquetes.isEmpty()) {
-            JOptionPane.showMessageDialog(this,"Faltan Los Paquetes", "Error Al Enviar", JOptionPane.ERROR_MESSAGE);
-           return false; 
-        }else{
+        } else if (paquetes.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Faltan Los Paquetes", "Error Al Enviar", JOptionPane.ERROR_MESSAGE);
+            return false;
+        } else {
             return true;
         }
     }
-private void agregarPaquetesATabla(){
-    DefaultTableModel model = (DefaultTableModel) tblPaquetes.getModel();
-    int aux=model.getRowCount();
-    for (int i = aux; i > 0; i--) {
-        model.removeRow(i-1);
-        
-    }
-            for (int i = 0; i < paquetes.size(); i++) {//Creacion de Celdas
-                 model.addRow(new Object[] {"","","","",""});
-                 tblPaquetes.setValueAt(paquetes.get(i).getCodigo(), i, 0);
-                 tblPaquetes.setValueAt(paquetes.get(i).getRuta().getDestino().getNombre(), i, 1);
-                 tblPaquetes.setValueAt(paquetes.get(i).getPeso(), i, 2);
-                 tblPaquetes.setValueAt(String.format("%6.2f",paquetes.get(i).getPrecioPagado()), i, 3);
-                 if (paquetes.get(i).isPriorizado()) {
-                    tblPaquetes.setValueAt("Si", i, 4);
-                }else{
-                     tblPaquetes.setValueAt("No", i, 4);
-                 }
-                 
+
+    private void agregarPaquetesATabla() {
+        DefaultTableModel model = (DefaultTableModel) tblPaquetes.getModel();
+        int aux = model.getRowCount();
+        for (int i = aux; i > 0; i--) {
+            model.removeRow(i - 1);
+
+        }
+        for (int i = 0; i < paquetes.size(); i++) {//Creacion de Celdas
+            model.addRow(new Object[]{"", "", "", "", ""});
+            tblPaquetes.setValueAt(paquetes.get(i).getCodigo(), i, 0);
+            tblPaquetes.setValueAt(paquetes.get(i).getRuta().getDestino().getNombre(), i, 1);
+            tblPaquetes.setValueAt(paquetes.get(i).getPeso(), i, 2);
+            tblPaquetes.setValueAt(String.format("%6.2f", paquetes.get(i).getPrecioPagado()), i, 3);
+            if (paquetes.get(i).isPriorizado()) {
+                tblPaquetes.setValueAt("Si", i, 4);
+            } else {
+                tblPaquetes.setValueAt("No", i, 4);
             }
 
-           
-}
-private void sumarTotal(){
-    for (int i = 0; i < paquetes.size(); i++) {
-        total=total+paquetes.get(i).getPrecioPagado();        
+        }
+
     }
-    lblTotal.setText("$"+String.format("%6.2f",total));
-}
+
+    private void sumarTotal() {
+        for (int i = 0; i < paquetes.size(); i++) {
+            total = total + paquetes.get(i).getPrecioPagado();
+        }
+        lblTotal.setText("$" + String.format("%6.2f", total));
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarCliente;
     private javax.swing.JButton btnCancelar;

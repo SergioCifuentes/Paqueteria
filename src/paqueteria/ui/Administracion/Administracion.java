@@ -211,6 +211,7 @@ public class Administracion extends javax.swing.JFrame {
 
         menuUsuario.setBorder(javax.swing.BorderFactory.createCompoundBorder());
         menuUsuario.setForeground(new java.awt.Color(1, 1, 1));
+        menuUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/LogOut_1_1.png"))); // NOI18N
         menuUsuario.setText("user");
 
         mItemLogOut.setText("Log Out");
@@ -237,7 +238,7 @@ public class Administracion extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(dskVentana, javax.swing.GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE)
+                .addComponent(dskVentana, javax.swing.GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
                 .addContainerGap())
         );
 

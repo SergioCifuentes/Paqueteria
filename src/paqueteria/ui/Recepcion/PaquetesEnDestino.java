@@ -49,6 +49,7 @@ public class PaquetesEnDestino extends javax.swing.JInternalFrame {
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         setTitle("Paquetes Listos Para Retirar");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/recepcion2.png"))); // NOI18N
 
         btnRetirar.setText("Retirar Paquete");
         btnRetirar.setEnabled(false);

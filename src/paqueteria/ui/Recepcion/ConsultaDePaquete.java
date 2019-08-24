@@ -57,6 +57,7 @@ public class ConsultaDePaquete extends javax.swing.JInternalFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         setIconifiable(true);
         setTitle("Consulta De Paquete");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/recepcion2.png"))); // NOI18N
 
         progressBarPaquete.setBackground(java.awt.Color.white);
         progressBarPaquete.setForeground(java.awt.Color.orange);

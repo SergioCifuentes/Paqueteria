@@ -67,6 +67,7 @@ private PuntoDeControl puntoDeControl;
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         setIconifiable(true);
         setTitle("Nuevo Punto De Control");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/admi.png"))); // NOI18N
 
         jLabel1.setText("Codigo Punto:");
 
