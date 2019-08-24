@@ -17,6 +17,7 @@ import paqueteria.DB.TransferenciasDB;
 import paqueteria.Ruta.PuntoDeControl;
 import paqueteria.Usuario.Operador;
 import paqueteria.paquetes.Paquete;
+import paqueteria.ui.IngresoDeUsuario;
 
 /**
  *
@@ -73,6 +74,7 @@ public class AreaOperador extends javax.swing.JFrame {
         lblTarifaPaquete = new javax.swing.JLabel();
         lblPaquetes = new javax.swing.JLabel();
         lblRefresh = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         menuUser = new javax.swing.JMenu();
@@ -81,20 +83,24 @@ public class AreaOperador extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Area De Operacion");
         setResizable(false);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         comBoxPunto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comBoxPuntoActionPerformed(evt);
             }
         });
+        getContentPane().add(comBoxPunto, new org.netbeans.lib.awtextra.AbsoluteConstraints(205, 12, 165, -1));
 
         jLabel1.setForeground(java.awt.Color.black);
         jLabel1.setText("Puntos De Control:");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(31, 17, -1, -1));
 
         lblErrorPuntos.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
         lblErrorPuntos.setForeground(java.awt.Color.red);
         lblErrorPuntos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblErrorPuntos.setText("No Cuentas Con Puntos De Contol");
+        getContentPane().add(lblErrorPuntos, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 45, 285, -1));
 
         jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -128,11 +134,16 @@ public class AreaOperador extends javax.swing.JFrame {
 
         jScrollPane2.setViewportView(jScrollPane1);
 
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 80, 414, 150));
+
         spinnerHora.setFont(new java.awt.Font("URW Gothic L", 0, 15)); // NOI18N
         spinnerHora.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
+        getContentPane().add(spinnerHora, new org.netbeans.lib.awtextra.AbsoluteConstraints(246, 348, 71, -1));
 
         jLabel2.setFont(new java.awt.Font("URW Gothic L", 0, 15)); // NOI18N
+        jLabel2.setForeground(java.awt.Color.white);
         jLabel2.setText("Horas Para Procesar:");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(78, 353, -1, -1));
 
         btnProcesar.setFont(new java.awt.Font("URW Gothic L", 0, 15)); // NOI18N
         btnProcesar.setText("Procesar");
@@ -141,16 +152,27 @@ public class AreaOperador extends javax.swing.JFrame {
                 btnProcesarActionPerformed(evt);
             }
         });
+        getContentPane().add(btnProcesar, new org.netbeans.lib.awtextra.AbsoluteConstraints(343, 347, -1, -1));
 
+        jLabel3.setForeground(java.awt.Color.white);
         jLabel3.setText("Tarifa/Hora(Actual):");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(22, 260, -1, -1));
 
+        lblTarifa.setForeground(java.awt.Color.white);
         lblTarifa.setText("---");
+        getContentPane().add(lblTarifa, new org.netbeans.lib.awtextra.AbsoluteConstraints(166, 260, 78, -1));
 
+        jLabel4.setForeground(java.awt.Color.white);
         jLabel4.setText("Tarifa/Hora(Paquete): ");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(78, 324, -1, -1));
 
+        lblTarifaPaquete.setForeground(java.awt.Color.white);
         lblTarifaPaquete.setText("---");
+        getContentPane().add(lblTarifaPaquete, new org.netbeans.lib.awtextra.AbsoluteConstraints(246, 324, 71, -1));
 
+        lblPaquetes.setForeground(java.awt.Color.white);
         lblPaquetes.setText("Paquetes");
+        getContentPane().add(lblPaquetes, new org.netbeans.lib.awtextra.AbsoluteConstraints(315, 45, 111, -1));
 
         lblRefresh.setBackground(java.awt.Color.white);
         lblRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Refresh.png"))); // NOI18N
@@ -167,6 +189,10 @@ public class AreaOperador extends javax.swing.JFrame {
                 lblRefreshMouseEntered(evt);
             }
         });
+        getContentPane().add(lblRefresh, new org.netbeans.lib.awtextra.AbsoluteConstraints(386, 248, 40, -1));
+
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/983280.jpg"))); // NOI18N
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -23, 440, 430));
 
         jMenuBar1.setBackground(java.awt.Color.white);
         jMenuBar1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -186,85 +212,16 @@ public class AreaOperador extends javax.swing.JFrame {
         menuItemLogOut.setForeground(java.awt.Color.white);
         menuItemLogOut.setText("Log Out");
         menuItemLogOut.setOpaque(true);
+        menuItemLogOut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemLogOutActionPerformed(evt);
+            }
+        });
         menuUser.add(menuItemLogOut);
 
         jMenuBar1.add(menuUser);
 
         setJMenuBar(jMenuBar1);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(31, 31, 31)
-                        .addComponent(jLabel1)
-                        .addGap(42, 42, 42)
-                        .addComponent(comBoxPunto, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(spinnerHora, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
-                    .addComponent(lblTarifaPaquete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(26, 26, 26)
-                .addComponent(btnProcesar)
-                .addGap(22, 22, 22))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblTarifa, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lblErrorPuntos, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblPaquetes, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(comBoxPunto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblErrorPuntos)
-                    .addComponent(lblPaquetes))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(lblTarifa)
-                    .addComponent(lblRefresh))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(lblTarifaPaquete))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(spinnerHora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(btnProcesar))
-                .addGap(25, 25, 25))
-        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -303,18 +260,20 @@ public class AreaOperador extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "El siguiente punto de control (codigo: " + puntoSiguiente.getCodigo() + ") se encuentra lleno", "Error Al Procesar", JOptionPane.ERROR_MESSAGE);
             } else {
                 procesarPaquete();
-                JOptionPane.showMessageDialog(this, "El paquete (codigo: " + paqueteAProcesar.getCodigo() + ") llego al siguente punto", "Paquete Procesado Correctamente", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "El paquete (codigo: " + paqueteAProcesar.getCodigo() + ") llego al siguente punto", "Paquete Procesado Correctamente", JOptionPane.INFORMATION_MESSAGE);
             }
         } else {
             procesarPaquete();
-            JOptionPane.showMessageDialog(this, "El paquete (codigo: " + paqueteAProcesar.getCodigo() + ") llego a su destino", "Paquete Procesado Correctamente", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El paquete (codigo: " + paqueteAProcesar.getCodigo() + ") llego a su destino", "Paquete Procesado Correctamente", JOptionPane.INFORMATION_MESSAGE);
         }
 
 
     }//GEN-LAST:event_btnProcesarActionPerformed
 
     private void lblRefreshMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRefreshMouseClicked
+        lblErrorPuntos.setText(" ");
         agregarPaquetes();
+                
     }//GEN-LAST:event_lblRefreshMouseClicked
 
     private void lblRefreshMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRefreshMouseEntered
@@ -324,6 +283,12 @@ public class AreaOperador extends javax.swing.JFrame {
     private void lblRefreshMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRefreshMouseExited
         lblRefresh.setBackground(Color.WHITE);
     }//GEN-LAST:event_lblRefreshMouseExited
+
+    private void menuItemLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLogOutActionPerformed
+       IngresoDeUsuario logOut = new IngresoDeUsuario();
+       logOut.setVisible(true);
+       this.setVisible(false); 
+    }//GEN-LAST:event_menuItemLogOutActionPerformed
     private void agregarPuntosDeControl() {
         if (puntosDeControl.size() > 0) {
             for (int i = 0; i < puntosDeControl.size(); i++) {
@@ -374,6 +339,7 @@ public class AreaOperador extends javax.swing.JFrame {
             lblErrorPuntos.setText(ERROR_PAQUETES);
             lblErrorPuntos.setVisible(true);
         }
+        lblPaquetes.setText(paquetesDisponibles.size() + "/" + puntosDeControl.get(comBoxPunto.getSelectedIndex()).getCapacidad() + " Paquetes");
     }
     /**
      * @param args the command line arguments
@@ -387,6 +353,7 @@ public class AreaOperador extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;

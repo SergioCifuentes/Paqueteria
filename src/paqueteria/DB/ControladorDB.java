@@ -37,7 +37,7 @@ public class ControladorDB {
     private final static String STATEMENT_PRECIO_ADMIN_ACTUALES = "SELECT * FROM PreciosAdmin ORDER BY FECHA DESC";
     private final static String STATEMENT_PRECIO_PUNTO_POR_CODIGO = "SELECT * FROM PrecioPunto WHERE codigoPuntoDeControl = ? ORDER BY FECHA";
     private final static String STATEMENT_PRECIO_DESTINO_POR_CODIGO = "SELECT * FROM PrecioDestino WHERE codigoDestino = ? ORDER BY FECHA";
-    private final static String STATEMENT_PUNTOS_DE_CONTROL_POR_RUTA = "SELECT * FROM PuntoDeControl WHERE codigoRuta = ?";
+    private final static String STATEMENT_PUNTOS_DE_CONTROL_POR_RUTA = "SELECT * FROM PuntoDeControl WHERE codigoRuta = ? ORDER BY numeroEnRuta";
     private final static String STATEMENT_DESTINO_POR_CODIGO = "SELECT * FROM Destino WHERE codigo = ?";
     private final static String STATEMENT_GUARDAR_USUARIO = "INSERT INTO Usuario VALUES (?,?,?)";
     private final static String STATEMENT_GUARDAR_DESTINO = "INSERT INTO Destino VALUES (?,?)";
@@ -270,7 +270,7 @@ public class ControladorDB {
         }
     }
 
-    public static void guardarPuntoDeControl(PuntoDeControl punto) {
+        public static void guardarPuntoDeControl(PuntoDeControl punto) {
         try {
             PreparedStatement declaracionPunto = coneccion.prepareStatement(STATEMENT_GUARDAR_PUNTOS_DE_CONTROL);
             declaracionPunto.setString(1, String.valueOf(punto.getCodigo()));

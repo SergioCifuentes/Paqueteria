@@ -6,9 +6,13 @@
 package paqueteria.ui.Administracion;
 
 import java.util.ArrayList;
+import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import paqueteria.DB.ControladorDB;
+import paqueteria.DB.TransferenciasDB;
 import paqueteria.Ruta.Ruta;
+import paqueteria.paquetes.Paquete;
 
 /**
  *
@@ -17,24 +21,29 @@ import paqueteria.Ruta.Ruta;
 public class MostradorDeRutas extends javax.swing.JInternalFrame {
 
     private ArrayList<Ruta> rutas;
-    protected static final String  IDENTIFICADO_EDITADOR="Editar";
-    protected static final String  IDENTIFICADO_DESACTIVADOR="Desactivar";    
-    private String tipo;       
+    protected static final String IDENTIFICADO_EDITADOR = "Editar";
+    protected static final String IDENTIFICADO_DESACTIVADOR = "Desactivar";
+    private String tipo;
+        private JDesktopPane panel ;
+    private ArrayList<Paquete> paquetesEnRuta;
+
     /**
      * Creates new form MostradorDeRutas
+     *
+     * @param tipo
+     * @param panel
      */
-    public MostradorDeRutas(String tipo) {
+    public MostradorDeRutas(String tipo , JDesktopPane panel) {
+        this.panel=panel;
         initComponents();
-        rutas = ControladorDB.obtenerRutas();
-        if (rutas.size()==0) {
-            lblErrorRutas.setVisible(true);
-        }else{
+        paquetesEnRuta = new ArrayList<>();
+        
+
             agregarRutas();
-        }
-        
-        this.tipo=tipo;
+
+        this.tipo = tipo;
         btnAccion.setText(tipo);
-        
+
     }
 
     /**
@@ -98,8 +107,8 @@ public class MostradorDeRutas extends javax.swing.JInternalFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(lblErrorRutas)
-                        .addGap(68, 68, 68)
-                        .addComponent(btnAccion, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(36, 36, 36)
+                        .addComponent(btnAccion, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -118,22 +127,52 @@ public class MostradorDeRutas extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void tblRutaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblRutaMouseClicked
-        if (tblRuta.getSelectedRow()>=0) {
+        paquetesEnRuta = TransferenciasDB.obtenerPaquetesActivosPorRuta(rutas.get(tblRuta.getSelectedRow()).getCodigo());
+        if (tblRuta.getSelectedRow() >= 0) {
             btnAccion.setEnabled(true);
-        }else{
+            if (tipo.equals(IDENTIFICADO_DESACTIVADOR)) {
+                if (rutas.get(tblRuta.getSelectedRow()).isEstado()) {
+                    btnAccion.setText(tipo);
+                } else {
+                    btnAccion.setText("Activar");
+                }
+            }
+        } else {
             btnAccion.setEnabled(false);
         }
     }//GEN-LAST:event_tblRutaMouseClicked
 
     private void btnAccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccionActionPerformed
+        Ruta rutaACAmbiar = rutas.get(tblRuta.getSelectedRow());
         if (tipo.equals(IDENTIFICADO_DESACTIVADOR)) {
-            
-        }else{
-            
+            if (paquetesEnRuta.isEmpty()) {
+                if (rutaACAmbiar.isEstado()) {
+                    TransferenciasDB.cambiarEstadoRuta(rutaACAmbiar.getCodigo(), 0);
+                    JOptionPane.showMessageDialog(this, "Ruta codigo: " + rutaACAmbiar.getCodigo() + " Desactivada", "Ruta Desactivada ", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    TransferenciasDB.cambiarEstadoRuta(rutaACAmbiar.getCodigo(), 1);
+                    JOptionPane.showMessageDialog(this, "Ruta codigo: " + rutaACAmbiar.getCodigo() + " Activada", "Ruta Activada ", JOptionPane.INFORMATION_MESSAGE);
+                }
+                agregarRutas();
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Esta Ruta Cuenta Con Paquetes", "Error Al Desactivar", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            if (paquetesEnRuta.isEmpty()) {
+                NuevaRuta editarRuta = new NuevaRuta(panel, rutaACAmbiar);
+                panel.add(editarRuta);
+                this.setVisible(false);
+                editarRuta.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Esta Ruta Cuenta Con Paquetes", "Error Al Editar", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_btnAccionActionPerformed
-private void agregarRutas() {
-        DefaultTableModel model = (DefaultTableModel) tblRuta.getModel();
+    private void agregarRutas() {
+        rutas = ControladorDB.obtenerRutas();
+        if (rutas.size()>0) {
+            DefaultTableModel model = (DefaultTableModel) tblRuta.getModel();
         int aux = model.getRowCount();
         for (int i = aux; i > 0; i--) {
             model.removeRow(i - 1);
@@ -143,13 +182,20 @@ private void agregarRutas() {
             tblRuta.setValueAt(rutas.get(i).getCodigo(), i, 0);
             if (rutas.get(i).isEstado()) {
                 tblRuta.setValueAt("Activado", i, 1);
-            }else{
+            } else {
                 tblRuta.setValueAt("Desactivado", i, 1);
             }
-            
+
             tblRuta.setValueAt(rutas.get(i).getDestino().getNombre(), i, 2);
             tblRuta.setValueAt(rutas.get(i).getPuntos().size(), i, 3);
+
+            paquetesEnRuta = TransferenciasDB.obtenerPaquetesActivosPorRuta(rutas.get(i).getCodigo());
+            tblRuta.setValueAt(paquetesEnRuta.size(), i, 4);
         }
+        }else{
+            lblErrorRutas.setVisible(true);
+        }
+        
     }
 
 

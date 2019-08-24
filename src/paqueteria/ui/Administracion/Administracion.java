@@ -295,13 +295,13 @@ public class Administracion extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void menuEditarRutaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEditarRutaActionPerformed
-       MostradorDeRutas nuevaMostador= new MostradorDeRutas(MostradorDeRutas.IDENTIFICADO_EDITADOR);
+       MostradorDeRutas nuevaMostador= new MostradorDeRutas(MostradorDeRutas.IDENTIFICADO_EDITADOR,this.dskVentana);
        dskVentana.add(nuevaMostador);
        nuevaMostador.setVisible(true);
     }//GEN-LAST:event_menuEditarRutaActionPerformed
 
     private void menuDesactivarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuDesactivarActionPerformed
-      MostradorDeRutas nuevaMostador= new MostradorDeRutas(MostradorDeRutas.IDENTIFICADO_DESACTIVADOR);
+      MostradorDeRutas nuevaMostador= new MostradorDeRutas(MostradorDeRutas.IDENTIFICADO_DESACTIVADOR,this.dskVentana);
        dskVentana.add(nuevaMostador);
        nuevaMostador.setVisible(true);  
     }//GEN-LAST:event_menuDesactivarActionPerformed

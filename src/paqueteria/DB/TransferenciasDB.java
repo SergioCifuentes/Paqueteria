@@ -12,8 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import static paqueteria.DB.ControladorDB.verificarPaquete;
 import paqueteria.Ruta.PuntoDeControl;
 import paqueteria.Ruta.Tarifa;
@@ -26,11 +24,14 @@ import paqueteria.paquetes.Paquete;
 public class TransferenciasDB {
 
     private final static String STATEMENT_SUBIR_ESTADO_POR_CODIGO = "UPDATE Paquete SET estado =estado+1 WHERE codigo =?";
+    private final static String STATEMENT_CAMBIAR_ESTADO_RUTA = "UPDATE Ruta SET estado =? WHERE codigo =?";
+    private final static String STATEMENT_ELIMINAR_PUNTOS_POR_RUTA = "DELETE FROM PuntoDeControl WHERE codigoRuta =?";
     private final static String STATEMENT_REGISTRAR_RETIRO = "UPDATE Paquete SET fechaRecibido =? WHERE codigo =?";
     private final static String STATEMENT_UPDATE_CODIGO_PUNTO = "UPDATE Paquete SET codigoPunto =?  WHERE codigo =?";
     private final static String STATEMENT_UPDATE_NUMERO_COLA = "UPDATE Paquete SET numeroEnCola =? WHERE codigo =?";
     private final static String STATEMENT_UPDATE_PRECIO_PERDIDO = "UPDATE Paquete SET precioPerdido =precioPerdido+? WHERE codigo =?";
     private final static String STATEMENT_PAQUETE_POR_PUNTO = "SELECT * FROM Paquete WHERE codigoPunto = ?";
+    private final static String STATEMENT_PAQUETE_POR_RUTA = "SELECT * FROM Paquete WHERE codigoRuta = ? AND estado<3";
 
     private static Connection coneccion2 = null;
 
@@ -70,6 +71,21 @@ public class TransferenciasDB {
         try {
             PreparedStatement declaracionPreparada = coneccion2.prepareStatement(STATEMENT_PAQUETE_POR_PUNTO);
             declaracionPreparada.setString(1, String.valueOf(codigoPunto));
+            ResultSet resultado2 = declaracionPreparada.executeQuery();
+            while (resultado2.next()) {
+                codigos.add(verificarPaquete(resultado2.getInt("codigo")));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error SQL");
+        }
+        return codigos;
+    }
+
+    public static ArrayList<Paquete> obtenerPaquetesActivosPorRuta(int codigoRuta) {
+        ArrayList<Paquete> codigos = new ArrayList();
+        try {
+            PreparedStatement declaracionPreparada = coneccion2.prepareStatement(STATEMENT_PAQUETE_POR_RUTA);
+            declaracionPreparada.setString(1, String.valueOf(codigoRuta));
             ResultSet resultado2 = declaracionPreparada.executeQuery();
             while (resultado2.next()) {
                 codigos.add(verificarPaquete(resultado2.getInt("codigo")));
@@ -137,11 +153,11 @@ public class TransferenciasDB {
     public static void ingresarPaqueteDesdeBodega(Paquete paquete, PuntoDeControl puntoSiguinte) {
         try {
             coneccion2.setAutoCommit(false);
-            moverEstadoDePaquete(paquete.getCodigo());            
+            moverEstadoDePaquete(paquete.getCodigo());
             PreparedStatement declaracionPaqueteCodigo = coneccion2.prepareStatement(STATEMENT_UPDATE_CODIGO_PUNTO);
             PreparedStatement declaracionPaqueteNumero = coneccion2.prepareStatement(STATEMENT_UPDATE_NUMERO_COLA);
-            declaracionPaqueteCodigo.setString(1,String.valueOf(puntoSiguinte.getCodigo()));
-            declaracionPaqueteNumero.setString(1, String.valueOf(obtenerPaquetesPorPunto(puntoSiguinte.getCodigo()).size()+1));
+            declaracionPaqueteCodigo.setString(1, String.valueOf(puntoSiguinte.getCodigo()));
+            declaracionPaqueteNumero.setString(1, String.valueOf(obtenerPaquetesPorPunto(puntoSiguinte.getCodigo()).size() + 1));
             declaracionPaqueteCodigo.setString(2, String.valueOf(paquete.getCodigo()));
             declaracionPaqueteNumero.setString(2, String.valueOf(paquete.getCodigo()));
             declaracionPaqueteCodigo.executeUpdate();
@@ -156,6 +172,41 @@ public class TransferenciasDB {
             }
         }
     }
+
+    public static void cambiarEstadoRuta(int codigoRuta, int estado) {
+        try {
+            PreparedStatement declaracionPreparada = coneccion2.prepareStatement(STATEMENT_CAMBIAR_ESTADO_RUTA);
+            declaracionPreparada.setString(1, String.valueOf(estado));
+            declaracionPreparada.setString(2, String.valueOf(codigoRuta));
+
+            declaracionPreparada.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error Al Cambiar");
+        }
+
+    }
+
+    public static void actualizarPuntos(int codigoRuta,ArrayList<PuntoDeControl> puntos) {
+            eliminarPuntosPorRuta(codigoRuta);
+            for (int i = 0; i < puntos.size(); i++) {
+                System.out.println("sawd");
+                ControladorDB.guardarPuntoDeControl(puntos.get(i));                
+            }          
+
+
+    }
+
+    public static void eliminarPuntosPorRuta(int codigoRuta) {
+        try {
+            PreparedStatement declaracionPreparada = coneccion2.prepareStatement(STATEMENT_ELIMINAR_PUNTOS_POR_RUTA);
+            declaracionPreparada.setString(1, String.valueOf(codigoRuta));
+
+            declaracionPreparada.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error Al Eliminar");
+        }
+    }
+
     private final static String USER = "root";
     private final static String PASSWORD = "danielito";
     private final static String STRING_CONNECTION = "jdbc:mysql://localhost:3306/paquetes";

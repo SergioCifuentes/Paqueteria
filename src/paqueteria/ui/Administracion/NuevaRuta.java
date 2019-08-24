@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import paqueteria.DB.ControladorDB;
 import paqueteria.Ruta.Destino;
 import paqueteria.DB.GeneradorDeCodigos;
+import paqueteria.DB.TransferenciasDB;
 import paqueteria.Ruta.PuntoDeControl;
 import paqueteria.Ruta.Ruta;
 
@@ -20,32 +21,51 @@ import paqueteria.Ruta.Ruta;
  * @author sergio
  */
 public class NuevaRuta extends javax.swing.JInternalFrame {
-    private JDesktopPane panel ;
+
+    private JDesktopPane panel;
     private Destino destino;
     private ArrayList<Destino> destinosPosibles;
     private ArrayList<PuntoDeControl> puntos;
     private int codigoRuta;
+    private Ruta rutaAEditar;
+    private boolean editacion;
+
     /**
      * Creates new form NuevaRuta
+     *
      * @param panel
      */
     public NuevaRuta(JDesktopPane panel) {
-        puntos= new ArrayList<>();
-        this.panel=panel;
+        editacion = false;
+        puntos = new ArrayList<>();
+        this.panel = panel;
         initComponents();
         desabilitarOpciones(false);
-        codigoRuta=GeneradorDeCodigos.generarCodigoRuta();
+        codigoRuta = GeneradorDeCodigos.generarCodigoRuta();
         lblCodigoRuta.setText(String.valueOf(codigoRuta));
         mostrarDestinos();
     }
-    public NuevaRuta(JDesktopPane panel,Ruta rutas) {
-        puntos= new ArrayList<>();
-        this.panel=panel;
+
+    public NuevaRuta(JDesktopPane panel, Ruta ruta) {
+        editacion = true;
+        this.panel = panel;
+        this.rutaAEditar = ruta;
+        puntos = rutaAEditar.getPuntos();
         initComponents();
         desabilitarOpciones(false);
-        codigoRuta=GeneradorDeCodigos.generarCodigoRuta();
+        codigoRuta = rutaAEditar.getCodigo();
+        mostrarElementosDeEditacion();
+        agregarPuntosATabla();
+    }
+
+    private void mostrarElementosDeEditacion() {
         lblCodigoRuta.setText(String.valueOf(codigoRuta));
-        mostrarDestinos();
+        cBoxDestinos.addItem(rutaAEditar.getDestino().getCodigo() + "-" + String.valueOf(rutaAEditar.getDestino().getNombre()));
+        lblCoutaDestino.setText(String.valueOf(rutaAEditar.getDestino().getPrecio().get(rutaAEditar.getDestino().getPrecio().size() - 1).getPrecio()));
+        cBoxDestinos.setEnabled(false);
+        btnNuevoDestino.setVisible(false);
+        btnRuta.setEnabled(false);
+        btnRuta.setText("Actualizar");
     }
 
     /**
@@ -61,7 +81,7 @@ public class NuevaRuta extends javax.swing.JInternalFrame {
         jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         cBoxDestinos = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        btnNuevoDestino = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         btnAgregarPunto = new javax.swing.JButton();
         labelCodigo = new javax.swing.JLabel();
@@ -107,10 +127,10 @@ public class NuevaRuta extends javax.swing.JInternalFrame {
             }
         });
 
-        jButton1.setText("Nuevo Destino");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnNuevoDestino.setText("Nuevo Destino");
+        btnNuevoDestino.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnNuevoDestinoActionPerformed(evt);
             }
         });
 
@@ -223,14 +243,14 @@ public class NuevaRuta extends javax.swing.JInternalFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(lblCoutaDestino, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
-                                        .addComponent(jButton1)
+                                        .addComponent(btnNuevoDestino)
                                         .addGap(36, 36, 36)
                                         .addComponent(lblErrorDestino))))
                             .addComponent(btnAgregarPunto, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 614, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(lblPosicion)
@@ -242,9 +262,7 @@ public class NuevaRuta extends javax.swing.JInternalFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(39, 39, 39)
                                         .addComponent(btnEliminar))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(btnRuta, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(10, 10, 10)))))
+                                    .addComponent(btnRuta, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -266,7 +284,7 @@ public class NuevaRuta extends javax.swing.JInternalFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jButton1)
+                                        .addComponent(btnNuevoDestino)
                                         .addComponent(lblErrorDestino))
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(cBoxDestinos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -298,35 +316,35 @@ public class NuevaRuta extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregarPuntoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarPuntoActionPerformed
-        NuevoPunto nuevo = new NuevoPunto(this,puntos);
+        NuevoPunto nuevo = new NuevoPunto(this, puntos);
         panel.add(nuevo);
         nuevo.setVisible(true);
         desabilitarOpciones(false);
     }//GEN-LAST:event_btnAgregarPuntoActionPerformed
 
     private void cBoxDestinosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cBoxDestinosActionPerformed
-        if (destinosPosibles!=null) {
-            Destino destinoAux=destinosPosibles.get(cBoxDestinos.getSelectedIndex());
-            destino=destinoAux;
-            lblCoutaDestino.setText("$"+String.format("%6.2f",destinoAux.getPrecio().get(destinoAux.getPrecio().size()-1).getPrecio()));
+        if (destinosPosibles != null) {
+            Destino destinoAux = destinosPosibles.get(cBoxDestinos.getSelectedIndex());
+            destino = destinoAux;
+            lblCoutaDestino.setText("$" + String.format("%6.2f", destinoAux.getPrecio().get(destinoAux.getPrecio().size() - 1).getPrecio()));
         }
 
     }//GEN-LAST:event_cBoxDestinosActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnNuevoDestinoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoDestinoActionPerformed
         NuevoDestino nuevoDestino = new NuevoDestino(this);
         panel.add(nuevoDestino);
         nuevoDestino.setVisible(true);
         desabilitarOpciones(false);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnNuevoDestinoActionPerformed
 
     private void tblPuntosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPuntosMouseClicked
         int row = tblPuntos.getSelectedRow();
-        if (row>=0) {
+        if (row >= 0) {
             desabilitarOpciones(true);
             lblCodigo.setText(String.valueOf(puntos.get(row).getCodigo()));
-            spinnerPosicion.setModel(new javax.swing.SpinnerNumberModel(row+1, 1,puntos.size(), 1));
-        }else{
+            spinnerPosicion.setModel(new javax.swing.SpinnerNumberModel(row + 1, 1, puntos.size(), 1));
+        } else {
             desabilitarOpciones(false);
         }
     }//GEN-LAST:event_tblPuntosMouseClicked
@@ -335,93 +353,112 @@ public class NuevaRuta extends javax.swing.JInternalFrame {
         puntos.remove(tblPuntos.getSelectedRow());
         agregarPuntosATabla();
         desabilitarOpciones(false);
+        if (editacion) {
+            btnRuta.setEnabled(true);
+        }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void spinnerPosicionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_spinnerPosicionMouseClicked
-        PuntoDeControl Aux =puntos.get((Integer)spinnerPosicion.getValue()-1);
-        puntos.set((Integer)spinnerPosicion.getValue()-1,puntos.get(tblPuntos.getSelectedRow()));
-        puntos.set(tblPuntos.getSelectedRow(),Aux);
+        PuntoDeControl Aux = puntos.get((Integer) spinnerPosicion.getValue() - 1);
+        puntos.set((Integer) spinnerPosicion.getValue() - 1, puntos.get(tblPuntos.getSelectedRow()));
+        puntos.set(tblPuntos.getSelectedRow(), Aux);
         agregarPuntosATabla();
     }//GEN-LAST:event_spinnerPosicionMouseClicked
 
     private void spinnerPosicionStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinnerPosicionStateChanged
-        PuntoDeControl Aux =puntos.get((Integer)spinnerPosicion.getValue()-1);
-        puntos.set((Integer)spinnerPosicion.getValue()-1,puntos.get(tblPuntos.getSelectedRow()));
-        puntos.set(tblPuntos.getSelectedRow(),Aux);
+        if (editacion) {
+            btnRuta.setEnabled(true);
+        }
+        PuntoDeControl Aux = puntos.get((Integer) spinnerPosicion.getValue() - 1);
+        puntos.set((Integer) spinnerPosicion.getValue() - 1, puntos.get(tblPuntos.getSelectedRow()));
+        puntos.set(tblPuntos.getSelectedRow(), Aux);
         agregarPuntosATabla();
-        tblPuntos.setRowSelectionInterval((Integer)spinnerPosicion.getValue()-1,(Integer)spinnerPosicion.getValue()-1);
-        
+        tblPuntos.setRowSelectionInterval((Integer) spinnerPosicion.getValue() - 1, (Integer) spinnerPosicion.getValue() - 1);
+
     }//GEN-LAST:event_spinnerPosicionStateChanged
 
     private void btnRutaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRutaActionPerformed
-        lblErrorDestino.setVisible(false);
-        if (destino!= null) {
+        if (editacion) {
             for (int i = 0; i < puntos.size(); i++) {
-                puntos.get(i).setNumero(1+i);
+                puntos.get(i).setNumero(1 + i);
                 puntos.get(i).setCodigoRuta(codigoRuta);
             }
-            Ruta nuevaRuta = new Ruta(codigoRuta,true, destino, puntos);
-            ControladorDB.guardarRuta(nuevaRuta);
-             JOptionPane.showMessageDialog(this, "Codigo: "+nuevaRuta.getCodigo()+"   Destino: "+nuevaRuta.getDestino().getNombre() , "Ruta Creada", JOptionPane.INFORMATION_MESSAGE);
-             this.setVisible(false);
-        }else{
-            lblErrorDestino.setVisible(true);
-            
+            TransferenciasDB.actualizarPuntos(codigoRuta, puntos);
+        } else {
+            lblErrorDestino.setVisible(false);
+            if (destino != null) {
+                for (int i = 0; i < puntos.size(); i++) {
+                    puntos.get(i).setNumero(1 + i);
+                    puntos.get(i).setCodigoRuta(codigoRuta);
+                }
+                Ruta nuevaRuta = new Ruta(codigoRuta, true, destino, puntos);
+                ControladorDB.guardarRuta(nuevaRuta);
+                JOptionPane.showMessageDialog(this, "Codigo: " + nuevaRuta.getCodigo() + "   Destino: " + nuevaRuta.getDestino().getNombre(), "Ruta Creada", JOptionPane.INFORMATION_MESSAGE);
+                this.setVisible(false);
+            } else {
+                lblErrorDestino.setVisible(true);
+            }
         }
     }//GEN-LAST:event_btnRutaActionPerformed
 
-private void desabilitarOpciones(boolean b){
-    lblCodigo.setVisible(b);
-    lblPosicion.setVisible(b);
-    btnEliminar.setVisible(b);
-    labelCodigo.setVisible(b);
-    spinnerPosicion.setVisible(b);
-    
-}
-private void mostrarDestinos(){
-    destinosPosibles=ControladorDB.obtenerDestino();
-    if (destinosPosibles!=null) {
-        for (int i = 0; i < destinosPosibles.size(); i++) {
-            cBoxDestinos.addItem(String.valueOf(destinosPosibles.get(i).getCodigo())+" - "+destinosPosibles.get(i).getNombre());            
-        }
-    }else{
-        cBoxDestinos.setEnabled(false);
-    }
-}
-protected  void agregarPunto(PuntoDeControl puntoNuevo){
-    puntos.add(puntoNuevo);
-    agregarPuntosATabla();
-}
-protected  void agregarDestino(Destino destino){
-    this.destino=destino;
-    destinosPosibles.add(destino);
-    cBoxDestinos.addItem(destino.getCodigo()+" - "+destino.getNombre());
-    cBoxDestinos.setSelectedIndex(destinosPosibles.size()-1);
-}
-private void agregarPuntosATabla(){
-    DefaultTableModel model = (DefaultTableModel) tblPuntos.getModel();
-    int aux=model.getRowCount();
-    for (int i = aux; i > 0; i--) {
-        model.removeRow(i-1);
-        
-    }
-            for (int i = 0; i < puntos.size(); i++) {//Creacion de Celdas
-                 model.addRow(new Object[] {"","","","",""});
-                 tblPuntos.setValueAt(1+i, i,0 );
-                 tblPuntos.setValueAt(puntos.get(i).getCodigo(), i, 1);
-                 tblPuntos.setValueAt(puntos.get(i).getCapacidad(), i, 2);
-                 tblPuntos.setValueAt(puntos.get(i).getUser().getUserName(), i, 3);
-                 tblPuntos.setValueAt(puntos.get(i).getPrecio().get(puntos.get(i).getPrecio().size()-1).getPrecio(), i, 4);                
-            }
+    private void desabilitarOpciones(boolean b) {
+        lblCodigo.setVisible(b);
+        lblPosicion.setVisible(b);
+        btnEliminar.setVisible(b);
+        labelCodigo.setVisible(b);
+        spinnerPosicion.setVisible(b);
 
-           
-}
+    }
+
+    private void mostrarDestinos() {
+        destinosPosibles = ControladorDB.obtenerDestino();
+        if (destinosPosibles != null) {
+            for (int i = 0; i < destinosPosibles.size(); i++) {
+                cBoxDestinos.addItem(String.valueOf(destinosPosibles.get(i).getCodigo()) + " - " + destinosPosibles.get(i).getNombre());
+            }
+        } else {
+            cBoxDestinos.setEnabled(false);
+        }
+    }
+
+    protected void agregarPunto(PuntoDeControl puntoNuevo) {
+        puntos.add(puntoNuevo);
+        agregarPuntosATabla();
+        if (editacion) {
+            btnRuta.setEnabled(true);
+        }
+    }
+
+    protected void agregarDestino(Destino destino) {
+        this.destino = destino;
+        destinosPosibles.add(destino);
+        cBoxDestinos.addItem(destino.getCodigo() + " - " + destino.getNombre());
+        cBoxDestinos.setSelectedIndex(destinosPosibles.size() - 1);
+    }
+
+    private void agregarPuntosATabla() {
+        DefaultTableModel model = (DefaultTableModel) tblPuntos.getModel();
+        int aux = model.getRowCount();
+        for (int i = aux; i > 0; i--) {
+            model.removeRow(i - 1);
+
+        }
+        for (int i = 0; i < puntos.size(); i++) {//Creacion de Celdas
+            model.addRow(new Object[]{"", "", "", "", ""});
+            tblPuntos.setValueAt(1 + i, i, 0);
+            tblPuntos.setValueAt(puntos.get(i).getCodigo(), i, 1);
+            tblPuntos.setValueAt(puntos.get(i).getCapacidad(), i, 2);
+            tblPuntos.setValueAt(puntos.get(i).getUser().getUserName(), i, 3);
+            tblPuntos.setValueAt("$" + String.format("%6.2f", puntos.get(i).getPrecio().get(puntos.get(i).getPrecio().size() - 1).getPrecio()), i, 4);
+        }
+
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarPunto;
     private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnNuevoDestino;
     private javax.swing.JButton btnRuta;
     private javax.swing.JComboBox<String> cBoxDestinos;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
