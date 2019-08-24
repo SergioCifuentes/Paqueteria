@@ -12,6 +12,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static paqueteria.DB.ControladorDB.verificarPaquete;
 import paqueteria.Ruta.PuntoDeControl;
 import paqueteria.Ruta.Tarifa;
@@ -29,9 +31,7 @@ public class TransferenciasDB {
     private final static String STATEMENT_UPDATE_NUMERO_COLA = "UPDATE Paquete SET numeroEnCola =? WHERE codigo =?";
     private final static String STATEMENT_UPDATE_PRECIO_PERDIDO = "UPDATE Paquete SET precioPerdido =precioPerdido+? WHERE codigo =?";
     private final static String STATEMENT_PAQUETE_POR_PUNTO = "SELECT * FROM Paquete WHERE codigoPunto = ?";
-    private final static String USER = "root";
-    private final static String PASSWORD = "danielito";
-    private final static String STRING_CONNECTION = "jdbc:mysql://localhost:3306/paquetes";
+
     private static Connection coneccion2 = null;
 
     public TransferenciasDB() {
@@ -52,17 +52,18 @@ public class TransferenciasDB {
         }
 
     }
+
     public static void registrarRetiroDePaquete(int codigo) {
         try {
             PreparedStatement declaracionPreparada = coneccion2.prepareStatement(STATEMENT_REGISTRAR_RETIRO);
-            declaracionPreparada.setString(1,String.valueOf(LocalDateTime.now()));
+            declaracionPreparada.setString(1, String.valueOf(LocalDateTime.now()));
             declaracionPreparada.setString(2, String.valueOf(codigo));
             declaracionPreparada.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error Al Retirar");
         }
 
-    }    
+    }
 
     public static ArrayList<Paquete> obtenerPaquetesPorPunto(int codigoPunto) {
         ArrayList<Paquete> codigos = new ArrayList();
@@ -92,28 +93,28 @@ public class TransferenciasDB {
     public static void procesarPaquete(Paquete paquete, float tarifa) {
         //En caso de que el paquete ya este en su ultimo punto de control
         try {
-            coneccion2.setAutoCommit(false);            
+            coneccion2.setAutoCommit(false);
             PreparedStatement declaracionPaqueteCodigo = coneccion2.prepareStatement(STATEMENT_UPDATE_CODIGO_PUNTO);
             PreparedStatement declaracionPaqueteNumero = coneccion2.prepareStatement(STATEMENT_UPDATE_NUMERO_COLA);
             PreparedStatement declaracionPrecio = coneccion2.prepareStatement(STATEMENT_UPDATE_PRECIO_PERDIDO);
-            
+
             if (paquete.getPunto().getNumero() == ControladorDB.obtenerPuntosPorRuta(paquete.getRuta().getCodigo()).size()) {
                 moverEstadoDePaquete(paquete.getCodigo());
                 registrarRetiroDePaquete(paquete.getCodigo());
-                declaracionPaqueteCodigo.setString(1, null);                
-                declaracionPaqueteNumero.setString(1, null); 
-            }else{
-                int codigoSiguientePunto=obtenerSiguientePunto(paquete.getPunto()).getCodigo();
-                declaracionPaqueteCodigo.setString(1,String.valueOf(codigoSiguientePunto));
-                declaracionPaqueteNumero.setString(1,String.valueOf(obtenerPaquetesPorPunto(codigoSiguientePunto).size()+1));
+                declaracionPaqueteCodigo.setString(1, null);
+                declaracionPaqueteNumero.setString(1, null);
+            } else {
+                int codigoSiguientePunto = obtenerSiguientePunto(paquete.getPunto()).getCodigo();
+                declaracionPaqueteCodigo.setString(1, String.valueOf(codigoSiguientePunto));
+                declaracionPaqueteNumero.setString(1, String.valueOf(obtenerPaquetesPorPunto(codigoSiguientePunto).size() + 1));
             }
-            declaracionPrecio.setString(1,String.valueOf(tarifa));
+            declaracionPrecio.setString(1, String.valueOf(tarifa));
             declaracionPrecio.setString(2, String.valueOf(paquete.getCodigo()));
             declaracionPaqueteCodigo.setString(2, String.valueOf(paquete.getCodigo()));
             declaracionPaqueteNumero.setString(2, String.valueOf(paquete.getCodigo()));
             declaracionPrecio.executeUpdate();
             declaracionPaqueteCodigo.executeUpdate();
-            declaracionPaqueteNumero.executeUpdate();          
+            declaracionPaqueteNumero.executeUpdate();
             coneccion2.commit();
             coneccion2.setAutoCommit(true);
         } catch (SQLException ex) {
@@ -126,9 +127,36 @@ public class TransferenciasDB {
         }
 
     }
-    public static PuntoDeControl obtenerSiguientePunto(PuntoDeControl puntoAnterior){
+
+    public static PuntoDeControl obtenerSiguientePunto(PuntoDeControl puntoAnterior) {
         System.out.println(puntoAnterior.getCodigoRuta());
-        ArrayList<PuntoDeControl> puntosDeRuta=ControladorDB.obtenerPuntosPorRuta(puntoAnterior.getCodigoRuta());
+        ArrayList<PuntoDeControl> puntosDeRuta = ControladorDB.obtenerPuntosPorRuta(puntoAnterior.getCodigoRuta());
         return puntosDeRuta.get(puntoAnterior.getNumero());
     }
+
+    public static void ingresarPaqueteDesdeBodega(Paquete paquete, PuntoDeControl puntoSiguinte) {
+        try {
+            coneccion2.setAutoCommit(false);
+            moverEstadoDePaquete(paquete.getCodigo());            
+            PreparedStatement declaracionPaqueteCodigo = coneccion2.prepareStatement(STATEMENT_UPDATE_CODIGO_PUNTO);
+            PreparedStatement declaracionPaqueteNumero = coneccion2.prepareStatement(STATEMENT_UPDATE_NUMERO_COLA);
+            declaracionPaqueteCodigo.setString(1,String.valueOf(puntoSiguinte.getCodigo()));
+            declaracionPaqueteNumero.setString(1, String.valueOf(obtenerPaquetesPorPunto(puntoSiguinte.getCodigo()).size()+1));
+            declaracionPaqueteCodigo.setString(2, String.valueOf(paquete.getCodigo()));
+            declaracionPaqueteNumero.setString(2, String.valueOf(paquete.getCodigo()));
+            declaracionPaqueteCodigo.executeUpdate();
+            declaracionPaqueteNumero.executeUpdate();
+            coneccion2.commit();
+            coneccion2.setAutoCommit(true);
+        } catch (SQLException ex) {
+            try {
+                coneccion2.rollback();
+            } catch (SQLException ex1) {
+                System.out.println("Error RollBack");
+            }
+        }
+    }
+    private final static String USER = "root";
+    private final static String PASSWORD = "danielito";
+    private final static String STRING_CONNECTION = "jdbc:mysql://localhost:3306/paquetes";
 }
