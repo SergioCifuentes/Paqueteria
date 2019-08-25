@@ -13,15 +13,21 @@ import paqueteria.ui.IngresoDeUsuario;
  * @author sergio
  */
 public class Administracion extends javax.swing.JFrame {
-    private Administrador user=null;
+
+    private Administrador user = null;
+
     /**
      * Creates new form Administracion
+     *
      * @param user
      */
     public Administracion(Administrador user) {
-        this.user=user;
+        this.user = user;
         initComponents();
-        
+        GraficaGanancias nuevo = new GraficaGanancias();
+        dskVentana.add(nuevo);
+        nuevo.setVisible(true);
+
     }
 
     /**
@@ -255,6 +261,11 @@ public class Administracion extends javax.swing.JFrame {
         jMenuItem5.setForeground(java.awt.Color.black);
         jMenuItem5.setText("Ganancias");
         jMenuItem5.setOpaque(true);
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem5);
 
         mItemRutas.setForeground(java.awt.Color.black);
@@ -341,9 +352,9 @@ public class Administracion extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void mItemLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mItemLogOutActionPerformed
-       IngresoDeUsuario logOut = new IngresoDeUsuario();
-       logOut.setVisible(true);
-       this.setVisible(false);
+        IngresoDeUsuario logOut = new IngresoDeUsuario();
+        logOut.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_mItemLogOutActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
@@ -375,21 +386,21 @@ public class Administracion extends javax.swing.JFrame {
     }//GEN-LAST:event_menuTarifasMouseClicked
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        UsuariosExistentes usuariosExistentes = new UsuariosExistentes(user,this);
+        UsuariosExistentes usuariosExistentes = new UsuariosExistentes(user, this);
         dskVentana.add(usuariosExistentes);
         usuariosExistentes.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void menuEditarRutaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEditarRutaActionPerformed
-       MostradorDeRutas nuevaMostador= new MostradorDeRutas(MostradorDeRutas.IDENTIFICADO_EDITADOR,this.dskVentana);
-       dskVentana.add(nuevaMostador);
-       nuevaMostador.setVisible(true);
+        MostradorDeRutas nuevaMostador = new MostradorDeRutas(MostradorDeRutas.IDENTIFICADO_EDITADOR, this.dskVentana);
+        dskVentana.add(nuevaMostador);
+        nuevaMostador.setVisible(true);
     }//GEN-LAST:event_menuEditarRutaActionPerformed
 
     private void menuDesactivarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuDesactivarActionPerformed
-      MostradorDeRutas nuevaMostador= new MostradorDeRutas(MostradorDeRutas.IDENTIFICADO_DESACTIVADOR,this.dskVentana);
-       dskVentana.add(nuevaMostador);
-       nuevaMostador.setVisible(true);  
+        MostradorDeRutas nuevaMostador = new MostradorDeRutas(MostradorDeRutas.IDENTIFICADO_DESACTIVADOR, this.dskVentana);
+        dskVentana.add(nuevaMostador);
+        nuevaMostador.setVisible(true);
     }//GEN-LAST:event_menuDesactivarActionPerformed
 
     private void menuItemEditarPuntoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemEditarPuntoActionPerformed
@@ -399,7 +410,7 @@ public class Administracion extends javax.swing.JFrame {
     }//GEN-LAST:event_menuItemEditarPuntoActionPerformed
 
     private void menuAyudaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuAyudaMousePressed
-        Ayuda nuevaAyuda= new Ayuda();
+        Ayuda nuevaAyuda = new Ayuda();
         dskVentana.add(nuevaAyuda);
         nuevaAyuda.setVisible(true);
     }//GEN-LAST:event_menuAyudaMousePressed
@@ -408,7 +419,7 @@ public class Administracion extends javax.swing.JFrame {
         CambioTarifas cambioTarifas = new CambioTarifas();
         dskVentana.add(cambioTarifas);
         cambioTarifas.setVisible(true);
-        
+
     }//GEN-LAST:event_menuTarifasMousePressed
 
     private void menuItemEditarDestinoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemEditarDestinoActionPerformed
@@ -441,10 +452,15 @@ public class Administracion extends javax.swing.JFrame {
         nuevaRutasPopulares.setVisible(true);
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        GraficaGanancias nuevo = new GraficaGanancias();
+        dskVentana.add(nuevo);
+        nuevo.setVisible(true);
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
     /**
      * @param args the command line arguments
      */
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane dskVentana;

@@ -4,19 +4,25 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/ui/Administracion/NuevoPunto.java</file>
+            <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/ui/Recepcion/PaquetesEnDestino.java</file>
             <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/DB/TransferenciasDB.java</file>
             <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/Ruta/Ruta.java</file>
             <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/ui/Recepcion/Factura.java</file>
             <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/Ruta/Destino.java</file>
+            <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/ui/Recepcion/AyudaRecepcion.java</file>
             <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/ui/Operador/AreaOperador.java</file>
+            <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/ui/Recepcion/PrecioDestino.java</file>
             <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/ui/Recepcion/PreciosRecepcion.java</file>
             <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/Usuario/Operador.java</file>
+            <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/ui/Administracion/EditacionDePuntos.java</file>
+            <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/ui/Administracion/PaquetesEnRuta.java</file>
             <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/ui/Administracion/NuevaRuta.java</file>
             <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/DB/GeneradorDeCodigos.java</file>
             <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/DB/ControladorDB.java</file>
             <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/ui/Administracion/CambioTarifas.java</file>
             <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/Usuario/Usuario.java</file>
             <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/ui/Recepcion/Recepcion.java</file>
+            <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/ui/Recepcion/ConsultaDePaquete.java</file>
             <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/ui/Administracion/UsuariosExistentes.java</file>
             <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/ui/Administracion/NuevoDestino.java</file>
             <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/Ruta/PuntoDeControl.java</file>
@@ -31,6 +37,7 @@
             <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/Usuario/Recepcionista.java</file>
             <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/ui/Administracion/NuevoUsuario.java</file>
             <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/Paqueteria.java</file>
+            <file>file:/home/sergio/IPC2Proyectos/Paqueteria/src/paqueteria/DB/ControladorDeBodega.java</file>
         </group>
     </open-files>
 </project-private>

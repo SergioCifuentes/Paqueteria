@@ -46,6 +46,7 @@ public class GananciaDeRutas extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        barRenderer1 = new org.jfree.chart.renderer.category.BarRenderer();
         btnExportar = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
         lblErrorRutas = new javax.swing.JLabel();
@@ -325,6 +326,7 @@ public class GananciaDeRutas extends javax.swing.JInternalFrame {
         }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private org.jfree.chart.renderer.category.BarRenderer barRenderer1;
     private javax.swing.JButton btnExportar;
     private javax.swing.JButton btnSalir;
     private com.toedter.calendar.JDateChooser dateFinal;

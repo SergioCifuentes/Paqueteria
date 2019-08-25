@@ -92,7 +92,8 @@ public class AreaOperador extends javax.swing.JFrame {
         });
         getContentPane().add(comBoxPunto, new org.netbeans.lib.awtextra.AbsoluteConstraints(205, 12, 165, -1));
 
-        jLabel1.setForeground(java.awt.Color.black);
+        jLabel1.setBackground(java.awt.Color.white);
+        jLabel1.setForeground(java.awt.Color.white);
         jLabel1.setText("Puntos De Control:");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(31, 17, -1, -1));
 
