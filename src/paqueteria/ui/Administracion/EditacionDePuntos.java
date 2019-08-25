@@ -184,7 +184,6 @@ public class EditacionDePuntos extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnEditarActionPerformed
     private void buscar(String palabra) {
         if (!"".equals(palabra)) {
-            System.out.println(palabra);
             ArrayList<PuntoDeControl> aux = new ArrayList<>();
             for (int i = 0; i < puntos.size(); i++) {
                 if (String.valueOf(puntos.get(i).getCodigo()).startsWith(palabra)) {

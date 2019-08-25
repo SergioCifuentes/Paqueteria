@@ -36,6 +36,7 @@ public class Administracion extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem9 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
         dskVentana = new javax.swing.JDesktopPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuUsuarios = new javax.swing.JMenu();
@@ -45,6 +46,7 @@ public class Administracion extends javax.swing.JFrame {
         jMenuItem3 = new javax.swing.JMenuItem();
         menuEditarRuta = new javax.swing.JMenuItem();
         menuDesactivar = new javax.swing.JMenuItem();
+        mItemPackEnRuta = new javax.swing.JMenuItem();
         menuPuntos = new javax.swing.JMenu();
         menuItemEditarPunto = new javax.swing.JMenuItem();
         menuItemTarifa = new javax.swing.JMenuItem();
@@ -53,6 +55,11 @@ public class Administracion extends javax.swing.JFrame {
         menuItemEditarDestino = new javax.swing.JMenuItem();
         menuTarifas = new javax.swing.JMenu();
         menuAyuda = new javax.swing.JMenu();
+        jMenu2 = new javax.swing.JMenu();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        jMenuItem7 = new javax.swing.JMenuItem();
+        jMenuItem8 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         menuUsuario = new javax.swing.JMenu();
         mItemLogOut = new javax.swing.JMenuItem();
@@ -62,6 +69,8 @@ public class Administracion extends javax.swing.JFrame {
         jMenu3.setText("jMenu3");
 
         jMenuItem9.setText("jMenuItem9");
+
+        jMenuItem4.setText("jMenuItem4");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Administracion");
@@ -142,6 +151,14 @@ public class Administracion extends javax.swing.JFrame {
             }
         });
         menuRutas.add(menuDesactivar);
+
+        mItemPackEnRuta.setText("Paquetes En Ruta");
+        mItemPackEnRuta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mItemPackEnRutaActionPerformed(evt);
+            }
+        });
+        menuRutas.add(mItemPackEnRuta);
 
         jMenuBar1.add(menuRutas);
 
@@ -227,7 +244,24 @@ public class Administracion extends javax.swing.JFrame {
         });
         jMenuBar1.add(menuAyuda);
 
-        jMenu4.setText("                                                                              ");
+        jMenu2.setForeground(java.awt.Color.black);
+        jMenu2.setText("Estadistica");
+
+        jMenuItem5.setText("Ganancias");
+        jMenu2.add(jMenuItem5);
+
+        jMenuItem6.setText("Rutas");
+        jMenu2.add(jMenuItem6);
+
+        jMenuItem7.setText("Clientes");
+        jMenu2.add(jMenuItem7);
+
+        jMenuItem8.setText("Imagen Ruta");
+        jMenu2.add(jMenuItem8);
+
+        jMenuBar1.add(jMenu2);
+
+        jMenu4.setText("                                                         ");
         jMenu4.setEnabled(false);
         jMenuBar1.add(jMenu4);
 
@@ -350,6 +384,12 @@ public class Administracion extends javax.swing.JFrame {
         nuevoEditarDestino.setVisible(true);
     }//GEN-LAST:event_menuItemEditarDestinoActionPerformed
 
+    private void mItemPackEnRutaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mItemPackEnRutaActionPerformed
+        PaquetesEnRuta nuevoPaquetesEnRuta = new PaquetesEnRuta();
+        dskVentana.add(nuevoPaquetesEnRuta);
+        nuevoPaquetesEnRuta.setVisible(true);
+    }//GEN-LAST:event_mItemPackEnRutaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -358,6 +398,7 @@ public class Administracion extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane dskVentana;
     private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
@@ -366,8 +407,14 @@ public class Administracion extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JMenuItem mItemLogOut;
+    private javax.swing.JMenuItem mItemPackEnRuta;
     private javax.swing.JMenu menuAyuda;
     private javax.swing.JMenuItem menuDesactivar;
     private javax.swing.JMenuItem menuEditarRuta;

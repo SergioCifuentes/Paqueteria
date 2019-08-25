@@ -32,7 +32,8 @@ public class TransferenciasDB {
     private final static String STATEMENT_UPDATE_NUMERO_COLA = "UPDATE Paquete SET numeroEnCola =? WHERE codigo =?";
     private final static String STATEMENT_UPDATE_PRECIO_PERDIDO = "UPDATE Paquete SET precioPerdido =precioPerdido+? WHERE codigo =?";
     private final static String STATEMENT_PAQUETE_POR_PUNTO = "SELECT * FROM Paquete WHERE codigoPunto = ?";
-    private final static String STATEMENT_PAQUETE_POR_RUTA = "SELECT * FROM Paquete WHERE codigoRuta = ? AND estado<3";
+    private final static String STATEMENT_PAQUETE_POR_RUTA_ACTIVOS = "SELECT * FROM Paquete WHERE codigoRuta = ? AND estado<3";
+    private final static String STATEMENT_PAQUETE_POR_RUTA_SALIDOS = "SELECT * FROM Paquete WHERE codigoRuta = ? AND estado>=3";
     private final static String STATEMENT_PUNTOS_DE_CONTROL = "SELECT * FROM PuntoDeControl ORDER BY codigoRuta ";
 
     private static Connection coneccion2 = null;
@@ -86,7 +87,7 @@ public class TransferenciasDB {
     public static ArrayList<Paquete> obtenerPaquetesActivosPorRuta(int codigoRuta) {
         ArrayList<Paquete> codigos = new ArrayList();
         try {
-            PreparedStatement declaracionPreparada = coneccion2.prepareStatement(STATEMENT_PAQUETE_POR_RUTA);
+            PreparedStatement declaracionPreparada = coneccion2.prepareStatement(STATEMENT_PAQUETE_POR_RUTA_ACTIVOS);
             declaracionPreparada.setString(1, String.valueOf(codigoRuta));
             ResultSet resultado2 = declaracionPreparada.executeQuery();
             while (resultado2.next()) {
@@ -97,6 +98,20 @@ public class TransferenciasDB {
         }
         return codigos;
     }
+    public static ArrayList<Paquete> obtenerPaquetesNoActivosPorRuta(int codigoRuta) {
+        ArrayList<Paquete> codigos = new ArrayList();
+        try {
+            PreparedStatement declaracionPreparada = coneccion2.prepareStatement(STATEMENT_PAQUETE_POR_RUTA_SALIDOS);
+            declaracionPreparada.setString(1, String.valueOf(codigoRuta));
+            ResultSet resultado2 = declaracionPreparada.executeQuery();
+            while (resultado2.next()) {
+                codigos.add(verificarPaquete(resultado2.getInt("codigo")));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error SQL");
+        }
+        return codigos;
+    }    
 
     public static float obtenerTarifaDePaquete(Paquete paquete) {
         ArrayList<Tarifa> tarifas = ControladorDB.obtenerPreciosPorCodigo(paquete.getPunto().getCodigo(), ControladorDB.TIPO_PRECIO_PUNTO);
