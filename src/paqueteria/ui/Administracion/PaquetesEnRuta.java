@@ -5,10 +5,13 @@
  */
 package paqueteria.ui.Administracion;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import paqueteria.DB.ControladorDB;
 import paqueteria.DB.TransferenciasDB;
+import paqueteria.GeneradorHTML;
 import paqueteria.Ruta.Ruta;
 
 /**
@@ -40,42 +43,20 @@ public class PaquetesEnRuta extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tblRuta = new javax.swing.JTable();
         btnFiltrar = new javax.swing.JButton();
         txtBuscador = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         btnSalir = new javax.swing.JButton();
         lblErrorRutas = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblRuta = new javax.swing.JTable();
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         setIconifiable(true);
         setTitle("Paquetes En Ruta");
-
-        tblRuta.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Codigo", "Destino", "Estado", "Paq. En Ruta", "Paq. Salido", "Total Paq."
-            }
-        ));
-        jScrollPane1.setViewportView(tblRuta);
-        if (tblRuta.getColumnModel().getColumnCount() > 0) {
-            tblRuta.getColumnModel().getColumn(0).setPreferredWidth(75);
-            tblRuta.getColumnModel().getColumn(0).setMaxWidth(75);
-            tblRuta.getColumnModel().getColumn(1).setPreferredWidth(110);
-            tblRuta.getColumnModel().getColumn(1).setMaxWidth(110);
-            tblRuta.getColumnModel().getColumn(2).setPreferredWidth(85);
-            tblRuta.getColumnModel().getColumn(2).setMaxWidth(85);
-            tblRuta.getColumnModel().getColumn(3).setPreferredWidth(95);
-            tblRuta.getColumnModel().getColumn(3).setMaxWidth(95);
-            tblRuta.getColumnModel().getColumn(4).setPreferredWidth(85);
-            tblRuta.getColumnModel().getColumn(4).setMaxWidth(85);
-            tblRuta.getColumnModel().getColumn(5).setPreferredWidth(85);
-            tblRuta.getColumnModel().getColumn(5).setMaxWidth(85);
-        }
 
         btnFiltrar.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
         btnFiltrar.setText("Filtrar(Estado)");
@@ -112,6 +93,40 @@ public class PaquetesEnRuta extends javax.swing.JInternalFrame {
         lblErrorRutas.setText("No Existen Rutas");
         lblErrorRutas.setVisible(false);
 
+        jButton1.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
+        jButton1.setText("Exportar (HTML)");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        tblRuta.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Codigo", "Destino", "Estado", "Paq. En Ruta", "Paq. Salido", "Total Paq."
+            }
+        ));
+        jScrollPane1.setViewportView(tblRuta);
+        if (tblRuta.getColumnModel().getColumnCount() > 0) {
+            tblRuta.getColumnModel().getColumn(0).setPreferredWidth(75);
+            tblRuta.getColumnModel().getColumn(0).setMaxWidth(75);
+            tblRuta.getColumnModel().getColumn(1).setPreferredWidth(110);
+            tblRuta.getColumnModel().getColumn(1).setMaxWidth(110);
+            tblRuta.getColumnModel().getColumn(2).setPreferredWidth(85);
+            tblRuta.getColumnModel().getColumn(2).setMaxWidth(85);
+            tblRuta.getColumnModel().getColumn(3).setPreferredWidth(95);
+            tblRuta.getColumnModel().getColumn(3).setMaxWidth(95);
+            tblRuta.getColumnModel().getColumn(4).setPreferredWidth(85);
+            tblRuta.getColumnModel().getColumn(4).setMaxWidth(85);
+            tblRuta.getColumnModel().getColumn(5).setPreferredWidth(85);
+            tblRuta.getColumnModel().getColumn(5).setMaxWidth(85);
+        }
+
+        jScrollPane2.setViewportView(jScrollPane1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -119,18 +134,19 @@ public class PaquetesEnRuta extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 531, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 531, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(104, 104, 104)
+                        .addComponent(lblErrorRutas)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(btnFiltrar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(176, 176, 176)
-                        .addComponent(lblErrorRutas)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -141,12 +157,13 @@ public class PaquetesEnRuta extends javax.swing.JInternalFrame {
                     .addComponent(btnFiltrar)
                     .addComponent(txtBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSalir)
-                    .addComponent(lblErrorRutas))
+                    .addComponent(lblErrorRutas)
+                    .addComponent(jButton1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -179,6 +196,11 @@ public class PaquetesEnRuta extends javax.swing.JInternalFrame {
         filtrarPorEstado();
         mostrarRutasEnTabla();
     }//GEN-LAST:event_btnFiltrarActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        GeneradorHTML.generarReprote(tblRuta,title,LocalDate.now());
+                JOptionPane.showMessageDialog(this, "Archivo HTML se encuentra en la carpeta 'Reportes'", "Exportado Correctamente", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_jButton1ActionPerformed
     private void filtrarPorEstado() {
         txtBuscador.setText("");
         ArrayList<Ruta> aux = new ArrayList<>();
@@ -242,7 +264,7 @@ public class PaquetesEnRuta extends javax.swing.JInternalFrame {
                 model.removeRow(i - 1);
             }
             for (int i = 0; i < rutas.size(); i++) {//Creacion de Celdas
-                model.addRow(new Object[]{"", "", "", ""});
+                model.addRow(new Object[]{"", "", "", "", "", ""});
                 tblRuta.setValueAt(rutas.get(i).getCodigo(), i, 0);
                 if (rutas.get(i).isEstado()) {
                     tblRuta.setValueAt("Activado", i, 2);
@@ -265,8 +287,10 @@ public class PaquetesEnRuta extends javax.swing.JInternalFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnFiltrar;
     private javax.swing.JButton btnSalir;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblErrorRutas;
     private javax.swing.JTable tblRuta;
     private javax.swing.JTextField txtBuscador;

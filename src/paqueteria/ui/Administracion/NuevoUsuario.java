@@ -185,7 +185,7 @@ public class NuevoUsuario extends javax.swing.JInternalFrame {
     }
 
     private boolean verificarCamposLlenos() {
-        if (txtUserName.getText().equals("") || "".equals(password.getText())) {
+            if (txtUserName.getText().equals("") || "".equals(password.getText())) {
             lblErrorUser.setText(ERROR_CAMPO_NO_LLENADO);
             return false;
         } else {

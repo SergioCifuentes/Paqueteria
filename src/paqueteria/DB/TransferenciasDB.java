@@ -33,7 +33,9 @@ public class TransferenciasDB {
     private final static String STATEMENT_UPDATE_PRECIO_PERDIDO = "UPDATE Paquete SET precioPerdido =precioPerdido+? WHERE codigo =?";
     private final static String STATEMENT_PAQUETE_POR_PUNTO = "SELECT * FROM Paquete WHERE codigoPunto = ?";
     private final static String STATEMENT_PAQUETE_POR_RUTA_ACTIVOS = "SELECT * FROM Paquete WHERE codigoRuta = ? AND estado<3";
+    private final static String STATEMENT_PAQUETE_POR_RUTA= "SELECT * FROM Paquete WHERE codigoRuta = ? ";
     private final static String STATEMENT_PAQUETE_POR_RUTA_SALIDOS = "SELECT * FROM Paquete WHERE codigoRuta = ? AND estado>=3";
+    private final static String STATEMENT_PAQUETE_POR_CLIENTE = "SELECT * FROM Paquete WHERE codigoCliente = ?";
     private final static String STATEMENT_PUNTOS_DE_CONTROL = "SELECT * FROM PuntoDeControl ORDER BY codigoRuta ";
 
     private static Connection coneccion2 = null;
@@ -98,6 +100,7 @@ public class TransferenciasDB {
         }
         return codigos;
     }
+    
     public static ArrayList<Paquete> obtenerPaquetesNoActivosPorRuta(int codigoRuta) {
         ArrayList<Paquete> codigos = new ArrayList();
         try {
@@ -111,7 +114,21 @@ public class TransferenciasDB {
             System.out.println("Error SQL");
         }
         return codigos;
-    }    
+    }
+    public static ArrayList<Paquete> obtenerPaquetesPorCliente(int codigoCliente) {
+        ArrayList<Paquete> codigos = new ArrayList();
+        try {
+            PreparedStatement declaracionPreparada = coneccion2.prepareStatement(STATEMENT_PAQUETE_POR_CLIENTE);
+            declaracionPreparada.setString(1, String.valueOf(codigoCliente));
+            ResultSet resultado2 = declaracionPreparada.executeQuery();
+            while (resultado2.next()) {
+                codigos.add(verificarPaquete(resultado2.getInt("codigo")));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error SQL");
+        }
+        return codigos;
+    }        
 
     public static float obtenerTarifaDePaquete(Paquete paquete) {
         ArrayList<Tarifa> tarifas = ControladorDB.obtenerPreciosPorCodigo(paquete.getPunto().getCodigo(), ControladorDB.TIPO_PRECIO_PUNTO);
@@ -246,6 +263,80 @@ public class TransferenciasDB {
             System.out.println("Error SQL");
         }
         return puntos;
+    }
+    public static float  obtenerGananciasPorRuta(int codigoRuta) {
+        float ganancias = 0;
+        try {
+            PreparedStatement declaracionPreparada = coneccion2.prepareStatement(STATEMENT_PAQUETE_POR_RUTA_ACTIVOS);
+            declaracionPreparada.setString(1, String.valueOf(codigoRuta));
+            ResultSet resultado2 = declaracionPreparada.executeQuery();
+            while (resultado2.next()) {
+                ganancias=ganancias+verificarPaquete(resultado2.getInt("codigo")).getPrecioPagado();
+            }
+            declaracionPreparada = coneccion2.prepareStatement(STATEMENT_PAQUETE_POR_RUTA_SALIDOS);
+            declaracionPreparada.setString(1, String.valueOf(codigoRuta));
+            ResultSet resultado3 = declaracionPreparada.executeQuery();
+            while (resultado3.next()) {
+                ganancias=ganancias+verificarPaquete(resultado3.getInt("codigo")).getPrecioPagado();
+            }
+        } catch (SQLException e) {
+            System.out.println("Error SQL");
+        }
+        return ganancias;
+    }    
+    public static float  obtenerPerdidaPorRuta(int codigoRuta) {
+        float perdida = 0;
+        try {
+            PreparedStatement declaracionPreparada = coneccion2.prepareStatement(STATEMENT_PAQUETE_POR_RUTA_ACTIVOS);
+            declaracionPreparada.setString(1, String.valueOf(codigoRuta));
+            ResultSet resultado2 = declaracionPreparada.executeQuery();
+            while (resultado2.next()) {
+                perdida=perdida+verificarPaquete(resultado2.getInt("codigo")).getPrecioPerdido();
+            }
+            declaracionPreparada = coneccion2.prepareStatement(STATEMENT_PAQUETE_POR_RUTA_SALIDOS);
+            declaracionPreparada.setString(1, String.valueOf(codigoRuta));
+            ResultSet resultado3 = declaracionPreparada.executeQuery();
+            while (resultado3.next()) {
+                perdida=perdida+verificarPaquete(resultado3.getInt("codigo")).getPrecioPerdido();
+            }
+        } catch (SQLException e) {
+            System.out.println("Error SQL");
+        }
+        return perdida;
+    }
+    public static float  obtenerGananciasPorRutaFecha(int codigoRuta,LocalDateTime inicio,LocalDateTime fin) {
+        float ganancias = 0;
+        ArrayList<Paquete> paquetesFecha = obtenerPaquetesPorRutaFecha(codigoRuta, inicio, fin);
+        for (int i = 0; i < paquetesFecha.size(); i++) {
+            ganancias= ganancias+paquetesFecha.get(i).getPrecioPagado();            
+        }
+        return ganancias;
+    }
+    public static float  obtenerPerdidaPorRutaFecha(int codigoRuta,LocalDateTime inicio,LocalDateTime fin) {
+        float perdidas = 0;
+        ArrayList<Paquete> paquetesFecha = obtenerPaquetesPorRutaFecha(codigoRuta, inicio, fin);
+        for (int i = 0; i < paquetesFecha.size(); i++) {
+            perdidas= perdidas+paquetesFecha.get(i).getPrecioPerdido();            
+        }
+        return perdidas;
+    }
+        public static ArrayList<Paquete> obtenerPaquetesPorRutaFecha(int codigoRuta,LocalDateTime inicio,LocalDateTime fin) {
+        ArrayList<Paquete> codigos = new ArrayList();
+        try {
+            PreparedStatement declaracionPreparada = coneccion2.prepareStatement(STATEMENT_PAQUETE_POR_RUTA);
+            declaracionPreparada.setString(1, String.valueOf(codigoRuta));
+            ResultSet resultado2 = declaracionPreparada.executeQuery();
+            while (resultado2.next()) {
+                Paquete pack=verificarPaquete(resultado2.getInt("codigo"));
+                if (pack.getFechaIngresado().isBefore(fin)&&pack.getFechaIngresado().isAfter(inicio)) {
+                    codigos.add(pack);
+                }
+                
+            }
+        } catch (SQLException e) {
+            System.out.println("Error SQL");
+        }
+        return codigos;
     }
     private final static String USER = "root";
     private final static String PASSWORD = "danielito";

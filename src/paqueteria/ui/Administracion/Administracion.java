@@ -57,8 +57,9 @@ public class Administracion extends javax.swing.JFrame {
         menuAyuda = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem5 = new javax.swing.JMenuItem();
-        jMenuItem6 = new javax.swing.JMenuItem();
+        mItemRutas = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
         jMenuItem8 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         menuUsuario = new javax.swing.JMenu();
@@ -152,7 +153,10 @@ public class Administracion extends javax.swing.JFrame {
         });
         menuRutas.add(menuDesactivar);
 
+        mItemPackEnRuta.setBackground(java.awt.Color.white);
+        mItemPackEnRuta.setForeground(java.awt.Color.black);
         mItemPackEnRuta.setText("Paquetes En Ruta");
+        mItemPackEnRuta.setOpaque(true);
         mItemPackEnRuta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mItemPackEnRutaActionPerformed(evt);
@@ -192,10 +196,10 @@ public class Administracion extends javax.swing.JFrame {
         jMenuBar1.add(menuPuntos);
 
         jMenu5.setBackground(new java.awt.Color(254, 254, 254));
-        jMenu5.setForeground(new java.awt.Color(1, 1, 1));
+        jMenu5.setForeground(java.awt.Color.black);
         jMenu5.setText("Destinos");
-        jMenu5.setOpaque(true);
 
+        jMenuItem10.setForeground(java.awt.Color.black);
         jMenuItem10.setText("Nuevo Destino");
         jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -204,6 +208,7 @@ public class Administracion extends javax.swing.JFrame {
         });
         jMenu5.add(jMenuItem10);
 
+        menuItemEditarDestino.setForeground(java.awt.Color.black);
         menuItemEditarDestino.setText("Editar");
         menuItemEditarDestino.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -247,15 +252,43 @@ public class Administracion extends javax.swing.JFrame {
         jMenu2.setForeground(java.awt.Color.black);
         jMenu2.setText("Estadistica");
 
+        jMenuItem5.setForeground(java.awt.Color.black);
         jMenuItem5.setText("Ganancias");
+        jMenuItem5.setOpaque(true);
         jMenu2.add(jMenuItem5);
 
-        jMenuItem6.setText("Rutas");
-        jMenu2.add(jMenuItem6);
+        mItemRutas.setForeground(java.awt.Color.black);
+        mItemRutas.setText("Rutas");
+        mItemRutas.setOpaque(true);
+        mItemRutas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mItemRutasActionPerformed(evt);
+            }
+        });
+        jMenu2.add(mItemRutas);
 
+        jMenuItem7.setForeground(java.awt.Color.black);
         jMenuItem7.setText("Clientes");
+        jMenuItem7.setOpaque(true);
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem7);
 
+        jMenuItem6.setBackground(java.awt.Color.white);
+        jMenuItem6.setForeground(java.awt.Color.black);
+        jMenuItem6.setText("Populares");
+        jMenuItem6.setOpaque(true);
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem6);
+
+        jMenuItem8.setForeground(java.awt.Color.black);
         jMenuItem8.setText("Imagen Ruta");
         jMenu2.add(jMenuItem8);
 
@@ -390,6 +423,24 @@ public class Administracion extends javax.swing.JFrame {
         nuevoPaquetesEnRuta.setVisible(true);
     }//GEN-LAST:event_mItemPackEnRutaActionPerformed
 
+    private void mItemRutasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mItemRutasActionPerformed
+        GananciaDeRutas nuevoPaquetesEnRuta = new GananciaDeRutas();
+        dskVentana.add(nuevoPaquetesEnRuta);
+        nuevoPaquetesEnRuta.setVisible(true);
+    }//GEN-LAST:event_mItemRutasActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        GananciaClientes nuevoGananciaClientes = new GananciaClientes();
+        dskVentana.add(nuevoGananciaClientes);
+        nuevoGananciaClientes.setVisible(true);
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        RutasPopulares nuevaRutasPopulares = new RutasPopulares();
+        dskVentana.add(nuevaRutasPopulares);
+        nuevaRutasPopulares.setVisible(true);
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -415,6 +466,7 @@ public class Administracion extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JMenuItem mItemLogOut;
     private javax.swing.JMenuItem mItemPackEnRuta;
+    private javax.swing.JMenuItem mItemRutas;
     private javax.swing.JMenu menuAyuda;
     private javax.swing.JMenuItem menuDesactivar;
     private javax.swing.JMenuItem menuEditarRuta;
