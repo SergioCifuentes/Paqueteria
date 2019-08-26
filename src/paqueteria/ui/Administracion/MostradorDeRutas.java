@@ -7,8 +7,6 @@ package paqueteria.ui.Administracion;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -40,11 +38,8 @@ public class MostradorDeRutas extends javax.swing.JInternalFrame {
     public MostradorDeRutas(String tipo , JDesktopPane panel) {
         this.panel=panel;
         initComponents();
-        paquetesEnRuta = new ArrayList<>();
-        
-
+        paquetesEnRuta = new ArrayList<>(); 
             agregarRutas();
-
         this.tipo = tipo;
         btnAccion.setText(tipo);
 
@@ -148,6 +143,7 @@ public class MostradorDeRutas extends javax.swing.JInternalFrame {
 
     private void btnAccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccionActionPerformed
         Ruta rutaACAmbiar = rutas.get(tblRuta.getSelectedRow());
+        //En caso de que se desee desactivar
         if (tipo.equals(IDENTIFICADO_DESACTIVADOR)) {
             if (paquetesEnRuta.isEmpty()) {
                 if (rutaACAmbiar.isEstado()) {
@@ -162,6 +158,7 @@ public class MostradorDeRutas extends javax.swing.JInternalFrame {
             } else {
                 JOptionPane.showMessageDialog(this, "Esta Ruta Cuenta Con Paquetes", "Error Al Desactivar", JOptionPane.ERROR_MESSAGE);
             }
+            //En caso de querer editar
         } else if(tipo.equals(IDENTIFICADO_EDITADOR)){
             if (paquetesEnRuta.isEmpty()) {
                 NuevaRuta editarRuta = new NuevaRuta(panel, rutaACAmbiar);
@@ -171,6 +168,7 @@ public class MostradorDeRutas extends javax.swing.JInternalFrame {
             } else {
                 JOptionPane.showMessageDialog(this, "Esta Ruta Cuenta Con Paquetes", "Error Al Editar", JOptionPane.ERROR_MESSAGE);
             }
+            //En caso de querer su imagen
         }else{
             try {
                 GeneradorGraphviz.generar(rutaACAmbiar);
@@ -181,6 +179,7 @@ public class MostradorDeRutas extends javax.swing.JInternalFrame {
             this.setVisible(false);
         }
     }//GEN-LAST:event_btnAccionActionPerformed
+//Muetra los datos de todas las rutas posibles que existan    
     private void agregarRutas() {
         rutas = ControladorDB.obtenerRutas();
         if (rutas.size()>0) {

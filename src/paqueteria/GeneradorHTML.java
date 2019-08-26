@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JTable;
@@ -23,6 +22,7 @@ public class GeneradorHTML {
     static File carpeta = new File("Reportes");
     
     public static void generarReprote(JTable tabla, String nombre, LocalDate fechaGenerado) {
+        //Parte del header del html
         String head = "<!DOCTYPE html>\n"
                 + "<html lang=\"en\">\n"
                 + "<head>\n"
@@ -31,14 +31,17 @@ public class GeneradorHTML {
                 + "    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">\n"
                 + "    <title>Reporte " + nombre + "</title>\n"
                 + "</head>";
+        //Parte del body del html
         String body1 = "<body>\n"
                 + "    <div class=\"contenedor\">\n"
                 + "        <header style=\"background-color: rgb(1, 141, 141);text-align: center\">\n"
                 + "            <h1>" + nombre + "</h1>\n"
                 + "        </header>";
+        //Parte de la tabla del html
         String table = "            <article style=\"    border: 4px solid rgb(0, 70, 70);text-align: center;font-family: monospace;font-size: 15px \">\n"
                 + "                <h1>Tabla</h1>\n"
                 + "                <ul >\n";
+        //Parte del footer del html
         String footer = "</ul>\n"
                 + "            </article>\n"
                 + "        </section>\n"
@@ -57,9 +60,11 @@ public class GeneradorHTML {
             archivo.write(head.getBytes());
             archivo.write(body1.getBytes());
             archivo.write(table.getBytes());
+            //Por cada columna se le agregara al archivo el nombre de la columna y sus datos
             for (int i = 0; i < tabla.getColumnCount(); i++) {
                 String linea = "<div style=\"display: inline-block;margin: auto;border: 1px solid black;font-size: 20px\">" + tabla.getColumnName(i);
                 linea = linea + "<br>";
+                //Agregacion de todos los elementos de la tabla
                 for (int j = 0; j < tabla.getRowCount(); j++) {
                     linea = linea + tabla.getValueAt(j, i) + "<br>";
                     

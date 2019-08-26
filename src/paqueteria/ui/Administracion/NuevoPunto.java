@@ -33,6 +33,7 @@ private boolean editacion;
      * @param ruta
      * @param puntosCreados
      */
+//Si se desea crear un punto desde cero
     public NuevoPunto(NuevaRuta ruta,ArrayList<PuntoDeControl> puntosCreados) {
         this.ruta=ruta;
         editacion=false;
@@ -44,6 +45,7 @@ private boolean editacion;
         mostrarOperadores();
         spinnerTarifa.setValue(tarifaGlobal);
     }
+    //Si se desee editar un punto de control ya existente
         public NuevoPunto(PuntoDeControl puntoAEditar) {
             this.puntoDeControl=puntoAEditar;
         tarifaAEditar= puntoAEditar.getPrecio().get(puntoAEditar.getPrecio().size() - 1).getPrecio();
@@ -232,6 +234,7 @@ private boolean editacion;
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        //En caso de que se Editacion
         if (editacion) {
             puntoDeControl.setCapacidad((Integer)spinnerCapacidad.getValue());
             puntoDeControl.setUser(ControladorDB.verificarUserName((String)cBoxOperador.getSelectedItem()));
@@ -241,7 +244,7 @@ private boolean editacion;
             }       
             JOptionPane.showMessageDialog(this,"Punto Codigo: "+puntoDeControl.getCodigo()+" Actualizado","Punto Actualizado", JOptionPane.INFORMATION_MESSAGE);   
             this.setVisible(false);
-        }else{
+        }else{//En caso de que se quiere crear una ruta
         if (verificarOperador()) {
             ArrayList<Tarifa> nuevaTarifa= new ArrayList<>();
             nuevaTarifa.add(new Tarifa((float)spinnerTarifa.getValue(), LocalDateTime.now()));
@@ -294,6 +297,7 @@ private void esconderErrores(){
     lblErrorTarifa.setVisible(false);
     txtErrorOperador.setVisible(false);
 }
+//Muestra todos los operadores disponibles 
 private void mostrarOperadores(){
     operadores=ControladorDB.obtenerUsuarioPorJerarquia(2);
     if (operadores.isEmpty()) {

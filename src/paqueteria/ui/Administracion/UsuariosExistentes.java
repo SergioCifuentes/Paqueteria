@@ -10,7 +10,6 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import paqueteria.DB.ControladorDB;
 import paqueteria.Usuario.Administrador;
-import paqueteria.Usuario.Operador;
 import paqueteria.Usuario.Usuario;
 import paqueteria.ui.IngresoDeUsuario;
 
@@ -230,6 +229,7 @@ public class UsuariosExistentes extends javax.swing.JInternalFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (numeroDePuntos == 0) {
             Usuario usuarioAElimnar = usuarios.get(tblUsuarios.getSelectedRow());
+            //En caso de que el administrado se desee elimar a si mismo
             if (administrador.getUserName().equals(usuarioAElimnar.getUserName())) {
                 if (advertencia) {
                     ControladorDB.eliminarUsuario(usuarioAElimnar);
@@ -270,6 +270,7 @@ public class UsuariosExistentes extends javax.swing.JInternalFrame {
         buscar(txtBuscador.getText());
         agregarUsuariosATabla();
     }//GEN-LAST:event_txtBuscadorKeyReleased
+    //Filtrar Usuarios por userName
     private void buscar(String palabra){
         if (!"".equals(palabra)) {
             System.out.println(palabra);
@@ -302,7 +303,7 @@ public class UsuariosExistentes extends javax.swing.JInternalFrame {
         IngresoDeUsuario inicio = new IngresoDeUsuario();
         inicio.setVisible(true);
     }
-
+//Agrega los datos de todos los usuarios a las tabla
     private void agregarUsuariosATabla() {
         lblCantidadPuntos.setText("");
         lblUserName.setText("");

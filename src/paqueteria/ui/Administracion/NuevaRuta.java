@@ -35,6 +35,7 @@ public class NuevaRuta extends javax.swing.JInternalFrame {
      *
      * @param panel
      */
+    //Cuando se desee Crear una ruta nueva
     public NuevaRuta(JDesktopPane panel) {
         editacion = false;
         puntos = new ArrayList<>();
@@ -45,7 +46,7 @@ public class NuevaRuta extends javax.swing.JInternalFrame {
         lblCodigoRuta.setText(String.valueOf(codigoRuta));
         mostrarDestinos();
     }
-
+//Cuando se desee editar una ruta
     public NuevaRuta(JDesktopPane panel, Ruta ruta) {
         editacion = true;
         this.panel = panel;
@@ -57,7 +58,7 @@ public class NuevaRuta extends javax.swing.JInternalFrame {
         mostrarElementosDeEditacion();
         agregarPuntosATabla();
     }
-
+//Muestra los botones que utilizamos para editar
     private void mostrarElementosDeEditacion() {
         lblCodigoRuta.setText(String.valueOf(codigoRuta));
         cBoxDestinos.addItem(rutaAEditar.getDestino().getCodigo() + "-" + String.valueOf(rutaAEditar.getDestino().getNombre()));
@@ -409,7 +410,7 @@ public class NuevaRuta extends javax.swing.JInternalFrame {
         spinnerPosicion.setVisible(b);
 
     }
-
+//Muestra todos los destinos posibles a escojer
     private void mostrarDestinos() {
         destinosPosibles = ControladorDB.obtenerDestino();
         if (destinosPosibles != null) {
@@ -420,7 +421,7 @@ public class NuevaRuta extends javax.swing.JInternalFrame {
             cBoxDestinos.setEnabled(false);
         }
     }
-
+//Agrega un siguiente punto de la ruta
     protected void agregarPunto(PuntoDeControl puntoNuevo) {
         puntos.add(puntoNuevo);
         agregarPuntosATabla();
@@ -428,14 +429,14 @@ public class NuevaRuta extends javax.swing.JInternalFrame {
             btnRuta.setEnabled(true);
         }
     }
-
+//Agrega el destino de la ruta
     protected void agregarDestino(Destino destino) {
         this.destino = destino;
         destinosPosibles.add(destino);
         cBoxDestinos.addItem(destino.getCodigo() + " - " + destino.getNombre());
         cBoxDestinos.setSelectedIndex(destinosPosibles.size() - 1);
     }
-
+//Muestra todos los puntos creados para la tabla
     private void agregarPuntosATabla() {
         DefaultTableModel model = (DefaultTableModel) tblPuntos.getModel();
         int aux = model.getRowCount();

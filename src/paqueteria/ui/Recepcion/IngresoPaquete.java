@@ -341,6 +341,7 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
         sumarTotal();
         btnCancelarPaquete.setEnabled(false);
     }//GEN-LAST:event_btnCancelarPaqueteActionPerformed
+    //Verifica que el nit sea valido
     private boolean verficarNit() {
         try {
             int aux = Integer.parseInt(txtNit.getText());
@@ -351,7 +352,7 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
             return false;
         }
     }
-
+    //Muestra todos los datos de los clientes en la tabla
     private void mostrarDatosCliente() {
         lblNombre.setText(cliente.getNombre());
         lblDireccion.setText(cliente.getDireccion());
@@ -368,9 +369,9 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
         agregarPaquetesATabla();
         sumarTotal();
     }
-
+//Verifica que los datos del envio esten correctos
     private boolean verificarEnvio() {
-        if (cliente == null) {
+        if (cliente == null) {//En caso de que el cliente aun no s registra
             JOptionPane.showMessageDialog(this, "Cliente No Registrado", "Error Al Enviar", JOptionPane.ERROR_MESSAGE);
             return false;
         } else if (paquetes.isEmpty()) {
@@ -380,7 +381,7 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
             return true;
         }
     }
-
+//Muestra todos los deatos de paquetes en la tabla
     private void agregarPaquetesATabla() {
         DefaultTableModel model = (DefaultTableModel) tblPaquetes.getModel();
         int aux = model.getRowCount();
@@ -403,7 +404,7 @@ public class IngresoPaquete extends javax.swing.JInternalFrame {
         }
 
     }
-
+//Suma el total del paquete
     private void sumarTotal() {
         for (int i = 0; i < paquetes.size(); i++) {
             total = total + paquetes.get(i).getPrecioPagado();

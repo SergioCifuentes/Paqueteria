@@ -23,7 +23,7 @@ public class ControladorDeBodega implements Runnable {
         buscarTransferencias();
         
     }
-
+// se organizen todos los paquetes que esten en bodega para que los que estan priorizados esten de primero en la lista
     private ArrayList<Paquete> obtenerPaquetesSegunPriorizacion() {
         ArrayList<Paquete> paquetesOrdenados = new ArrayList<>();
         ArrayList<Paquete> paquetesEnBodega = ControladorDB.obtenerPaquetesPorEstado(1);
@@ -46,9 +46,10 @@ public class ControladorDeBodega implements Runnable {
         }
         return paquetesOrdenados;
     }
+    //Luego de ordenar los paquetes de la forma posterior se verifica si se pueden processar los paquetes
     private void buscarTransferencias(){
         for (int i = 0; i < paquetes.size(); i++) {
-            System.out.println(paquetes.get(i).getRuta().getCodigo());
+            //Se obtiene el punto siguietne de cada paquete
             PuntoDeControl puntoSiguiente = ControladorDB.obtenerPuntosPorRuta(paquetes.get(i).getRuta().getCodigo()).get(0);
             if (TransferenciasDB.obtenerPaquetesPorPunto(puntoSiguiente.getCodigo()
             ).size()<puntoSiguiente.getCapacidad()) {

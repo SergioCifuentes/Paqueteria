@@ -251,6 +251,7 @@ public class GananciaDeRutas extends javax.swing.JInternalFrame {
         GeneradorHTML.generarReprote(tblRuta, title, LocalDate.now());
                 JOptionPane.showMessageDialog(this, "Archivo HTML se encuentra en la carpeta 'Reportes'", "Exportado Correctamente", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnExportarActionPerformed
+    //Filtra las rutas conforme a la palabra que es el codigo
     private void buscar(String palabra) {
         if (!"".equals(palabra)) {
             ArrayList<Ruta> aux = new ArrayList<>();
@@ -275,7 +276,7 @@ public class GananciaDeRutas extends javax.swing.JInternalFrame {
         }
 
     }
-
+//Muestra los datos de las rutas en las tablas
         private void mostrarRutasEnTabla() {
             if (rutas.size() > 0) {
                 DefaultTableModel model = (DefaultTableModel) tblRuta.getModel();
@@ -295,6 +296,7 @@ public class GananciaDeRutas extends javax.swing.JInternalFrame {
                     tblRuta.setValueAt(rutas.get(i).getDestino().getNombre(), i, 1);
                     float ganacias=0;
                     float perdida=0;
+                    //En caso de querer filtrar por fechas
                     if (filtrarFechas) {
                         LocalDateTime inicioDate;
                         LocalDateTime finalDate;
@@ -318,7 +320,6 @@ public class GananciaDeRutas extends javax.swing.JInternalFrame {
                     tblRuta.setValueAt("$" + String.format("%6.2f", ganacias), i, 3);
                     tblRuta.setValueAt("$" + String.format("%6.2f", perdida), i, 4);
                         tblRuta.setValueAt("$" + String.format("%6.2f", ganacias - perdida), i, 5);
-
                 }
             } else {
                 lblErrorRutas.setVisible(true);

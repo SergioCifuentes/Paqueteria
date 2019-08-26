@@ -27,6 +27,12 @@ public class Paquete {
     private float precioPerdido;
     private float precioPagado;
 
+/*Estados
+1-Bodega
+2-En Ruta
+3-En Destino
+4-Retirado
+    */
     public Paquete(int codigo, int peso, Ruta ruta, boolean priorizado, LocalDateTime fechaIngresado,
             int numeroEnCola, int estado, float precioPerdido, float precioPagado) {
         this.codigo = codigo;

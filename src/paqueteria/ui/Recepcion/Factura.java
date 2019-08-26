@@ -293,7 +293,7 @@ public class Factura extends javax.swing.JInternalFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
-
+//Agregar los componentes de la factura
 private void agregarComponentes(){
     lblFecha.setText(String.valueOf(LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
     if (cliente.getNit()==0) {
@@ -305,6 +305,7 @@ private void agregarComponentes(){
     lblNombre.setText(cliente.getNombre());
     lblDireccion.setText(cliente.getDireccion());
 }
+//Muestra todos los deatos de los paquetes en la tabla
 private void agregarPaquetesATabla(){
         DefaultTableModel model = (DefaultTableModel) tblFactura.getModel();
     int aux=model.getRowCount();

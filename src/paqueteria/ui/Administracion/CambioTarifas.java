@@ -266,7 +266,7 @@ public class CambioTarifas extends javax.swing.JInternalFrame {
         spinnerPriorizacion.setValue(porPriorizacion);
         spinnerOperacion.setValue(operacionGlobal);
     }
-
+//verifica los cambios realizados
     private void verificarCambio() {
         if (lblCambioLibra.isVisible() || lblCambioOperacion.isVisible() || lblCambioPriorizacion.isVisible()) {
             btnCambiar.setEnabled(true);
@@ -276,7 +276,7 @@ public class CambioTarifas extends javax.swing.JInternalFrame {
             btnReset.setEnabled(false);
         }
     }
-
+//Verifica si los precios son validos
     private boolean verificarPreciosValidos() {
         try {
             float precio;

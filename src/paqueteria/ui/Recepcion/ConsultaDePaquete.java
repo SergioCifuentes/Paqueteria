@@ -7,8 +7,6 @@ package paqueteria.ui.Recepcion;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Locale;
 import paqueteria.DB.ControladorDB;
 import paqueteria.paquetes.Paquete;
 
@@ -238,6 +236,7 @@ public class ConsultaDePaquete extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtBuscadorPaqueteKeyReleased
 
     private void txtBuscadorPaqueteKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscadorPaqueteKeyTyped
+        //Evita el ingreso de letras
         char c = evt.getKeyChar();
         if (c < '0' || c > '9') {
             evt.consume();
@@ -265,21 +264,21 @@ public class ConsultaDePaquete extends javax.swing.JInternalFrame {
          horas= horas-dias*24;
          return dias+" Dias y "+horas+" Horas";
     }
-
+//Muestra todos los datos de los paquetes en la tabla
     private void agregarDatosPaquete() {
         int numeroDePuntosEnRuta = paqueteAConsultar.getRuta().getPuntos().size();
         progressBarPaquete.setMaximum(numeroDePuntosEnRuta);
         switch (paqueteAConsultar.getEstado()) {
-            case 1:
+            case 1://Si esta en bodega
                 progressBarPaquete.setValue(0);
                 lblLocalizacion.setText("Bodega");
                 lblDescripcionProgreso.setText("Bodega 0/"+numeroDePuntosEnRuta+" Puntos De Control");
                 break;
-            case 3:                
+            case 3://si esta en ruta                
                 progressBarPaquete.setValue(numeroDePuntosEnRuta);
                 lblDescripcionProgreso.setText("Listo! " +numeroDePuntosEnRuta+"/"+numeroDePuntosEnRuta+" Puntos De Control");
                 break;
-            default:
+            default://Si esta en camino
                 progressBarPaquete.setValue(paqueteAConsultar.getPunto().getNumero()-1);
                 lblDescripcionProgreso.setText("En Camino " +(paqueteAConsultar.getPunto().getNumero()-1)+"/"+numeroDePuntosEnRuta+" Puntos De Control");
                 lblLocalizacion.setText("Punto De Control # " + paqueteAConsultar.getPunto().getCodigo());
@@ -304,6 +303,7 @@ private void resetearLabels(){
     lblLocalizacion.setText("---");
     lblTiempo.setText("----");
 }
+//Metodo que calcula el tiempo transcurrido del paquete
     private int calcularTiempoTrascurrido() {
         LocalDateTime inicio = paqueteAConsultar.getFechaIngresado();
         LocalDateTime finalizo = LocalDateTime.now();

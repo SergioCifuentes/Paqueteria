@@ -21,11 +21,13 @@ public class GeneradorGraphviz {
 
     public static void generar(Ruta ruta) throws IOException {
         FileOutputStream archivo = crearArchivo("Imagen" + ruta.getCodigo());
+        //Inicio del archivo
         String im = "digraph Imagen" + ruta.getCodigo() + " {\n"
                 + "\n"
                 + "        Bodega -> ";
         archivo.write(im.getBytes());
         String puntos = "";
+        //por cada punto de control se mostrara su codigo en el archivo
         for (int i = 0; i < ruta.getPuntos().size(); i++) {
             puntos = puntos + ruta.getPuntos().get(i).getCodigo() + "\n"
                      + ruta.getPuntos().get(i).getCodigo() + " -> ";

@@ -169,6 +169,7 @@ public class NuevoDestino extends javax.swing.JInternalFrame {
 
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+   //Verifica si se lleno los campos necesarios para seguir
     private boolean verificarCamposLlenos() {
 
         if ("".equals(txtNombre.getText())) {

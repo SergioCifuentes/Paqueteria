@@ -182,6 +182,7 @@ public class EditacionDePuntos extends javax.swing.JInternalFrame {
         editarPunto.setVisible(true);
         }
     }//GEN-LAST:event_btnEditarActionPerformed
+     //Filtra el array list conforme a la palabra ingresada en el txtField
     private void buscar(String palabra) {
         if (!"".equals(palabra)) {
             ArrayList<PuntoDeControl> aux = new ArrayList<>();
@@ -204,9 +205,8 @@ public class EditacionDePuntos extends javax.swing.JInternalFrame {
             }
             puntos = aux;
         }
-
     }
-
+//Agregar Los Puntos a La Tabla
     private void agregarPuntosATabal() {
         DefaultTableModel model = (DefaultTableModel) tblPuntos.getModel();
         int aux = model.getRowCount();

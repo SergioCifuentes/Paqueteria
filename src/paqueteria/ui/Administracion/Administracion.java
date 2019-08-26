@@ -24,6 +24,7 @@ public class Administracion extends javax.swing.JFrame {
     public Administracion(Administrador user) {
         this.user = user;
         initComponents();
+        //Abre las graficas al momento de ingresar
         GraficaGanancias nuevo = new GraficaGanancias();
         dskVentana.add(nuevo);
         nuevo.setVisible(true);

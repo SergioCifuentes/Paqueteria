@@ -183,7 +183,7 @@ public class NuevoUsuario extends javax.swing.JInternalFrame {
         lblErrorPassword.setText("");
         lblErrorUser.setText("");
     }
-
+//Verifica si se lleno los campos necesarios para seguir
     private boolean verificarCamposLlenos() {
             if (txtUserName.getText().equals("") || "".equals(password.getText())) {
             lblErrorUser.setText(ERROR_CAMPO_NO_LLENADO);
@@ -192,7 +192,7 @@ public class NuevoUsuario extends javax.swing.JInternalFrame {
             return true;
         }
     }
-
+//Verifica si los digitos son suficientes para seguir
     private boolean verificarDigitosSuficientes() {
 
         if (txtUserName.getText().length() < DIGITOS_USUARIO) {

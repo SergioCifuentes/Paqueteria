@@ -181,6 +181,7 @@ public class PaquetesEnDestino extends javax.swing.JInternalFrame {
                 char c = evt.getKeyChar();
         if (c<'0' || c>'9')evt.consume();
     }//GEN-LAST:event_txtBuscadorCodigoKeyTyped
+    //Muestra todos los deatos de los paquetes en la tabla
     private void agregarPaquetesATablas() {
         btnRetirar.setEnabled(false);
         if (paquetes.isEmpty()) {
@@ -204,7 +205,7 @@ public class PaquetesEnDestino extends javax.swing.JInternalFrame {
             }
         }
     }
-
+//Filtra los paquetes segun el codigo 
     private void buscar(String palabra) {
         if (!"".equals(palabra)) {
             ArrayList<Paquete> aux = new ArrayList<>();

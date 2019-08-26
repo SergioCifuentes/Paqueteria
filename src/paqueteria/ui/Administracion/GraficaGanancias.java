@@ -36,7 +36,7 @@ private float costos=0;
         String perdidas = "Perdidas";
         categoria.setValue(costos, perdidas,"Costos");
         categoria.setValue(ingresos, ganancias,"Ingresos");
-        
+        //Creacion de grafica de barras
         JFreeChart f = ChartFactory.createBarChart("Ganancias"," ","Dolares($)", categoria,PlotOrientation.VERTICAL,true,false,false);
         ChartPanel fa = new ChartPanel(f);
         panel.add(fa);
@@ -46,6 +46,7 @@ private float costos=0;
         
         
     }
+    //Llama a los metodos que devuelven las ganancias totale
 private void obtenerEstadisticas(){
     ArrayList<Ruta> rutasAux = ControladorDB.obtenerRutas();
     for (int i = 0; i < rutasAux.size(); i++) {
@@ -54,6 +55,7 @@ private void obtenerEstadisticas(){
         
     }
 }
+//Muestra todas las estadisticas
 private void mostrarEstadisticas(){
     lblIngresos.setText("$"+String.format("%6.2f",ingresos));
     lblCostos.setText("$"+String.format("%6.2f",costos));
@@ -88,7 +90,7 @@ private void mostrarEstadisticas(){
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         setIconifiable(true);
-        setTitle("Ganancias");
+        setTitle("Ganancias Totales");
 
         panel.setBackground(java.awt.Color.white);
 

@@ -21,7 +21,7 @@ import paqueteria.Ruta.Ruta;
 public class PaquetesEnRuta extends javax.swing.JInternalFrame {
 
     private ArrayList<Ruta> rutas;
-    private boolean ascendente;
+    private boolean ascendente;//boolean que servira para la ordenacion de la tabla
 
     /**
      * Creates new form PaquetesEnRuta
@@ -175,6 +175,7 @@ public class PaquetesEnRuta extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void txtBuscadorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscadorKeyTyped
+        //Evita el ingreso de letras
         char c = evt.getKeyChar();
         if (c < '0' || c > '9') {
             evt.consume();
@@ -201,6 +202,7 @@ public class PaquetesEnRuta extends javax.swing.JInternalFrame {
         GeneradorHTML.generarReprote(tblRuta,title,LocalDate.now());
                 JOptionPane.showMessageDialog(this, "Archivo HTML se encuentra en la carpeta 'Reportes'", "Exportado Correctamente", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jButton1ActionPerformed
+    //Filtra los paquetes por estado
     private void filtrarPorEstado() {
         txtBuscador.setText("");
         ArrayList<Ruta> aux = new ArrayList<>();
@@ -226,11 +228,11 @@ public class PaquetesEnRuta extends javax.swing.JInternalFrame {
             if (auxiliar) {
                 aux.add(rutas.get(i));
             }
-        }
+        }//Array aux se iguala al Array original
         rutas = aux;
         ascendente = !ascendente;
     }
-
+//Filtra las rutas segun el codigo ingresado
     private void buscar(String palabra) {
         if (!"".equals(palabra)) {
             ArrayList<Ruta> aux = new ArrayList<>();
@@ -255,7 +257,7 @@ public class PaquetesEnRuta extends javax.swing.JInternalFrame {
         }
 
     }
-
+//Muestra todas las rutas en la tabla
     private void mostrarRutasEnTabla() {
         if (rutas.size() > 0) {
             DefaultTableModel model = (DefaultTableModel) tblRuta.getModel();

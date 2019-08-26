@@ -230,6 +230,7 @@ public class AreaOperador extends javax.swing.JFrame {
     private void comBoxPuntoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comBoxPuntoActionPerformed
         lblErrorPuntos.setText(" ");
         ocultarOpciones(false);
+        //Metodo que busca la tarifa acual de operacion del punto de control
         tarifaActual = ControladorDB.obtenerPreciosPorCodigo(puntosDeControl.get(comBoxPunto.getSelectedIndex()).getCodigo(),
                 ControladorDB.TIPO_PRECIO_PUNTO).get(ControladorDB.obtenerPreciosPorCodigo(puntosDeControl.get(comBoxPunto.getSelectedIndex()).getCodigo(),
                         ControladorDB.TIPO_PRECIO_PUNTO).size() - 1).getPrecio();
@@ -241,6 +242,7 @@ public class AreaOperador extends javax.swing.JFrame {
     private void tblPaquetesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPaquetesMouseClicked
         ocultarOpciones(false);
         lblTarifaPaquete.setText("---");
+        //En caso de selecionar una fila
         if (tblPaquetes.getSelectedRow() >= 0) {
             ocultarOpciones(true);
             paqueteAProcesar = paquetesDisponibles.get(tblPaquetes.getSelectedRow());
@@ -274,7 +276,7 @@ public class AreaOperador extends javax.swing.JFrame {
     private void lblRefreshMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRefreshMouseClicked
         lblErrorPuntos.setText(" ");
         agregarPaquetes();
-                
+
     }//GEN-LAST:event_lblRefreshMouseClicked
 
     private void lblRefreshMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRefreshMouseEntered
@@ -286,10 +288,11 @@ public class AreaOperador extends javax.swing.JFrame {
     }//GEN-LAST:event_lblRefreshMouseExited
 
     private void menuItemLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLogOutActionPerformed
-       IngresoDeUsuario logOut = new IngresoDeUsuario();
-       logOut.setVisible(true);
-       this.setVisible(false); 
+        IngresoDeUsuario logOut = new IngresoDeUsuario();
+        logOut.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_menuItemLogOutActionPerformed
+    //Muestra todos los deatos de los puntos de control en la tabla 
     private void agregarPuntosDeControl() {
         if (puntosDeControl.size() > 0) {
             for (int i = 0; i < puntosDeControl.size(); i++) {
@@ -309,7 +312,7 @@ public class AreaOperador extends javax.swing.JFrame {
         btnProcesar.setEnabled(b);
         lblTarifaPaquete.setText("---");
     }
-
+//Empoeza el proceso para el paquete
     private void procesarPaquete() {
         System.out.println(tarifaDePaquete * (Integer) spinnerHora.getValue());
         user.preocesarPaquete(paqueteAProcesar, tarifaDePaquete * (Integer) spinnerHora.getValue());
@@ -318,7 +321,7 @@ public class AreaOperador extends javax.swing.JFrame {
         new Thread(nuevo).start();
 
     }
-
+//Muestra todos los deatos de los paquetes en la tabla
     private void agregarPaquetes() {
         DefaultTableModel model = (DefaultTableModel) tblPaquetes.getModel();
         int aux = model.getRowCount();

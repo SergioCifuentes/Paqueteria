@@ -183,6 +183,7 @@ public class IngresoDeUsuario extends javax.swing.JFrame {
         }
         }
     }//GEN-LAST:event_jPasswordActionPerformed
+    //Llama al metodoque devuelve el usuario si existe
     private boolean verificarUsuario() {
         boolean usuarioValido;        
         usuarioAIngresar = ControladorDB.verificarUserName(txtUserName.getText());
@@ -206,7 +207,7 @@ public class IngresoDeUsuario extends javax.swing.JFrame {
         lblErrorPassword.setVisible(false);
         lblErrorUsuario.setVisible(false);
     }
-
+//Abre la ventana corespondiente a la jerarquia de usuario
     private void abrirVentaSegunJerarquia(int jerarquia) {
         switch (jerarquia) {
             case 1:
@@ -227,6 +228,7 @@ public class IngresoDeUsuario extends javax.swing.JFrame {
         }
         this.setVisible(false);
     }
+    //Verificacion que se se halla llenado los campos necesarios para continuar
     private boolean verificarCamposLlenados(){
         if (jPassword.getText().equals("")||txtUserName.getText().equals("")) {
             lblErrorUsuario.setText(ERROR_CAMPO_NO_LLENADO);

@@ -198,6 +198,7 @@ public class RutasPopulares extends javax.swing.JInternalFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         lblErrorFechas.setVisible(false);
+        //Verficacion de las fechas correctas
         if (dateFinal.getDate() == null && dateInicio.getDate() == null) {
             lblErrorFechas.setVisible(true);
         } else if (dateFinal.getDate() == null && dateInicio.getDate().after(Date.from(Instant.now()))) {
@@ -227,6 +228,7 @@ public class RutasPopulares extends javax.swing.JInternalFrame {
         GeneradorHTML.generarReprote(tblRuta, title, LocalDate.now());
         JOptionPane.showMessageDialog(this, "Archivo HTML se encuentra en la carpeta 'Reportes'", "Exportado Correctamente", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnExportarActionPerformed
+    //Muestra todas las rutas en la tabal
     private void mostrarRutasEnTabla() {
         if (rutas.size() > 0) {
             DefaultTableModel model = (DefaultTableModel) tblRuta.getModel();
@@ -240,6 +242,7 @@ public class RutasPopulares extends javax.swing.JInternalFrame {
                 tblRuta.setValueAt(rutas.get(i).getCodigo(), i, 1);
 
                 tblRuta.setValueAt(rutas.get(i).getDestino().getNombre(), i, 2);
+                //En caso de querer filtrar por fechas
                 if (filtrarFechas) {
                     LocalDateTime inicioDate;
                     LocalDateTime finalDate;
@@ -264,7 +267,7 @@ public class RutasPopulares extends javax.swing.JInternalFrame {
             lblErrorRutas.setVisible(true);
         }
     }
-
+//Ordena las rutas por las mas populares
     private void ordenarRutas() {
         rutas = ControladorDB.obtenerRutas();
         ArrayList<Ruta> aux = new ArrayList<>();
@@ -278,6 +281,7 @@ public class RutasPopulares extends javax.swing.JInternalFrame {
             auxiliar = i;
             rutaMayor = aux.get(i);
             System.out.println("r " + rutaMayor.getCodigo());
+            //Si se desea filtrar por fechas
             if (filtrarFechas) {
                 LocalDateTime inicioDate;
                 LocalDateTime finalDate;

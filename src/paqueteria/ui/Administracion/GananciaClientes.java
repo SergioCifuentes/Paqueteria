@@ -27,8 +27,9 @@ private ArrayList<Cliente> clientes;
     public GananciaClientes() {
         initComponents();
         obtenerCLientes();
-        mostrarRutasEnTabla();
+        mostrarClienteEnTabla();
     }
+    //Metodo que obtiene todos los clientes
 private void obtenerCLientes(){
     clientes= new ArrayList<>();
 ArrayList codigos = ControladorDB.obtenerCodigoDeClientes();
@@ -36,7 +37,8 @@ ArrayList codigos = ControladorDB.obtenerCodigoDeClientes();
         clientes.add(ControladorDB.verificarClientePorCodigo((Integer)codigos.get(i)));        
     }
 }
-    private void mostrarRutasEnTabla() {
+//Muestra los datos del ArrayList clientes en la tabla
+    private void mostrarClienteEnTabla() {
         if (clientes.size() > 0) {
             DefaultTableModel model = (DefaultTableModel) tblClientes.getModel();
             int aux = model.getRowCount();
@@ -184,7 +186,7 @@ ArrayList codigos = ControladorDB.obtenerCodigoDeClientes();
 
     private void txtBuscadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscadorActionPerformed
         buscar(txtBuscador.getText());
-        mostrarRutasEnTabla();
+        mostrarClienteEnTabla();
         txtBuscador.setText("");
     }//GEN-LAST:event_txtBuscadorActionPerformed
 
@@ -197,7 +199,7 @@ ArrayList codigos = ControladorDB.obtenerCodigoDeClientes();
 
     private void txtBuscadorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscadorKeyReleased
         buscar(txtBuscador.getText());
-        mostrarRutasEnTabla();
+        mostrarClienteEnTabla();
     }//GEN-LAST:event_txtBuscadorKeyReleased
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
@@ -208,6 +210,7 @@ ArrayList codigos = ControladorDB.obtenerCodigoDeClientes();
         GeneradorHTML.generarReprote(tblClientes, title, LocalDate.now());
         JOptionPane.showMessageDialog(this, "Archivo HTML se encuentra en la carpeta 'Reportes'", "Exportado Correctamente", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnExportarActionPerformed
+    //Filtra los cliente conforme a su codigo
     private void buscar(String palabra) {
         if (!"".equals(palabra)) {
             ArrayList<Cliente> aux = new ArrayList<>();
