@@ -5,7 +5,10 @@
  */
 package paqueteria.ui.Administracion;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -23,6 +26,7 @@ public class MostradorDeRutas extends javax.swing.JInternalFrame {
     private ArrayList<Ruta> rutas;
     protected static final String IDENTIFICADO_EDITADOR = "Editar";
     protected static final String IDENTIFICADO_DESACTIVADOR = "Desactivar";
+    protected static final String IDENTIFICADO_IMAGEN = "Imagen";
     private String tipo;
         private JDesktopPane panel ;
     private ArrayList<Paquete> paquetesEnRuta;
@@ -158,7 +162,7 @@ public class MostradorDeRutas extends javax.swing.JInternalFrame {
             } else {
                 JOptionPane.showMessageDialog(this, "Esta Ruta Cuenta Con Paquetes", "Error Al Desactivar", JOptionPane.ERROR_MESSAGE);
             }
-        } else {
+        } else if(tipo.equals(IDENTIFICADO_EDITADOR)){
             if (paquetesEnRuta.isEmpty()) {
                 NuevaRuta editarRuta = new NuevaRuta(panel, rutaACAmbiar);
                 panel.add(editarRuta);
@@ -167,6 +171,14 @@ public class MostradorDeRutas extends javax.swing.JInternalFrame {
             } else {
                 JOptionPane.showMessageDialog(this, "Esta Ruta Cuenta Con Paquetes", "Error Al Editar", JOptionPane.ERROR_MESSAGE);
             }
+        }else{
+            try {
+                GeneradorGraphviz.generar(rutaACAmbiar);
+            } catch (IOException ex) {
+                System.out.println("Error Al Hacer Imagen");
+            }
+            JOptionPane.showMessageDialog(this, "Puedes encontrar el imagen en la carpeta 'Reportes'", "Imagen Creado", JOptionPane.INFORMATION_MESSAGE);
+            this.setVisible(false);
         }
     }//GEN-LAST:event_btnAccionActionPerformed
     private void agregarRutas() {

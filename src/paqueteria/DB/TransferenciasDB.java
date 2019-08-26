@@ -338,6 +338,16 @@ public class TransferenciasDB {
         }
         return codigos;
     }
+        
+        public static void cabiarTarifaOperacion(float nuevo,float viejo){
+            ArrayList<PuntoDeControl> puntos= obtenerTodosLosPuntos();
+            for (int i = 0; i < puntos.size(); i++) {
+                if (puntos.get(i).getPrecio().get(puntos.get(i).getPrecio().size()-1).getPrecio()==viejo) {
+                    ControladorDB.guardarPrecioPunto(puntos.get(i),new Tarifa(nuevo, LocalDateTime.now().plusSeconds(i*3)));
+                }
+                
+            }
+        } 
     private final static String USER = "root";
     private final static String PASSWORD = "danielito";
     private final static String STRING_CONNECTION = "jdbc:mysql://localhost:3306/paquetes";

@@ -47,7 +47,7 @@ public class ControladorDB {
     private final static String STATEMENT_GUARDAR_RUTA = "INSERT INTO Ruta VALUES (?,?,?)";
     private final static String STATEMENT_GUARDAR_PUNTOS_DE_CONTROL = "INSERT INTO PuntoDeControl VALUES (?,?,?,?,?)";
     private final static String STATEMENT_GUARDAR_PRECIO_DESTINO = "INSERT INTO PrecioDestino VALUES (?,?,?)";
-    private final static String STATEMENT_GUARDAR_PRECIO_PUNTO = "INSERT INTO PrecioPunto VALUES (?,?,?)";
+    private final static String STATEMENT_GUARDAR_PRECIO_PUNTO = "INSERT INTO PrecioPunto VALUES(?,?,?)";
     private final static String STATEMENT_OBTENER_RUTAS = "SELECT * FROM Ruta";
     private final static String STATEMENT_OBTENER_PUNTOS = "SELECT * FROM PuntoDeControl";
     private final static String STATEMENT_OBTENER_PUNTOS_POR_CODIGO = "SELECT * FROM PuntoDeControl WHERE codigo = ?";

@@ -185,7 +185,7 @@ public class Factura extends javax.swing.JInternalFrame {
 
         lblTotal.setFont(new java.awt.Font("Ubuntu", 0, 17)); // NOI18N
         lblTotal.setForeground(java.awt.Color.blue);
-        lblTotal.setText("jLabel9");
+        lblTotal.setText("----");
 
         jLabel10.setFont(new java.awt.Font("Ubuntu", 0, 17)); // NOI18N
         jLabel10.setForeground(java.awt.Color.blue);
@@ -279,7 +279,7 @@ public class Factura extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblTotal)
                     .addComponent(jLabel10))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)

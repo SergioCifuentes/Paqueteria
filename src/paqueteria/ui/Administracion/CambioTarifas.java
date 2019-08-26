@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 import paqueteria.DB.ControladorDB;
+import paqueteria.DB.TransferenciasDB;
 
 /**
  *
@@ -240,6 +241,9 @@ public class CambioTarifas extends javax.swing.JInternalFrame {
 
     private void btnCambiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiarActionPerformed
         if (verificarPreciosValidos()) {
+            if (operacionGlobal!=(float) spinnerOperacion.getValue()) {
+                TransferenciasDB.cabiarTarifaOperacion((float) spinnerOperacion.getValue(), operacionGlobal);
+            }
             ControladorDB.guardarPreciosAdmin(LocalDateTime.now(), (float) spinnerLibra.getValue(), (float) spinnerPriorizacion.getValue(), (float) spinnerOperacion.getValue());
             JOptionPane.showMessageDialog(this, "CambiosRealizados", "Tarifa", JOptionPane.INFORMATION_MESSAGE);
             obtenerPreciosYFecha();
